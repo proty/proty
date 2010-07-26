@@ -29,7 +29,7 @@ To build Pyrite (you'll need SCons (http://www.scons.org)) type:
 
     scons
 
-For further instructions see http://pyrite-lang.org/Installing.
+For further instructions see http://pyrite-lang.org/install.
 
 7. Authors
 ==========
