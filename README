@@ -1,0 +1,40 @@
+1. License
+==========
+Copyright (c) Thomas Gatzweiler.
+
+See LICENSE.
+
+2. What is Pyrite?
+==================
+Pyrite is an object oriented, dynamic programming language.
+
+3. Status
+=========
+The current status of Pyrite is **NOT STABLE**, please don't use it for
+productive projects.
+
+4. Documentation
+================
+The raw documentation of Pyrite is placed in *doc/user/*.
+
+For more information see http://pyrite-lang.org/.
+
+5. Report Issues
+================
+See http://pyrite-lang.org/ReportIssues.
+
+6. Build instructions
+=====================
+To build Pyrite (you'll need SCons (http://www.scons.org)) type:
+
+    scons
+
+For further instructions see http://pyrite-lang.org/Installing.
+
+7. Authors
+==========
+* Authors:
+  - Thomas Gatzweiler
+
+* Contributors:
+  - to be continued

@@ -1,0 +1,11 @@
+import test
+
+a = 1337
+assert(a == 1337)
+
+b = 5
+b = b + 102
+assert(b == 107)
+
+s = "test"
+assert(s == "test")
