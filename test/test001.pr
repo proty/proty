@@ -1,0 +1,16 @@
+import test
+
+assert((5+5)==10)
+assert((15-5)==10)
+assert((5*2)==10)
+assert((50/5)==10)
+
+assert((5+2*10)==25)
+assert((5+2*10+1)==26)
+
+assert(5<10)
+assert(10>5)
+assert(5<=5)
+assert(5>=5)
+assert(5==5)
+assert(5!=10)

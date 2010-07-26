@@ -1,0 +1,5 @@
+def assert(x)
+  if x
+    print("+")
+  else
+    print("-")
