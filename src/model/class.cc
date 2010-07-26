@@ -11,8 +11,6 @@ namespace pyrite {
     c->env->set_class(name);
 
     std::vector<const Type*> elts;
-    elts.push_back(c->ObjectTy);
-    elts.push_back(Type::getInt32Ty(getGlobalContext()));
     StructType* classtype = StructType::get(getGlobalContext(), elts);
     c->module->addTypeName(name, classtype);
 

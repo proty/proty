@@ -28,11 +28,8 @@ namespace pyrite {
     fpm->add(createGVNPass());
     fpm->add(createCFGSimplificationPass());
     
-    std::vector<const Type*> elts;
-    elts.push_back(Type::getInt32Ty(getGlobalContext()));
-    StructType* objt = StructType::get(getGlobalContext(), elts);
-    module->addTypeName("Object", objt);
-    ObjectTy = PointerType::get(objt, 0);
+    module->addTypeName("prim_int", Type::getInt32Ty(getGlobalContext()));
+    module->addTypeName("prim_double", Type::getDoubleTy(getGlobalContext()));
   }
 
   Module* Compiler::compile(BlockModel* root) {

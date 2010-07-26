@@ -8,7 +8,7 @@
 namespace pyrite {
 
   class BlockModel;
-  
+
   /// A class to handle the compilation
   /// of a BlockModel to a LLVM Module
   class Compiler {
@@ -18,15 +18,13 @@ namespace pyrite {
     /// Compiles a BlockModel to a LLVM Module.
     /// @returns the compiled code as a LLVM Module
     Module* compile(BlockModel*);
-    
-    // LLVM Classes
+
+    /// LLVM Classes
     IRBuilder<>* builder;
     Module* module;
     ExecutionEngine *executionEngine;
     FunctionPassManager* fpm;
     Linker* linker;
-
-    const Type* ObjectTy;
 
     /// The environment.
     Env* env;
@@ -34,7 +32,7 @@ namespace pyrite {
     /// Prints out an error messages
     /// and stops the program.
     void error(std::string);
-    
+
     /// Prints out a warning.
     void warning(std::string);
   };

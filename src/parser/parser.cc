@@ -195,10 +195,19 @@ namespace pyrite {
     std::string name = t.getContent();
 
     FunctionArgsModel* args = parse_function_args();
+    
+    TypeModel* returnType;
+    if (tokenizer->peek().getType() == Token::arrow) {
+      match("arrow", Token::arrow);
+      returnType = parse_type_name();
+    }
+    else {
+      returnType = new TypeModel("Object");
+    }
 
     BlockModel* block = parse_block();
 
-    return new FunctionModel(name, args, block);
+    return new FunctionModel(name, args, returnType, block);
   }
 
   FunctionArgsModel* Parser::parse_function_args() {
@@ -214,10 +223,20 @@ namespace pyrite {
     while (true) {
       Token t = match("parameter name", Token::name);
       std::string n = t.getContent();
-
-      args->push(n);
+      TypeModel* type;
 
       t = tokenizer->next();
+
+      if (t.getType() == Token::colon) {
+        tokenizer->skip();
+        type = parse_type_name();
+      }
+      else {
+        type = new TypeModel("Object");
+      }
+
+      args->push(n, type);
+
       if (t.getType() == Token::comma) {
         continue;
       }
@@ -365,6 +384,11 @@ namespace pyrite {
 
     ExprModel* e = parse_expression();
     return new AssignModel(name, e);
+  }
+
+  TypeModel* Parser::parse_type_name() {
+    std::string name = match("type name", Token::name).getContent();
+    return new TypeModel(name);
   }
 
 }

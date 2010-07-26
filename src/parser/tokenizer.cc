@@ -159,6 +159,10 @@ namespace pyrite {
               stream->get();
               return Token(Token::eq, loc->copy(), "==");
             }
+            else if (nextch == '>') {
+              stream->get();
+              return Token(Token::arrow, loc->copy(), "=>");
+            }
             else return Token(Token::assign, loc->copy(), "=");
           }
           else if (currch == '>') {
@@ -207,7 +211,11 @@ namespace pyrite {
             return Token(Token::comma, loc->copy(), ",");
           }
           else if (currch == ':') {
-            return Token(Token::colon, loc->copy(), ":");
+            if (nextch == ':') {
+              stream->get();
+              return Token(Token::dblcolon, loc->copy(), "::");
+            }
+           else return Token(Token::colon, loc->copy(), ":");
           }
           else return Token(Token::unknown, loc->copy(), "unknown");
           break;
