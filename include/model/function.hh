@@ -7,11 +7,12 @@ namespace pyrite {
     private:
       std::string name;
       FunctionArgsModel* args;
+      TypeModel* returnType;
       BlockModel* block;
 
     public:
-      FunctionModel(std::string name, FunctionArgsModel* args, BlockModel* block)
-        : name(name), args(args), block(block) { }
+      FunctionModel(std::string name, FunctionArgsModel* args, TypeModel* returnType, BlockModel* block)
+        : name(name), args(args), returnType(returnType), block(block) { }
 
       std::string get_name();
 

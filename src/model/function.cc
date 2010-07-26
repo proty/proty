@@ -11,15 +11,12 @@ namespace pyrite {
 
     // Push all argument types to the args vector
     std::vector<const Type*> argTypes;
-    if (c->env->in_class()) {
-      argTypes.push_back(c->ObjectTy);
-    }
     for(unsigned int i = 0; i < args->size(); i++) {
-      argTypes.push_back(c->ObjectTy);
+      argTypes.push_back(args->getType(i)->get(c));
     }
 
     // Set up the function
-    FunctionType* FT = FunctionType::get(c->ObjectTy, argTypes, false);
+    FunctionType* FT = FunctionType::get(returnType->get(c), argTypes, false);
     Function* F = Function::Create(FT, Function::ExternalLinkage, n, c->module);
     if (!block) return F;
 
@@ -30,15 +27,10 @@ namespace pyrite {
 
     // Iterate all arguments
     Function::arg_iterator AI = F->arg_begin();
-    if (c->env->in_class()) {
-      AllocaInst* Alloca = c->builder->CreateAlloca(c->ObjectTy, 0, "self");
-      c->builder->CreateStore(AI++, Alloca);
-      c->env->symtab()->set("self", Alloca);
-    }
     for (unsigned int i = 0; i < args->size(); i++, AI++) {
-      AllocaInst* Alloca = c->builder->CreateAlloca(c->ObjectTy, 0, args->get(i).c_str());
+      AllocaInst* Alloca = c->builder->CreateAlloca(args->getType(i)->get(c), 0, args->getName(i).c_str());
       c->builder->CreateStore(AI, Alloca);
-      c->env->symtab()->set(args->get(i), Alloca);
+      c->env->symtab()->set(args->getName(i), Alloca);
     }
 
     for (unsigned int i = 0; i < block->size(); i++) {

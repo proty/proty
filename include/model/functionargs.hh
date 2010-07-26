@@ -8,13 +8,15 @@ namespace pyrite {
   class FunctionArgsModel {
     private:
       std::vector<std::string> names;
+      std::vector<TypeModel*> types;
 
     public:
       FunctionArgsModel() { }
 
-      void push(std::string);
+      void push(std::string, TypeModel*);
       unsigned int size();
-      std::string get(int);
+      std::string getName(int);
+      TypeModel* getType(int);
   };
 
 }

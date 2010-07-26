@@ -32,6 +32,7 @@ namespace pyrite {
       IfModel* parse_if();
       AssignModel* parse_assign();
       ExprModel* parse_name();
+      TypeModel* parse_type_name();
 
       /// Tests if the current token is
       /// of the expected type. If not
