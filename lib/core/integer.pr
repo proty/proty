@@ -1,0 +1,14 @@
+class Integer
+    value : prim_int
+
+def Integer::+(other : Integer)
+    return @value + other.value
+
+def Integer::-(other : Integer)
+    return @value - other.value
+
+def Integer::*(other : Integer)
+    return @value * other.value
+
+def Integer::/(other : Integer)
+    return @value / other.value
