@@ -19,7 +19,7 @@ without types:
 
 with types:
 
-    def multiply(a :: Integer, b :: Integer) => Integer
+    def multiply(a : Integer, b : Integer) => Integer
         return a*b
 
 Classes
@@ -28,16 +28,25 @@ Classes
 === Class definitions
 
     class Car
-        color :: String
-        speed :: Integer
-        running :: Bool
+        color : String
+        speed : Integer
+        running : Bool
 
 === Method definitions
 
-    def Car::start()
-        @running = true
+Methods can be defined in the class definition:
 
-    def Car::stop()
+    class Car
+        ...
+        def start()
+            @running = true
+
+        def Car.stop()
+            @running = false
+
+Or, to extend a class, anywhere after the class has been defined:
+
+    def Car.crash()
         @running = false
 
 Variables
@@ -53,6 +62,6 @@ without types:
 
 with types:
 
-    let a :: Integer = 5
+    let a : Integer = 5
     a = 9
     a = "Hello, World" // Error - a is of type Integer!      

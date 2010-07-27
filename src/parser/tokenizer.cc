@@ -157,7 +157,7 @@ namespace pyrite {
           else if (currch == '=') {
             if (nextch == '=') {
               stream->get();
-              return Token(Token::eq, loc->copy(), "==");
+              return Token(Token::binOp, loc->copy(), "==");
             }
             else if (nextch == '>') {
               stream->get();
@@ -168,32 +168,32 @@ namespace pyrite {
           else if (currch == '>') {
             if (nextch == '=') {
               stream->get();
-              return Token(Token::geq, loc->copy(), ">=");
+              return Token(Token::binOp, loc->copy(), ">=");
             }
-            else return Token(Token::gr, loc->copy(), ">");
+            else return Token(Token::binOp, loc->copy(), ">");
           }
           else if (currch == '<') {
             if (nextch == '=') {
               stream->get();
-              return Token(Token::leq, loc->copy(), "<=");
+              return Token(Token::binOp, loc->copy(), "<=");
             }
-            else return Token(Token::le, loc->copy(), "<");
+            else return Token(Token::binOp, loc->copy(), "<");
           }
           else if (currch == '!') {
             if (nextch == '=') {
               stream->get();
-              return Token(Token::neq, loc->copy(), "!=");
+              return Token(Token::binOp, loc->copy(), "!=");
             }
             else return Token(Token::unknown, loc->copy(), "unknown");
           }
           else if (currch == '+') {
-            return Token(Token::plus, loc->copy(), "+");
+            return Token(Token::binOp, loc->copy(), "+");
           }
           else if (currch == '-') {
-            return Token(Token::minus, loc->copy(), "-");
+            return Token(Token::binOp, loc->copy(), "-");
           }
           else if (currch == '*') {
-            return Token(Token::asterisk, loc->copy(), "*");
+            return Token(Token::binOp, loc->copy(), "*");
           }
           else if (currch == '/') {
             if (nextch == '/') {
@@ -201,21 +201,20 @@ namespace pyrite {
               state = st_comment;
             }
             else {
-              return Token(Token::slash, loc->copy(), "/");
+              return Token(Token::binOp, loc->copy(), "/");
             }
           }
           else if (currch == '%') {
-            return Token(Token::percent, loc->copy(), "%");
+            return Token(Token::binOp, loc->copy(), "%");
           }
           else if (currch == ',') {
             return Token(Token::comma, loc->copy(), ",");
           }
           else if (currch == ':') {
-            if (nextch == ':') {
-              stream->get();
-              return Token(Token::dblcolon, loc->copy(), "::");
-            }
-           else return Token(Token::colon, loc->copy(), ":");
+            return Token(Token::colon, loc->copy(), ":");
+          }
+          else if (currch == '@') {
+            return Token(Token::at, loc->copy(), "@");
           }
           else return Token(Token::unknown, loc->copy(), "unknown");
           break;
@@ -244,9 +243,9 @@ namespace pyrite {
             else if (name == "import")
               return Token(Token::importKw, loc->copy(), "import");
             else if (name == "or")
-              return Token(Token::logOr, loc->copy(), "or");
+              return Token(Token::binOp, loc->copy(), "or");
             else if (name == "and")
-              return Token(Token::logAnd, loc->copy(), "and");
+              return Token(Token::binOp, loc->copy(), "and");
             else if (name == "true")
               return Token(Token::bTrue, loc->copy(), "true");
             else if (name == "false")

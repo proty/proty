@@ -15,9 +15,8 @@ namespace pyrite {
         name, string, integer, decimal,
         ifKw, elseKw, whileKw, defKw, classKw, moduleKw, returnKw,
         importKw, indent, dedent,
-        lpar, rpar, lsqb, rsqb, lbrace, rbrace, arrow, dblcolon,
-        assign, plus, minus, asterisk, slash, percent, colon, comma, dot,
-        eq, neq, gr, le, geq, leq, logOr, logAnd, bTrue, bFalse
+        lpar, rpar, lsqb, rsqb, lbrace, rbrace, arrow, at,
+        assign, colon, comma, dot, binOp, bTrue, bFalse
       } Type;
 
     private:

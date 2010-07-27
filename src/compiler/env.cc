@@ -50,7 +50,6 @@ namespace pyrite {
   }
 
   std::string Env::format_function_name(std::string name) {
-    std::cout << "function name: " << name << std::endl;
     if (!ns.empty()) {
       return get_namespace() + name;
     }
