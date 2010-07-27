@@ -57,6 +57,7 @@ objs = [
 
 libpyrite = env.SharedLibrary('pyrite', objs)
 
+env.Replace(LINKFLAGS="")
 pyrite = env.Program('pyrite', ['src/pyrite.cc', libpyrite])
 
 env.Install('/usr/local/bin', [pyrite])

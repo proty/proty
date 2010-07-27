@@ -6,6 +6,10 @@ namespace pyrite {
     methods.push_back(function);
   }
 
+  void ClassModel::add_attribute(std::string n, TypeModel* t) {
+    attributes[n] = t;
+  }
+
   Value* ClassModel::codegen(Compiler* c) {
     name = c->env->format_class_name(name);
     c->env->set_class(name);

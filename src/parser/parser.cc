@@ -183,6 +183,21 @@ namespace pyrite {
           cm->add_method(parse_function());
           break;
 
+        case Token::name: {
+          tokenizer->skip();
+          std::string n = t.getContent();
+          TypeModel* tp;
+          if (is_next(Token::colon)) {
+            tokenizer->skip();
+            tp = parse_type_name();
+          }
+          else {
+            tp = new TypeModel("Object");
+          }
+          cm->add_attribute(n, tp);
+          break;
+        }
+
         default:
           unexpected(t, "statement");
       }
@@ -197,7 +212,7 @@ namespace pyrite {
     FunctionArgsModel* args = parse_function_args();
     
     TypeModel* returnType;
-    if (tokenizer->peek().getType() == Token::arrow) {
+    if (is_next(Token::arrow)) {
       match("arrow", Token::arrow);
       returnType = parse_type_name();
     }
@@ -215,7 +230,7 @@ namespace pyrite {
 
     match("(", Token::lpar);
 
-    if (tokenizer->peek().getType() == Token::rpar) {
+    if (is_next(Token::rpar)) {
       tokenizer->skip();
       return args;
     }
@@ -228,8 +243,8 @@ namespace pyrite {
       t = tokenizer->next();
 
       if (t.getType() == Token::colon) {
-        tokenizer->skip();
         type = parse_type_name();
+        t = tokenizer->next();
       }
       else {
         type = new TypeModel("Object");
@@ -266,12 +281,14 @@ namespace pyrite {
       case Token::string:
         lhs = new StringModel(t.getContent());
         break;
+      case Token::at:
+        break;
       case Token::name:
-        if (tokenizer->peek().getType() == Token::lpar) {
+        if (is_next(Token::lpar)) {
           tokenizer->back();
           lhs = parse_call();
         }
-        else if (tokenizer->peek().getType() == Token::assign) {
+        else if (is_next(Token::assign)) {
           tokenizer->back();
           lhs = parse_assign();
         }
@@ -291,25 +308,13 @@ namespace pyrite {
     t = tokenizer->next();
     std::string op;
     switch (t.getType()) {
-      case Token::plus:
-      case Token::minus:
-      case Token::asterisk:
-      case Token::slash:
-      case Token::percent:
-      case Token::eq:
-      case Token::neq:
-      case Token::gr:
-      case Token::le:
-      case Token::geq:
-      case Token::leq:
-      case Token::logOr:
-      case Token::logAnd:
+      case Token::binOp:
         op = t.getContent();
         break;
 
       case Token::dot: {
         std::string name = match("attribute name", Token::name).getContent();
-        if (tokenizer->peek().getType() == Token::lpar) {
+        if (is_next(Token::lpar)) {
           CallArgsModel* args = parse_call_args();
           return new MethodCallModel(lhs, name, args);
         }
@@ -369,7 +374,7 @@ namespace pyrite {
     ExprModel* cond = parse_expression();
     BlockModel* thenBlock = parse_block();
     BlockModel* elseBlock = 0;
-    if (tokenizer->peek().getType() == Token::elseKw) {
+    if (is_next(Token::elseKw)) {
       tokenizer->skip();
       elseBlock = parse_block();
     }

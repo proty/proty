@@ -9,6 +9,7 @@ namespace pyrite {
 
   class BlockModel;
 
+
   /// A class to handle the compilation
   /// of a BlockModel to a LLVM Module
   class Compiler {

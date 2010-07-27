@@ -1,5 +1,5 @@
 class Object
     type : Type
 
-def Object::kind_of(type : Type)
-    return @type == type
+    def kind_of(type : Type)
+        return @type == type

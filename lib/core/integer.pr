@@ -1,14 +1,17 @@
-class Integer
+class Integer : Object
     value : prim_int
 
-def Integer::+(other : Integer)
-    return @value + other.value
+    def init(value : prim_int)
+        @value = value
 
-def Integer::-(other : Integer)
-    return @value - other.value
+    def +(other : Integer)
+        return Integer.new(@value + other.value)
 
-def Integer::*(other : Integer)
-    return @value * other.value
+    def -(other : Integer)
+        return Integer.new(@value - other.value)
 
-def Integer::/(other : Integer)
-    return @value / other.value
+    def *(other : Integer)
+        return Integer.new(@value * other.value)
+
+    def /(other : Integer)
+        return Integer.new(@value / other.value)
