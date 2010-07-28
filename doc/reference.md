@@ -10,7 +10,7 @@ Program Structure
 Functions
 ---------
 
-=== Function definitions
+### Function definitions
 
 without types:
 
@@ -25,14 +25,14 @@ with types:
 Classes
 -------
 
-=== Class definitions
+### Class definitions
 
     class Car
         color : String
         speed : Integer
         running : Bool
 
-=== Method definitions
+### Method definitions
 
 Methods can be defined in the class definition:
 
@@ -52,7 +52,7 @@ Or, to extend a class, anywhere after the class has been defined:
 Variables
 ---------
 
-==== Variable assignments
+### Variable assignments
 
 without types:
 
