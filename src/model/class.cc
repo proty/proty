@@ -26,4 +26,12 @@ namespace pyrite {
     return 0;
   }
 
+  Value* ClassDeclModel::codegen(Compiler* c) {
+    std::vector<const Type*> elts;
+    StructType* classtype = StructType::get(getGlobalContext(), elts);
+    c->module->addTypeName(name, classtype);
+    
+    return 0;
+  }
+
 }

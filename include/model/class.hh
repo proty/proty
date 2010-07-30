@@ -10,13 +10,22 @@ namespace pyrite {
       std::map<std::string, TypeModel*> attributes;
 
     public:
-      ClassModel(std::string name)
-        : name(name) { }
+      ClassModel(std::string name) : name(name) {}
 
       void add_method(FunctionModel*);
       void add_attribute(std::string, TypeModel*);
 
       std::string get_name();
+
+      Value* codegen(Compiler*);
+  };
+
+  class ClassDeclModel : public ExprModel {
+    private:
+      std::string name;
+
+    public:
+      ClassDeclModel(std::string name) : name(name) {}
 
       Value* codegen(Compiler*);
   };

@@ -25,6 +25,7 @@ namespace pyrite {
       ClassModel* parse_class();
       FunctionModel* parse_function();
       FunctionArgsModel* parse_function_args();
+      ExprModel* parse_declaration();
       ExprModel* parse_expression();
       CallModel* parse_call();
       CallArgsModel* parse_call_args();
