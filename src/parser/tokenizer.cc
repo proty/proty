@@ -234,6 +234,8 @@ namespace pyrite {
               return Token(Token::whileKw, loc->copy(), "while");
             else if (name == "def")
               return Token(Token::defKw, loc->copy(), "def");
+            else if (name == "decl")
+              return Token(Token::declKw, loc->copy(), "decl");
             else if (name == "class")
               return Token(Token::classKw, loc->copy(), "class");
             else if (name == "module")

@@ -1,3 +1,5 @@
+decl class Type
+
 class Object
     type : Type
 
