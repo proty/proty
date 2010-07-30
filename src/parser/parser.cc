@@ -165,16 +165,24 @@ namespace pyrite {
 
   ClassModel* Parser::parse_class() {
     Token t = match("class name", Token::name);
-    match("indent", Token::indent);
 
     ClassModel* cm = new ClassModel(t.getContent());
 
+    t = tokenizer->peek();
+    if (t.getType() == Token::binOp && t.getContent() == "<") {
+      tokenizer->skip();
+      std::string base = match("base class", Token::name).getContent();
+    }
+
+    match("indent", Token::indent);
+
     while (true) {
-      Token t = tokenizer->peek();
+      t = tokenizer->peek();
 
       switch (t.getType()) {
         case Token::dedent:
           tokenizer->skip();
+
         case Token::eof:
           return cm;
 

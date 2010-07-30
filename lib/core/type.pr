@@ -1,2 +1,2 @@
-class Type
+class Type < Object
     name : String

@@ -34,20 +34,13 @@ Classes
 
 ### Method definitions
 
-Methods can be defined in the class definition:
-
-    class Car
+    class Car < Object
         ...
         def start()
             @running = true
 
-        def Car.stop()
+        def stop()
             @running = false
-
-Or, to extend a class, anywhere after the class has been defined:
-
-    def Car.crash()
-        @running = false
 
 Variables
 ---------

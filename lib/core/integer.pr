@@ -1,4 +1,4 @@
-class Integer : Object
+class Integer < Object
     value : prim_int
 
     def init(value : prim_int)
