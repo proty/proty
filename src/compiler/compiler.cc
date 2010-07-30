@@ -1,5 +1,6 @@
 #include "compiler/compiler.hh"
 #include "model/models.hh"
+#include "parser/parser.hh"
 #include <cstdlib>
 
 namespace pyrite {
@@ -30,6 +31,10 @@ namespace pyrite {
     
     module->addTypeName("prim_int", Type::getInt32Ty(getGlobalContext()));
     module->addTypeName("prim_double", Type::getDoubleTy(getGlobalContext()));
+    
+    link_pyrite("core/object.pr");
+    //link_pyrite("core/type.pr");
+    //link_pyrite("core/integer.pr");
   }
 
   Module* Compiler::compile(BlockModel* root) {
@@ -60,6 +65,26 @@ namespace pyrite {
     fpm->run(*F);
     
     return module;
+  }
+
+  void Compiler::link_pyrite(std::string file) {
+    std::cout << "link in " << file << std::endl;
+    Tokenizer* t = new Tokenizer("lib/" + file);
+
+    Parser* p = new Parser(t);
+    BlockModel* b = p->parse();
+
+    Module* m = compile(b);
+    
+    // Remove main function
+    m->getFunction("main")->removeFromParent();
+    
+    linker->LinkInModule(m);
+  }
+
+  void Compiler::link_llvm_bc(std::string file) {
+    bool native = false;
+    linker->LinkInFile(sys::Path("lib/" + file), native);
   }
 
   void Compiler::error(std::string msg) {

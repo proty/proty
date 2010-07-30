@@ -29,6 +29,11 @@ namespace pyrite {
 
     /// The environment.
     Env* env;
+    
+    /// Link in pyrite file
+    void link_pyrite(std::string);
+    /// Link in a llvm bytecode file
+    void link_llvm_bc(std::string);
 
     /// Prints out an error messages
     /// and stops the program.
