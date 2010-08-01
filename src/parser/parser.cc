@@ -68,11 +68,6 @@ namespace pyrite {
           b->push(parse_function());
           break;
 
-        case Token::declKw:
-          tokenizer->skip();
-          b->push(parse_declaration());
-          break;
-
         case Token::importKw: {
           tokenizer->skip();
           Token t2 = tokenizer->next();
@@ -278,24 +273,6 @@ namespace pyrite {
     }
   }
 
-  ExprModel* Parser::parse_declaration() {
-    Token t = tokenizer->next();
-
-    switch (t.getType()) {
-      case Token::classKw:
-        std::string name = match("class name", Token::name).getContent();
-        return new ClassDeclModel(name);
-      
-      case Token::defKw:
-        /// @todo: implemet function declaration
-        return 0;
-      
-      default:
-        unexpected(t, "class or function declaration");
-        return 0;
-    }
-  }
-
   ExprModel* Parser::parse_expression() {
     Token t = tokenizer->next();
     ExprModel* lhs;
@@ -319,7 +296,8 @@ namespace pyrite {
 
       case Token::at: {
         std::string name = match("instance variable name", Token::name).getContent();
-        lhs = new NameModel("self." + name);
+        NameModel* self = new NameModel("self");
+        lhs = new AttributeModel(self, name);
         break;
       }
 

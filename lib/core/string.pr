@@ -1,0 +1,5 @@
+class String < Object
+    value : prim_str
+
+    def init(value : prim_str)
+        @value = value
