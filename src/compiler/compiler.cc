@@ -29,11 +29,13 @@ namespace pyrite {
     fpm->add(createGVNPass());
     fpm->add(createCFGSimplificationPass());
     
+    module->addTypeName("prim_str", Type::getInt8PtrTy(getGlobalContext()));
     module->addTypeName("prim_int", Type::getInt32Ty(getGlobalContext()));
     module->addTypeName("prim_double", Type::getDoubleTy(getGlobalContext()));
     
+    link_pyrite("core/string.pr");
+    link_pyrite("core/type.pr");
     link_pyrite("core/object.pr");
-    //link_pyrite("core/type.pr");
     //link_pyrite("core/integer.pr");
   }
 

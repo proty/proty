@@ -20,16 +20,6 @@ namespace pyrite {
       Value* codegen(Compiler*);
   };
 
-  class ClassDeclModel : public ExprModel {
-    private:
-      std::string name;
-
-    public:
-      ClassDeclModel(std::string name) : name(name) {}
-
-      Value* codegen(Compiler*);
-  };
-
 }
 
 #endif
