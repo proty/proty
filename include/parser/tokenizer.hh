@@ -33,10 +33,10 @@ namespace pyrite {
       Token next();
       /// Peeks the next [i]th token.
       Token peek(int i=0);
-      /// Skips the current token.
-      void skip();
-      /// Goes back by one token.
-      void back();
+      /// Skips tokens.
+      void skip(int i=1);
+      /// Goes back.
+      void back(int i=1);
 
     private:
       /// Used by tokenize() to

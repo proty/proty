@@ -10,9 +10,7 @@ namespace pyrite {
     c->builder->CreateBr(LoopBB);
     c->builder->SetInsertPoint(LoopBB);
     
-    for (unsigned int i = 0; i < block->size(); i++) {
-      block->get(i)->codegen(c);
-    }
+    block->codegen(c);
     
     Value* condition = cond->codegen(c);
     

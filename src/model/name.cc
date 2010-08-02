@@ -7,7 +7,7 @@ namespace pyrite {
   }
 
   Value* NameModel::codegen(Compiler* c) {
-    Value* v = c->env->symtab()->get(name);
+    Value* v = 0;
     if (!v) throw "Variable '" + name + "' not declared";
     return c->builder->CreateLoad(v, name.c_str());
   }

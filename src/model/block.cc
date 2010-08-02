@@ -2,16 +2,15 @@
 
 namespace pyrite {
 
-  void BlockModel::push(ExprModel* expr) {
+  void BlockModel::add_expr(ExprModel* expr) {
     exprs.push_back(expr);
   }
 
-  unsigned int BlockModel::size() {
-    return exprs.size();
-  }
-
-  ExprModel* BlockModel::get(int pos) {
-    return exprs.at(pos);
+  void BlockModel::codegen(Compiler* c) {
+    std::vector<ExprModel*>::iterator it;
+    for (it = exprs.begin(); it != exprs.end(); ++it) {
+      (*it)->codegen(c);
+    }
   }
 
 }

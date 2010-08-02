@@ -33,12 +33,12 @@ namespace pyrite {
     return tokens->at(pos+i);
   }
 
-  void Tokenizer::skip() {
-    pos++;
+  void Tokenizer::skip(int i) {
+    pos += i;
   }
 
-  void Tokenizer::back() {
-    pos--;
+  void Tokenizer::back(int i) {
+    pos -= i;
   }
 
   Token Tokenizer::nextToken() {

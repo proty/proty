@@ -2,23 +2,22 @@
 #define PYRITE_COMPILER_HH
 
 #include "llvm.hh"
-#include "compiler/env.hh"
 #include <vector>
 
 namespace pyrite {
 
-  class BlockModel;
-
+  class ProgramModel;
 
   /// A class to handle the compilation
-  /// of a BlockModel to a LLVM Module
+  /// of a ProgramModel to a LLVM Module
   class Compiler {
   public:
     Compiler(std::string);
 
-    /// Compiles a BlockModel to a LLVM Module.
+    /// Compiles a ProgramModel to a LLVM Module.
     /// @returns the compiled code as a LLVM Module
-    Module* compile(BlockModel*);
+    Module* compile(ProgramModel*, bool=true);
+    ProgramModel* program;
 
     /// LLVM Classes
     IRBuilder<>* builder;
@@ -27,9 +26,6 @@ namespace pyrite {
     FunctionPassManager* fpm;
     Linker* linker;
 
-    /// The environment.
-    Env* env;
-    
     /// Link in pyrite file
     void link_pyrite(std::string);
     /// Link in a llvm bytecode file

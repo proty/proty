@@ -7,10 +7,11 @@ namespace pyrite {
     private:
       ExprModel* instance;
       std::string name;
+      ExprModel* value;
 
     public:
-      AttributeModel(ExprModel* instance, std::string name)
-        : instance(instance), name(name) { }
+      AttributeModel(ExprModel* instance, std::string name, ExprModel* value=0)
+        : instance(instance), name(name), value(value) { }
 
       Value* codegen(Compiler*);
   };

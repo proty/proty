@@ -5,6 +5,7 @@
 #include "model/expr.hh"
 #include "model/type.hh"
 #include "model/block.hh"
+#include "model/program.hh"
 #include "model/functionargs.hh"
 #include "model/function.hh"
 #include "model/name.hh"

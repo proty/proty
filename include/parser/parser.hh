@@ -16,10 +16,10 @@ namespace pyrite {
       
     public:
       Parser(Tokenizer*);
-      BlockModel* parse();
+      ProgramModel* parse();
 
     private:
-      BlockModel* parse_program();
+      ProgramModel* parse_program();
       BlockModel* parse_block();
       ModuleModel* parse_module();
       ClassModel* parse_class();
@@ -31,7 +31,6 @@ namespace pyrite {
       WhileModel* parse_while();
       IfModel* parse_if();
       AssignModel* parse_assign();
-      ExprModel* parse_name();
       TypeModel* parse_type_name();
 
       /// Tests if the current token is

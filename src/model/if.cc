@@ -13,17 +13,13 @@ namespace pyrite {
 
     c->builder->CreateCondBr(condition, ThenBB, ElseBB);
     c->builder->SetInsertPoint(ThenBB);
-    for (unsigned int i = 0; i < thenBlock->size(); i++) {
-      thenBlock->get(i)->codegen(c);
-    }
+    thenBlock->codegen(c);
     if (!ThenBB->getTerminator()) c->builder->CreateBr(MergeBB);
     
     Function->getBasicBlockList().push_back(ElseBB);
     c->builder->SetInsertPoint(ElseBB);
     if (elseBlock) {
-      for (unsigned int i = 0; i < elseBlock->size(); i++) {
-        elseBlock->get(i)->codegen(c);
-      }
+        elseBlock->codegen(c);
     }
     if (!ElseBB->getTerminator()) c->builder->CreateBr(MergeBB);
 
