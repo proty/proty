@@ -4,7 +4,7 @@
 #include "version.hh"
 
 void version() {
-  std::cout << "Pyrite " PYRITE_VERSION " (" COMPILE_DATE ", " COMPILE_TIME ")" << std::endl;
+  std::cout << "Pyrite " PYRITE_VERSION " (" __DATE__ ", " __TIME__ ")" << std::endl;
   std::cout << PYRITE_COPYRIGHT << std::endl;
 }
 
