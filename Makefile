@@ -27,8 +27,4 @@ pull:
 push:
 	git push origin master
 
-doc:
-	cd doc && texi2html pyrite.texi
-	cd doc && texi2pdf pyrite.texi
-
 .PHONY: all release debug clean install uninstall test pull push doc
