@@ -12,9 +12,8 @@ namespace pyrite {
     public:
       BlockModel() { }
 
-      void push(ExprModel*);
-      unsigned int size();
-      ExprModel* get(int);
+      void add_expr(ExprModel*);
+      void codegen(Compiler*);
   };
 
 }

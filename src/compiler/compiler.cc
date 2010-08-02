@@ -6,20 +6,20 @@
 namespace pyrite {
 
   Compiler::Compiler(std::string name) {
-    env = new Env();
-    
+    program = new ProgramModel();
+
     // Initialize LLVM Classes
     builder = new IRBuilder<>(getGlobalContext());
     module = new Module(name, getGlobalContext());
     linker = new Linker(name, module);
-    
+
     // Setup the ExecutionEngine
     InitializeNativeTarget();
     EngineBuilder builder(module);
     builder.setEngineKind(EngineKind::JIT);
     builder.setOptLevel(CodeGenOpt::Aggressive);
     executionEngine = builder.create();
-    
+
     // Setup the FunctionPassManager
     fpm = new FunctionPassManager(module);
     fpm->add(new TargetData(*executionEngine->getTargetData()));
@@ -28,30 +28,29 @@ namespace pyrite {
     fpm->add(createReassociatePass());
     fpm->add(createGVNPass());
     fpm->add(createCFGSimplificationPass());
-    
+
     module->addTypeName("prim_str", Type::getInt8PtrTy(getGlobalContext()));
     module->addTypeName("prim_int", Type::getInt32Ty(getGlobalContext()));
     module->addTypeName("prim_double", Type::getDoubleTy(getGlobalContext()));
-    
-    link_pyrite("core/string.pr");
-    link_pyrite("core/type.pr");
+
     link_pyrite("core/object.pr");
+    link_pyrite("core/type.pr");
+    link_pyrite("core/string.pr");
     //link_pyrite("core/integer.pr");
   }
 
-  Module* Compiler::compile(BlockModel* root) {
+  Module* Compiler::compile(ProgramModel* root, bool main) {
     std::vector<const Type*> argTypes;
     FunctionType *FT = FunctionType::get(Type::getVoidTy(getGlobalContext()), argTypes, false);
     Function *F = Function::Create(FT, Function::ExternalLinkage, "main", module);
-    
-    env->push();
+
     BasicBlock *BB = BasicBlock::Create(getGlobalContext(), "entry", F);
     builder->SetInsertPoint(BB);
-    
+
+    program->merge_in(root);
+
     try {
-      for (unsigned int i = 0; i < root->size(); i++) {
-        root->get(i)->codegen(this);
-      }
+      program->generate(this);
     }
     catch(std::string s) {
       error(s);
@@ -59,29 +58,22 @@ namespace pyrite {
     catch(const char* s) {
       error(s);
     }
-    
-    env->pop();
+
     builder->CreateRetVoid();
-    
+
     verifyFunction(*F);
     fpm->run(*F);
-    
+
     return module;
   }
 
   void Compiler::link_pyrite(std::string file) {
-    std::cout << "link in " << file << std::endl;
     Tokenizer* t = new Tokenizer("lib/" + file);
 
     Parser* p = new Parser(t);
-    BlockModel* b = p->parse();
+    ProgramModel* pm = p->parse();
 
-    Module* m = compile(b);
-    
-    // Remove main function
-    m->getFunction("main")->removeFromParent();
-    
-    linker->LinkInModule(m);
+    program->merge_in(pm);
   }
 
   void Compiler::link_llvm_bc(std::string file) {
@@ -90,6 +82,7 @@ namespace pyrite {
   }
 
   void Compiler::error(std::string msg) {
+    module->dump();
     std::cout << "pyrite: Error: " << msg << std::endl;
     std::exit(1);
   }

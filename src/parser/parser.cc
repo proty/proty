@@ -26,10 +26,10 @@ namespace pyrite {
     return tokenizer->peek().getType() == type;
   }
 
-  BlockModel* Parser::parse() {
+  ProgramModel* Parser::parse() {
     tokenizer->tokenize();
     try {
-      BlockModel* b = parse_program();
+      ProgramModel* b = parse_program();
       return b;
     }
     catch (ParseError* e) {
@@ -38,41 +38,41 @@ namespace pyrite {
     }
   }
 
-  BlockModel* Parser::parse_program() {
-    BlockModel* b = new BlockModel();
+  ProgramModel* Parser::parse_program() {
+    ProgramModel* p = new ProgramModel();
     while (true) {
       Token t = tokenizer->peek();
       switch (t.getType()) {
         case Token::moduleKw:
           tokenizer->skip();
-          b->push(parse_module());
+          //b->add_expr(parse_module());
           break;
 
         case Token::classKw:
           tokenizer->skip();
-          b->push(parse_class());
-          break;
-
-        case Token::whileKw:
-          tokenizer->skip();
-          b->push(parse_while());
-          break;
-
-        case Token::ifKw:
-          tokenizer->skip();
-          b->push(parse_if());
+          p->add_class(parse_class());
           break;
 
         case Token::defKw:
           tokenizer->skip();
-          b->push(parse_function());
+          p->add_function(parse_function());
+          break;
+
+        case Token::whileKw:
+          tokenizer->skip();
+          p->add_expr(parse_while());
+          break;
+
+        case Token::ifKw:
+          tokenizer->skip();
+          p->add_expr(parse_if());
           break;
 
         case Token::importKw: {
           tokenizer->skip();
           Token t2 = tokenizer->next();
           if (t2.getType() == Token::name) {
-            b->push(new ImportModel(t2.getContent()));
+            p->add_expr(new ImportModel(t2.getContent()));
           }
           else {
             unexpected(t2, "name of package to import");
@@ -81,10 +81,10 @@ namespace pyrite {
         }
 
         case Token::eof:
-          return b;
+          return p;
 
         default:
-          b->push(parse_expression());
+          p->add_expr(parse_expression());
       }
     }
   }
@@ -107,23 +107,23 @@ namespace pyrite {
 
         case Token::whileKw:
           tokenizer->skip();
-          b->push(parse_while());
+          b->add_expr(parse_while());
           break;
 
         case Token::ifKw:
           tokenizer->skip();
-          b->push(parse_if());
+          b->add_expr(parse_if());
           break;
 
         case Token::returnKw: {
           t = tokenizer->next();
           ExprModel* e = parse_expression();
-          b->push(new ReturnModel(e));
+          b->add_expr(new ReturnModel(e));
           break;
         }
 
         default:
-          b->push(parse_expression());
+          b->add_expr(parse_expression());
       }
     }
 
@@ -295,12 +295,24 @@ namespace pyrite {
         break;
 
       case Token::at: {
-        std::string name = match("instance variable name", Token::name).getContent();
         NameModel* self = new NameModel("self");
-        lhs = new AttributeModel(self, name);
+        std::string name = match("instance variable name", Token::name).getContent();
+
+        if (is_next(Token::lpar)) {
+          CallArgsModel* args = parse_call_args();
+          lhs = new MethodCallModel(self, name, args);
+        }
+        else if (is_next(Token::assign)) {
+          tokenizer->skip();
+          ExprModel* e = parse_expression();
+          lhs = new AttributeModel(self, name, e);
+        }
+        else {
+          lhs = new AttributeModel(self, name);
+        }
         break;
       }
-
+      
       case Token::name:
         if (is_next(Token::lpar)) {
           tokenizer->back();

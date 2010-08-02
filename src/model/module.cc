@@ -14,8 +14,4 @@ namespace pyrite {
     attributes[name] = value;
   }
 
-  Value* ModuleModel::codegen(Compiler* c) {
-    return 0;
-  }
-
 }

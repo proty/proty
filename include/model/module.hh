@@ -3,7 +3,7 @@
 
 namespace pyrite {
 
-  class ModuleModel : public ExprModel {
+  class ModuleModel {
     private:
       std::string name;
       std::vector<FunctionModel*> functions;
@@ -17,8 +17,6 @@ namespace pyrite {
       void add_function(FunctionModel*);
       void add_class(ClassModel*);
       void add_attribute(std::string, ExprModel*);
-
-      Value* codegen(Compiler*);
   };
 
 }

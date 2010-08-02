@@ -52,10 +52,10 @@ int main(int argc, char** argv) {
   }
 
   Parser* p = new Parser(t);
-  BlockModel* b = p->parse();
+  ProgramModel* pm = p->parse();
 
   Compiler* c = new Compiler(file);
-  Module* m = c->compile(b);
+  Module* m = c->compile(pm);
 
   if (dump) m->dump();
 

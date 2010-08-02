@@ -3,7 +3,7 @@
 
 namespace pyrite {
 
-  class FunctionModel : public ExprModel {
+  class FunctionModel {
     private:
       std::string name;
       FunctionArgsModel* args;
@@ -16,7 +16,8 @@ namespace pyrite {
 
       std::string get_name();
 
-      Value* codegen(Compiler*);
+      void generate_prototype(Compiler* c);
+      void generate_function(Compiler* c);
   };
 
 }

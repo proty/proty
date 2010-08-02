@@ -10,10 +10,12 @@ namespace pyrite {
     attributes[n] = t;
   }
 
-  Value* ClassModel::codegen(Compiler* c) {
-    name = c->env->format_class_name(name);
-    c->env->set_class(name);
+  void ClassModel::generate_placeholder(Compiler* c) {
+    pholder = OpaqueType::get(getGlobalContext());
+    c->module->addTypeName(name, pholder);
+  }
 
+  void ClassModel::generate_type(Compiler* c) {
     std::vector<const Type*> elts;
 
     // add attributes to the type
@@ -23,14 +25,17 @@ namespace pyrite {
     }
 
     const Type* classtype = StructType::get(getGlobalContext(), elts);
-    c->module->addTypeName(name, classtype);
 
-
+    cast<OpaqueType>(pholder.get())->refineAbstractTypeTo(classtype);
+  }
+  
+  void ClassModel::generate_methods(Compiler* c) {
     // backup main basic block
     BasicBlock* MainBB = c->builder->GetInsertBlock();
     BasicBlock* BB;
 
     // Generate setter and getter methods
+    std::map<std::string, TypeModel*>::iterator it;
     for (it = attributes.begin(); it != attributes.end(); it++) {
       std::string n = it->first;
       const Type* t = it->second->get(c);
@@ -62,13 +67,11 @@ namespace pyrite {
     // restore main basic block
     c->builder->SetInsertPoint(MainBB);
 
-    // generate the methods
+    /*
     for (unsigned int i = 0; i < methods.size(); i++) {
       methods.at(i)->codegen(c);
     }
-
-    c->env->clear_class();
-    return 0;
+    */
   }
 
 }
