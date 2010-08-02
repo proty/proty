@@ -34,8 +34,8 @@ env.Append(CPPPATH = env.Dir('./include'))
 
 # Pretty output
 env.Replace(SHOBJSUFFIX = ".o") # .o suffix for shared objects
-#env.Replace(CXXCOMSTR = "c++ $SOURCE", LINKCOMSTR = "ld $TARGET") # comstrings for static objects
-#env.Replace(SHCXXCOMSTR = "c++ $SOURCE", SHLINKCOMSTR = "ld $TARGET") # comstrings for shared objects
+env.Replace(CXXCOMSTR = "c++ $SOURCE", LINKCOMSTR = "ld $TARGET") # comstrings for static objects
+env.Replace(SHCXXCOMSTR = "c++ $SOURCE", SHLINKCOMSTR = "ld $TARGET") # comstrings for shared objects
 
 # Choose build mode
 mode = ARGUMENTS.get('mode', 'debug')
@@ -60,9 +60,10 @@ libpyrite = env.SharedLibrary('pyrite', objs)
 env.Replace(LINKFLAGS="")
 pyrite = env.Program('pyrite', ['src/pyrite.cc', libpyrite])
 
-env.Install('/usr/local/bin', [pyrite])
-env.Install('/usr/local/lib', [libpyrite])
-env.Install('/usr/local/lib/pyrite', Glob('lib/*'))
-env.Install('/usr/local/include/pyrite', Glob('include/*'))
-env.Alias('install', ['/usr/local/bin', '/usr/local/lib',
-                      '/usr/local/include' ,'/usr/local/include/pyrite'])
+prefix = ARGUMENTS.get('prefix', '/usr/local')
+env.Install(prefix + '/bin', [pyrite])
+env.Install(prefix + '/lib', [libpyrite])
+env.Install(prefix + '/lib/pyrite', Glob('lib/*'))
+env.Install(prefix + '/include/pyrite', Glob('include/*'))
+env.Alias('install', [prefix + '/bin', prefix +'/lib',
+                      prefix + '/include' , prefix + '/include/pyrite'])
