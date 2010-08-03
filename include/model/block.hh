@@ -12,7 +12,7 @@ namespace pyrite {
     public:
       BlockModel() { }
 
-      void add_expr(ExprModel*);
+      void addExpr(ExprModel*);
       void codegen(Compiler*);
   };
 

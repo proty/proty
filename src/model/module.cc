@@ -2,15 +2,15 @@
 
 namespace pyrite {
 
-  void ModuleModel::add_function(FunctionModel* fm) {
+  void ModuleModel::addFunction(FunctionModel* fm) {
     functions.push_back(fm);
   }
 
-  void ModuleModel::add_class(ClassModel* cm) {
+  void ModuleModel::addClass(ClassModel* cm) {
     classes.push_back(cm);
   }
 
-  void ModuleModel::add_attribute(std::string name, ExprModel* value) {
+  void ModuleModel::addAttribute(std::string name, ExprModel* value) {
     attributes[name] = value;
   }
 

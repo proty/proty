@@ -1,5 +1,5 @@
 class Object
     type : Type
 
-    def kind_of(type : Type)
+    def kind_of(type : Type) => Bool
         return @type == type

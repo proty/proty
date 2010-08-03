@@ -15,6 +15,7 @@
 #include <llvm/Transforms/Scalar.h>
 #include <llvm/Support/IRBuilder.h>
 #include <llvm/System/Path.h>
+#include <llvm/ValueSymbolTable.h>
 using namespace llvm;
 
 #endif

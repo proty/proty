@@ -31,12 +31,14 @@ namespace pyrite {
 
     module->addTypeName("prim_str", Type::getInt8PtrTy(getGlobalContext()));
     module->addTypeName("prim_int", Type::getInt32Ty(getGlobalContext()));
+    module->addTypeName("prim_bool", Type::getInt1Ty(getGlobalContext()));
     module->addTypeName("prim_double", Type::getDoubleTy(getGlobalContext()));
 
-    link_pyrite("core/object.pr");
-    link_pyrite("core/type.pr");
-    link_pyrite("core/string.pr");
-    //link_pyrite("core/integer.pr");
+    linkPyrite("core/object.pr");
+    linkPyrite("core/type.pr");
+    linkPyrite("core/string.pr");
+    linkPyrite("core/bool.pr");
+    //linkPyrite("core/integer.pr");
   }
 
   Module* Compiler::compile(ProgramModel* root, bool main) {
@@ -47,7 +49,7 @@ namespace pyrite {
     BasicBlock *BB = BasicBlock::Create(getGlobalContext(), "entry", F);
     builder->SetInsertPoint(BB);
 
-    program->merge_in(root);
+    program->mergeIn(root);
 
     try {
       program->generate(this);
@@ -67,16 +69,16 @@ namespace pyrite {
     return module;
   }
 
-  void Compiler::link_pyrite(std::string file) {
+  void Compiler::linkPyrite(std::string file) {
     Tokenizer* t = new Tokenizer("lib/" + file);
 
     Parser* p = new Parser(t);
     ProgramModel* pm = p->parse();
 
-    program->merge_in(pm);
+    program->mergeIn(pm);
   }
 
-  void Compiler::link_llvm_bc(std::string file) {
+  void Compiler::linkLLVMbc(std::string file) {
     bool native = false;
     linker->LinkInFile(sys::Path("lib/" + file), native);
   }
