@@ -14,9 +14,9 @@ namespace pyrite {
       ModuleModel(std::string name)
         : name(name) { }
 
-      void add_function(FunctionModel*);
-      void add_class(ClassModel*);
-      void add_attribute(std::string, ExprModel*);
+      void addFunction(FunctionModel*);
+      void addClass(ClassModel*);
+      void addAttribute(std::string, ExprModel*);
   };
 
 }

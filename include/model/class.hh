@@ -13,14 +13,16 @@ namespace pyrite {
     public:
       ClassModel(std::string name) : name(name) {}
 
-      void add_method(FunctionModel*);
-      void add_attribute(std::string, TypeModel*);
+      std::string getName();
+      const Type* getType(Compiler*);
 
-      void generate_placeholder(Compiler*);
-      void generate_type(Compiler*);
-      void generate_methods(Compiler*);
+      void addMethod(FunctionModel*);
+      void addAttribute(std::string, TypeModel*);
 
-      std::string get_name();
+      void generatePlaceholder(Compiler*);
+      void generateType(Compiler*);
+      void generateMethodPrototypes(Compiler*);
+      void generateMethodFunctions(Compiler*);
   };
 
 }

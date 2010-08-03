@@ -1,0 +1,5 @@
+class Bool < Object
+    value : prim_bool
+
+    def init(value : prim_bool)
+        @value = value

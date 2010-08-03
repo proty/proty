@@ -7,7 +7,9 @@ namespace pyrite {
   }
 
   Value* NameModel::codegen(Compiler* c) {
-    Value* v = 0;
+    BasicBlock* BB = c->builder->GetInsertBlock();
+    ValueSymbolTable* symtab = BB->getValueSymbolTable();
+    Value* v = symtab->lookup(name);
     if (!v) throw "Variable '" + name + "' not declared";
     return c->builder->CreateLoad(v, name.c_str());
   }

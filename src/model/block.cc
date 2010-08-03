@@ -2,7 +2,7 @@
 
 namespace pyrite {
 
-  void BlockModel::add_expr(ExprModel* expr) {
+  void BlockModel::addExpr(ExprModel* expr) {
     exprs.push_back(expr);
   }
 

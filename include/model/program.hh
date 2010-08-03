@@ -16,10 +16,10 @@ namespace pyrite {
     public:
       ProgramModel() {}
 
-      void merge_in(ProgramModel*);
+      void mergeIn(ProgramModel*);
 
-      void add_class(ClassModel*);
-      void add_function(FunctionModel*);
+      void addClass(ClassModel*);
+      void addFunction(FunctionModel*);
 
       void generate(Compiler* c);
   };

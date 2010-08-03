@@ -19,19 +19,19 @@ namespace pyrite {
       ProgramModel* parse();
 
     private:
-      ProgramModel* parse_program();
-      BlockModel* parse_block();
-      ModuleModel* parse_module();
-      ClassModel* parse_class();
-      FunctionModel* parse_function();
-      FunctionArgsModel* parse_function_args();
-      ExprModel* parse_expression();
-      CallModel* parse_call();
-      CallArgsModel* parse_call_args();
-      WhileModel* parse_while();
-      IfModel* parse_if();
-      AssignModel* parse_assign();
-      TypeModel* parse_type_name();
+      ProgramModel* parseProgram();
+      BlockModel* parseBlock();
+      ModuleModel* parseModule();
+      ClassModel* parseClass();
+      FunctionModel* parseFunction();
+      FunctionArgsModel* parseFunctionArgs();
+      ExprModel* parseExpression();
+      CallModel* parseCall();
+      CallArgsModel* parseCallArgs();
+      WhileModel* parseWhile();
+      IfModel* parseIf();
+      AssignModel* parseAssign();
+      TypeModel* parseTypeName();
 
       /// Tests if the current token is
       /// of the expected type. If not
@@ -40,7 +40,7 @@ namespace pyrite {
 
       /// Tests if the next token is of
       /// the given type.
-      bool is_next(Token::Type type);
+      bool isNext(Token::Type type);
 
       /// Throws a ParseError of an
       /// unexpected token.

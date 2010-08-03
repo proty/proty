@@ -6,9 +6,15 @@ namespace pyrite {
     return name;
   }
 
-  void FunctionModel::generate_prototype(Compiler* c) {
+  void FunctionModel::methodOf(ClassModel* klass) {
+    this->klass = klass;
+    name = klass->getName() + "." + name; 
+  }
+
+  void FunctionModel::generatePrototype(Compiler* c) {
     // Push all argument types to the args vector
     std::vector<const Type*> argTypes;
+    if (klass) argTypes.push_back(klass->getType(c));
     for(unsigned int i = 0; i < args->size(); i++) {
       argTypes.push_back(args->getType(i)->get(c));
     }
@@ -17,7 +23,7 @@ namespace pyrite {
     Function::Create(FT, Function::ExternalLinkage, name, c->module);
   }
 
-  void FunctionModel::generate_function(Compiler* c) {
+  void FunctionModel::generateFunction(Compiler* c) {
     Function* F = c->module->getFunction(name);
 
     BasicBlock* MainBB = c->builder->GetInsertBlock(); 
@@ -26,6 +32,11 @@ namespace pyrite {
 
     // Iterate all arguments
     Function::arg_iterator AI = F->arg_begin();
+    if (klass) {
+      AllocaInst* Alloca = c->builder->CreateAlloca(klass->getType(c), 0, "self");
+      c->builder->CreateStore(AI, Alloca);
+      AI++;
+    }
     for (unsigned int i = 0; i < args->size(); i++, AI++) {
       AllocaInst* Alloca = c->builder->CreateAlloca(args->getType(i)->get(c), 0, args->getName(i).c_str());
       c->builder->CreateStore(AI, Alloca);

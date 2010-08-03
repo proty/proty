@@ -3,3 +3,6 @@ class String < Object
 
     def init(value : prim_str)
         @value = value
+
+    def ==(other : String) => Bool
+        return new Bool(strcomp(@value, other))
