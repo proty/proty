@@ -1,5 +1,4 @@
 #include "model/models.hh"
-#include <iostream>
 
 namespace pyrite {
 

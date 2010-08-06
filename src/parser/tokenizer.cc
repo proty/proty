@@ -211,7 +211,13 @@ namespace pyrite {
             return Token(Token::comma, loc->copy(), ",");
           }
           else if (currch == ':') {
-            return Token(Token::colon, loc->copy(), ":");
+            if (nextch == ':') {
+              stream->get();
+              return Token(Token::dblcolon, loc->copy(), "::");
+            }
+            else {
+              return Token(Token::colon, loc->copy(), ":");
+            }
           }
           else if (currch == '@') {
             return Token(Token::at, loc->copy(), "@");
@@ -250,6 +256,12 @@ namespace pyrite {
               return Token(Token::bTrue, loc->copy(), "true");
             else if (name == "false")
               return Token(Token::bFalse, loc->copy(), "false");
+            else if (name == "nil")
+              return Token(Token::nil, loc->copy(), "nil");
+            else if (name == "extern")
+              return Token(Token::externKw, loc->copy(), "extern");
+            else if (name == "pass")
+              return Token(Token::pass, loc->copy(), "pass");
             else
               return Token(Token::name, loc->copy(), name);
           }

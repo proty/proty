@@ -11,10 +11,10 @@ namespace pyrite {
 
     std::string classname = c->module->getTypeName(instTy);
     
-    Function* F;
+    Function* F = c->module->getFunction(classname + "::" + name);
     std::vector<Value*> argValues;
-
-    F = c->module->getFunction(classname + "." + name);
+    argValues.push_back(inst);
+    
     for (unsigned int i = 0; i < args->size(); i++) {
       argValues.push_back(args->get(i)->codegen(c));
     }

@@ -8,7 +8,7 @@ namespace pyrite {
 
   void FunctionModel::methodOf(ClassModel* klass) {
     this->klass = klass;
-    name = klass->getName() + "." + name; 
+    name = klass->getName() + "::" + name; 
   }
 
   void FunctionModel::generatePrototype(Compiler* c) {
@@ -24,6 +24,8 @@ namespace pyrite {
   }
 
   void FunctionModel::generateFunction(Compiler* c) {
+    if (!block) return;
+
     Function* F = c->module->getFunction(name);
 
     BasicBlock* MainBB = c->builder->GetInsertBlock(); 
@@ -45,7 +47,8 @@ namespace pyrite {
     block->codegen(c);
 
     if (!BB->getTerminator()) {
-      // @todo return nil
+      NilModel* ret = new NilModel();
+      (new ReturnModel(ret))->codegen(c);
     }
 
     // Delete last block if empty

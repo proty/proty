@@ -1,11 +1,11 @@
 #include "model/models.hh"
 
 namespace pyrite {
-  
-  Value* BoolModel::codegen(Compiler* c) {
+
+  Value* NilModel::codegen(Compiler* c) {
     CallArgsModel* args = new CallArgsModel();
-    CallModel* call = new CallModel("Bool::new", args);
+    CallModel* call = new CallModel("Nil::new", args);
     return call->codegen(c);
   }
-  
+
 }

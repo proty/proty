@@ -5,11 +5,11 @@ namespace pyrite {
 
   class CallModel : public ExprModel {
     private:
-      NameModel* name;
+      std::string name;
       CallArgsModel* args;
 
     public:
-      CallModel(NameModel* name, CallArgsModel* args)
+      CallModel(std::string name, CallArgsModel* args)
         : name(name), args(args) { }
 
       Value* codegen(Compiler*);

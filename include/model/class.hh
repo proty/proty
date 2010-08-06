@@ -6,6 +6,7 @@ namespace pyrite {
   class ClassModel {
     private:
       std::string name;
+      std::vector<std::string> bases;
       std::vector<FunctionModel*> methods;
       std::map<std::string, TypeModel*> attributes;
       PATypeHolder pholder;
@@ -16,6 +17,7 @@ namespace pyrite {
       std::string getName();
       const Type* getType(Compiler*);
 
+      void addBase(std::string);
       void addMethod(FunctionModel*);
       void addAttribute(std::string, TypeModel*);
 

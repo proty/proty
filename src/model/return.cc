@@ -8,7 +8,7 @@ namespace pyrite {
     Value* retVal = value->codegen(c);
 
     if (F->getReturnType() != retVal->getType()) {
-      throw "returned a wrong type in function " + F->getNameStr();
+      retVal = c->builder->CreateBitCast(retVal, F->getReturnType());
     }
 
     c->builder->CreateRet(retVal);

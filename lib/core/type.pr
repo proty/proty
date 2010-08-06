@@ -2,4 +2,4 @@ class Type < Object
     name : String
 
     def ==(other : Type) => Bool
-        return name == other.name
+        return @name == other.name
