@@ -23,6 +23,7 @@
 #include "model/double.hh"
 #include "model/string.hh"
 #include "model/bool.hh"
+#include "model/nil.hh"
 #include "model/assign.hh"
 #include "model/import.hh"
 #include "model/return.hh"

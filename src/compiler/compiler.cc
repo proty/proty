@@ -38,6 +38,7 @@ namespace pyrite {
     linkPyrite("core/type.pr");
     linkPyrite("core/string.pr");
     linkPyrite("core/bool.pr");
+    linkPyrite("core/nil.pr");
     //linkPyrite("core/integer.pr");
   }
 
@@ -84,7 +85,6 @@ namespace pyrite {
   }
 
   void Compiler::error(std::string msg) {
-    module->dump();
     std::cout << "pyrite: Error: " << msg << std::endl;
     std::exit(1);
   }

@@ -3,8 +3,8 @@
 namespace pyrite {
 
   Value* CallModel::codegen(Compiler* c) {
-    Function* F = c->module->getFunction(name->get_name());
-    if (!F) throw "Function '" + name->get_name() + "' is not defined.";
+    Function* F = c->module->getFunction(name);
+    if (!F) throw "Function '" + name + "' is not defined.";
 
     std::vector<Value*> argValues;
     for (unsigned int i = 0; i < args->size(); i++) {

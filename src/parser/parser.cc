@@ -58,6 +58,11 @@ namespace pyrite {
           p->addFunction(parseFunction());
           break;
 
+        case Token::externKw:
+          tokenizer->skip();
+          p->addFunction(parseFunction(true));
+          break;
+
         case Token::whileKw:
           tokenizer->skip();
           p->addExpr(parseWhile());
@@ -99,8 +104,14 @@ namespace pyrite {
       switch (t.getType()) {
         case Token::dedent:
           tokenizer->skip();
+          // fall through
+
         case Token::eof:
           return b;
+
+        case Token::pass:
+          tokenizer->skip();
+          break;
 
         case Token::elseKw:
           return b;
@@ -142,8 +153,14 @@ namespace pyrite {
       switch (t.getType()) {
         case Token::dedent:
           tokenizer->skip();
+          // fall through
+
         case Token::eof:
           return mm;
+
+        case Token::pass:
+          tokenizer->skip();
+          break;
 
         case Token::defKw:
           tokenizer->skip();
@@ -172,6 +189,7 @@ namespace pyrite {
     if (t.getType() == Token::binOp && t.getContent() == "<") {
       tokenizer->skip();
       std::string base = match("base class", Token::name).getContent();
+      cm->addBase(base);
     }
 
     match("indent", Token::indent);
@@ -182,9 +200,14 @@ namespace pyrite {
       switch (t.getType()) {
         case Token::dedent:
           tokenizer->skip();
+          // fall through
 
         case Token::eof:
           return cm;
+
+        case Token::pass:
+          tokenizer->skip();
+          break;
 
         case Token::defKw:
           tokenizer->skip();
@@ -213,7 +236,7 @@ namespace pyrite {
     return 0;
   }
 
-  FunctionModel* Parser::parseFunction() {
+  FunctionModel* Parser::parseFunction(bool isExtern) {
     Token t = tokenizer->next();
     if (!(t.getType() == Token::name || t.getType() == Token::binOp)) {
       unexpected(t, "function name");
@@ -231,7 +254,8 @@ namespace pyrite {
       returnType = new TypeModel("Object");
     }
 
-    BlockModel* block = parseBlock();
+    BlockModel* block = 0;
+    if (!isExtern) block = parseBlock();
 
     return new FunctionModel(name, args, returnType, block);
   }
@@ -318,12 +342,27 @@ namespace pyrite {
       
       case Token::name:
         if (isNext(Token::lpar)) {
-          tokenizer->back();
-          lhs = parseCall();
+          std::string name = t.getContent();
+          CallArgsModel* args = parseCallArgs();
+          lhs = new CallModel(name, args);
         }
         else if (isNext(Token::assign)) {
-          tokenizer->back();
-          lhs = parseAssign();
+          std::string name = t.getContent();
+          match("equal", Token::assign);
+          ExprModel* e = parseExpression();
+          lhs = new AssignModel(name, e);
+        }
+        else if (isNext(Token::dblcolon)) {
+          std::string name = t.getContent();
+          name += tokenizer->next().getContent();
+          name += match("module variable name", Token::name).getContent();
+          if (isNext(Token::lpar)) {
+            CallArgsModel* args = parseCallArgs();
+            lhs = new CallModel(name, args);
+          }
+          else {
+            lhs = new NameModel(name);
+          }
         }
         else {
           lhs = new NameModel(t.getContent());
@@ -336,6 +375,10 @@ namespace pyrite {
 
       case Token::bFalse:
         lhs = new BoolModel(false);
+        break;
+
+      case Token::nil:
+        lhs = new NilModel();
         break;
 
       default:
@@ -365,13 +408,6 @@ namespace pyrite {
     }
     ExprModel* rhs = parseExpression();
     return new BinOpModel(lhs, rhs, op);
-  }
-
-  CallModel* Parser::parseCall() {
-    Token t = match("name", Token::name);
-    NameModel* name = new NameModel(t.getContent());
-    CallArgsModel* args = parseCallArgs();
-    return new CallModel(name, args);
   }
 
   CallArgsModel* Parser::parseCallArgs() {
@@ -415,16 +451,6 @@ namespace pyrite {
       elseBlock = parseBlock();
     }
     return new IfModel(cond, thenBlock, elseBlock);
-  }
-
-  AssignModel* Parser::parseAssign() {
-    Token t = tokenizer->peek(0);
-
-    std::string name = match("variable name", Token::name).getContent();
-    match("equal", Token::assign);
-
-    ExprModel* e = parseExpression();
-    return new AssignModel(name, e);
   }
 
   TypeModel* Parser::parseTypeName() {

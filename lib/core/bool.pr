@@ -3,3 +3,6 @@ class Bool < Object
 
     def init(value : prim_bool)
         @value = value
+
+    def __bool__()
+        return self

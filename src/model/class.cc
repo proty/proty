@@ -1,4 +1,5 @@
 #include "model/models.hh"
+#include <iostream>
 
 namespace pyrite {
 
@@ -8,6 +9,10 @@ namespace pyrite {
 
   const Type* ClassModel::getType(Compiler* c) {
     return PointerType::get(c->module->getTypeByName(name), 0);
+  }
+
+  void ClassModel::addBase(std::string base) {
+    bases.push_back(base);
   }
 
   void ClassModel::addMethod(FunctionModel* function) {
@@ -27,10 +32,16 @@ namespace pyrite {
   void ClassModel::generateType(Compiler* c) {
     std::vector<const Type*> elts;
 
+    // add parent class types
+    std::vector<std::string>::iterator base_it;
+    for (base_it = bases.begin(); base_it != bases.end(); base_it++) {
+      elts.push_back(c->module->getTypeByName(*base_it));
+    }
+
     // add attributes to the type
-    std::map<std::string, TypeModel*>::iterator it;
-    for (it = attributes.begin(); it != attributes.end(); it++) {
-      elts.push_back(it->second->get(c));
+    std::map<std::string, TypeModel*>::iterator attr_it;
+    for (attr_it = attributes.begin(); attr_it != attributes.end(); attr_it++) {
+      elts.push_back(attr_it->second->get(c));
     }
 
     const Type* classtype = StructType::get(getGlobalContext(), elts);
@@ -39,6 +50,11 @@ namespace pyrite {
   }
 
   void ClassModel::generateMethodPrototypes(Compiler* c) {
+    // create new prototype
+    std::vector<const Type*> newArgs;
+    FunctionType* newFT = FunctionType::get(getType(c), newArgs, true);
+    Function::Create(newFT, Function::ExternalLinkage, name + "::new", c->module);
+
     std::map<std::string, TypeModel*>::iterator it;
     for (it = attributes.begin(); it != attributes.end(); it++) {
       std::string n = it->first;
@@ -46,16 +62,16 @@ namespace pyrite {
 
       // create getter prototype
       std::vector<const Type*> getArgs;
+      getArgs.push_back(getType(c));
       FunctionType* getFT = FunctionType::get(t, getArgs, false);
-      Function* getF = Function::Create(getFT, Function::ExternalLinkage, name + ".get_" + n, c->module);
-      getF->addAttribute(0, Attribute::AlwaysInline);
+      Function::Create(getFT, Function::ExternalLinkage, name + "::get_" + n, c->module);
 
       // create setter prototype
       std::vector<const Type*>setArgs;
+      setArgs.push_back(getType(c));
       setArgs.push_back(t);
-      FunctionType* setFT = FunctionType::get(Type::getVoidTy(getGlobalContext()), setArgs, false);
-      Function* setF = Function::Create(setFT, Function::ExternalLinkage, name + ".set_" + n, c->module);
-      setF->addAttribute(0, Attribute::AlwaysInline);
+      FunctionType* setFT = FunctionType::get((new TypeModel("Nil"))->get(c), setArgs, false);
+      Function::Create(setFT, Function::ExternalLinkage, name + "::set_" + n, c->module);
     }
 
     std::vector<FunctionModel*>::iterator mit;
@@ -65,29 +81,71 @@ namespace pyrite {
   }
 
   void ClassModel::generateMethodFunctions(Compiler* c) {
-    std::map<std::string, TypeModel*>::iterator it;
-
     // backup main basic block
     BasicBlock* MainBB = c->builder->GetInsertBlock();
     BasicBlock* BB;
 
-    for (it = attributes.begin(); it != attributes.end(); it++) {
+    // create new function
+    {
+      Function* F = c->module->getFunction(name + "::new");
+      BB = BasicBlock::Create(getGlobalContext(), "entry", F);
+      c->builder->SetInsertPoint(BB);
+      AllocaInst* Alloca = c->builder->CreateAlloca(getType(c)->getContainedType(0), 0, "self");
+      c->builder->CreateRet(Alloca);
+    }
+
+    std::map<std::string, TypeModel*>::iterator it;
+    unsigned int pos = bases.size();
+    for (it = attributes.begin(); it != attributes.end(); it++, pos++) {
       std::string n = it->first;
       const Type* t = it->second->get(c);
 
       // create getter function
-      Function* getF = c->module->getFunction(name + ".get_" + n);
-      BB = BasicBlock::Create(getGlobalContext(), "entry", getF);
-      c->builder->SetInsertPoint(BB);
+      {
+        Function* F = c->module->getFunction(name + "::get_" + n);
+        BB = BasicBlock::Create(getGlobalContext(), "entry", F);
+        c->builder->SetInsertPoint(BB);
+
+        Function::arg_iterator AI = F->arg_begin();
+        AllocaInst* Alloca = c->builder->CreateAlloca(getType(c), 0, "self");
+        c->builder->CreateStore(AI++, Alloca);
+
+        Value* self = c->builder->CreateLoad(Alloca);
+        Value* attr = c->builder->CreateStructGEP(self, pos);
+
+        attr = c->builder->CreateLoad(attr);
+        AllocaInst* AttrAlloca = c->builder->CreateAlloca(t, 0, "attr");
+
+        // return the value
+        c->builder->CreateStore(attr, AttrAlloca);
+        c->builder->CreateRet(c->builder->CreateLoad(AttrAlloca));
+
+        verifyFunction(*F);
+        c->fpm->run(*F);
+      }
 
       // create setter function
-      Function* setF = c->module->getFunction(name + ".set_" + n);
-      BB = BasicBlock::Create(getGlobalContext(), "entry", setF);
-      c->builder->SetInsertPoint(BB);
+      {
+        Function* F = c->module->getFunction(name + "::set_" + n);
+        BB = BasicBlock::Create(getGlobalContext(), "entry", F);
+        c->builder->SetInsertPoint(BB);
+        /*
+        Function::arg_iterator AI =   F->arg_begin();
+        AllocaInst* SelfAlloca = c->builder->CreateAlloca(getType(c), 0, "self");
+        c->builder->CreateStore(AI++, SelfAlloca);
+        AllocaInst* ValueAlloca = c->builder->CreateAlloca(t, 0, "value");
+        c->builder->CreateStore(AI, ValueAlloca);
 
-      Function::arg_iterator AI = setF->arg_begin();
-      AllocaInst* Alloca = c->builder->CreateAlloca(t, 0, "value");
-      c->builder->CreateStore(AI, Alloca);
+        Value* self = c->builder->CreateLoad(SelfAlloca);
+        Value* value = c->builder->CreateLoad(ValueAlloca);
+        Value* attr = c->builder->CreateStructGEP(self, pos);
+        //c->builder->CreateStore(attr, value);
+        */
+        (new ReturnModel(new NilModel()))->codegen(c);
+
+        verifyFunction(*F);
+        c->fpm->run(*F);
+      }
     }
 
     // restore main basic block

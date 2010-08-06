@@ -13,7 +13,7 @@ namespace pyrite {
 
     public:
       FunctionModel(std::string name, FunctionArgsModel* args, TypeModel* returnType, BlockModel* block)
-        : name(name), args(args), returnType(returnType), block(block) { }
+        : name(name), args(args), returnType(returnType), block(block), klass(0) {}
 
       std::string get_name();
       void methodOf(ClassModel*);

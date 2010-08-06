@@ -1,3 +1,5 @@
+extern strcomp(first : prim_str, second : prim_str) => prim_bool
+
 class String < Object
     value : prim_str
 
@@ -5,4 +7,4 @@ class String < Object
         @value = value
 
     def ==(other : String) => Bool
-        return new Bool(strcomp(@value, other))
+        return Bool::new(strcomp(@value, other.value))
