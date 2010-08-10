@@ -1,5 +1,4 @@
 #include "model/models.hh"
-#include <iostream>
 
 namespace pyrite {
 
@@ -50,9 +49,22 @@ namespace pyrite {
   }
 
   void ClassModel::generateMethodPrototypes(Compiler* c) {
+    std::vector<FunctionModel*>::iterator mit;
+    for (mit = methods.begin(); mit != methods.end(); mit++) {
+      (*mit)->generatePrototype(c);
+    }
+
     // create new prototype
+    Function* initFunc = c->module->getFunction(name + "::init");
     std::vector<const Type*> newArgs;
-    FunctionType* newFT = FunctionType::get(getType(c), newArgs, true);
+    if (initFunc) {
+      const FunctionType* Ft = initFunc->getFunctionType();
+      FunctionType::param_iterator It;
+      for (It = Ft->param_begin(), It++; It != Ft->param_end(); It++) {
+        newArgs.push_back((It->get()));
+      }
+    }
+    FunctionType* newFT = FunctionType::get(getType(c), newArgs, false);
     Function::Create(newFT, Function::ExternalLinkage, name + "::new", c->module);
 
     std::map<std::string, TypeModel*>::iterator it;
@@ -73,11 +85,6 @@ namespace pyrite {
       FunctionType* setFT = FunctionType::get((new TypeModel("Nil"))->get(c), setArgs, false);
       Function::Create(setFT, Function::ExternalLinkage, name + "::set_" + n, c->module);
     }
-
-    std::vector<FunctionModel*>::iterator mit;
-    for (mit = methods.begin(); mit != methods.end(); ++mit) {
-      (*mit)->generatePrototype(c);
-    }
   }
 
   void ClassModel::generateMethodFunctions(Compiler* c) {
@@ -91,6 +98,22 @@ namespace pyrite {
       BB = BasicBlock::Create(getGlobalContext(), "entry", F);
       c->builder->SetInsertPoint(BB);
       AllocaInst* Alloca = c->builder->CreateAlloca(getType(c)->getContainedType(0), 0, "self");
+
+      Function* initFunc = c->module->getFunction(name + "::init");
+      if (initFunc) {
+        std::vector<Value*> argValues;
+        argValues.push_back(Alloca);
+
+        Function::arg_iterator It;
+        for (It = F->arg_begin(); It != F->arg_end(); It++) {
+          AllocaInst* Alloca = c->builder->CreateAlloca(It->getType(), 0, It->getName());
+          c->builder->CreateStore(It, Alloca);
+          Value* arg = c->builder->CreateLoad(Alloca);
+          argValues.push_back(arg);
+        }
+        c->builder->CreateCall(initFunc, argValues.begin(), argValues.end());
+      }
+
       c->builder->CreateRet(Alloca);
     }
 
@@ -129,18 +152,20 @@ namespace pyrite {
         Function* F = c->module->getFunction(name + "::set_" + n);
         BB = BasicBlock::Create(getGlobalContext(), "entry", F);
         c->builder->SetInsertPoint(BB);
-        /*
+
         Function::arg_iterator AI =   F->arg_begin();
         AllocaInst* SelfAlloca = c->builder->CreateAlloca(getType(c), 0, "self");
         c->builder->CreateStore(AI++, SelfAlloca);
+
         AllocaInst* ValueAlloca = c->builder->CreateAlloca(t, 0, "value");
         c->builder->CreateStore(AI, ValueAlloca);
 
         Value* self = c->builder->CreateLoad(SelfAlloca);
-        Value* value = c->builder->CreateLoad(ValueAlloca);
         Value* attr = c->builder->CreateStructGEP(self, pos);
-        //c->builder->CreateStore(attr, value);
-        */
+        Value* value = c->builder->CreateLoad(ValueAlloca);
+
+        c->builder->CreateStore(value, attr);
+
         (new ReturnModel(new NilModel()))->codegen(c);
 
         verifyFunction(*F);
@@ -152,7 +177,7 @@ namespace pyrite {
     c->builder->SetInsertPoint(MainBB);
 
     std::vector<FunctionModel*>::iterator mit;
-    for (mit = methods.begin(); mit != methods.end(); ++mit) {
+    for (mit = methods.begin(); mit != methods.end(); mit++) {
       (*mit)->generateFunction(c);
     }
   }

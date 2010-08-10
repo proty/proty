@@ -8,7 +8,12 @@ namespace pyrite {
       value.replace(pos, 2, "\n");
       pos += 1;
     }
-    return c->builder->CreateGlobalStringPtr(value.c_str(), ".str");
+    Value* string = c->builder->CreateGlobalStringPtr(value.c_str(), ".str");
+
+    CallArgsModel* args = new CallArgsModel();
+    args->push(new ValueModel(string));
+    CallModel* call = new CallModel("String::new", args);
+    return call->codegen(c);
   }
 
 }

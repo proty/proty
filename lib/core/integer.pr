@@ -15,3 +15,24 @@ class Integer < Object
 
     def /(other : Integer) => Integer
         return Integer::new(@value / other.value)
+
+    def ==(other : Integer) => Bool
+        return Bool::new(@value == other.value)
+    
+    def !=(other : Integer) => Bool
+        return Bool::new(@value != other.value)
+
+    def >(other : Integer) => Bool
+        return Bool::new(@value > other.value)
+
+    def >=(other : Integer) => Bool
+        return Bool::new(@value >= other.value)
+
+    def <(other : Integer) => Bool
+        return Bool::new(@value < other.value)
+
+    def <=(other : Integer) => Bool
+        return Bool::new(@value <= other.value)
+
+    def __bool__() => Bool
+        return Bool::new(@value != 0p)

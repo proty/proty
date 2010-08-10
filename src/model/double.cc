@@ -3,7 +3,12 @@
 namespace pyrite {
   
   Value* DoubleModel::codegen(Compiler* c) {
-    return ConstantFP::get(getGlobalContext(), APFloat(value));
+    Value* doubleV = ConstantFP::get(getGlobalContext(), APFloat(value));
+
+    if (primitive) return doubleV;
+
+    /// @todo: implement complex double generation
+    return doubleV;
   }
   
 }

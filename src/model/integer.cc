@@ -3,12 +3,14 @@
 namespace pyrite {
   
   Value* IntegerModel::codegen(Compiler* c) {
-    Function* F = c->module->getFunction("Integer::new");
+    Value* integer = ConstantInt::get(Type::getInt32Ty(getGlobalContext()), value);
 
-    std::vector<Value*> argValues;
-    argValues.push_back(ConstantInt::get(Type::getInt32Ty(getGlobalContext()), value));
+    if (primitive) return integer;
 
-    return c->builder->CreateCall(F, argValues.begin(), argValues.end(), "inttmp");
+    CallArgsModel* args = new CallArgsModel();
+    args->push(new ValueModel(integer));
+    CallModel* call = new CallModel("Integer::new", args);
+    return call->codegen(c);
   }
 
 }

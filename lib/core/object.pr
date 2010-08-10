@@ -3,3 +3,6 @@ class Object
 
     def kind_of(type : Type) => Bool
         return @type == type
+
+    def __bool__() => Bool
+        return true

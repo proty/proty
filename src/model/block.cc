@@ -8,7 +8,7 @@ namespace pyrite {
 
   void BlockModel::codegen(Compiler* c) {
     std::vector<ExprModel*>::iterator it;
-    for (it = exprs.begin(); it != exprs.end(); ++it) {
+    for (it = exprs.begin(); it != exprs.end(); it++) {
       (*it)->codegen(c);
     }
   }

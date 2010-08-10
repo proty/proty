@@ -12,7 +12,7 @@ namespace pyrite {
       /// List of all existing tokens.
       typedef enum {
         unknown, eof,
-        name, string, integer, decimal,
+        name, string, integer, decimal, prim_int, prim_dec,
         ifKw, elseKw, whileKw, externKw, defKw, classKw, moduleKw, returnKw,
         importKw, indent, dedent, pass,
         lpar, rpar, lsqb, rsqb, lbrace, rbrace, arrow, at,

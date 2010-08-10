@@ -5,7 +5,12 @@ namespace pyrite {
   Value* BinOpModel::codegen(Compiler* c) {
     Value* l = lhs->codegen(c);
     Value* r = rhs->codegen(c);
-    if (l->getType()->isIntegerTy() && r->getType()->isIntegerTy()) {
+    if (l->getType()->isIntegerTy() || r->getType()->isIntegerTy()) {
+
+      if (!(l->getType()->isIntegerTy() && r->getType()->isIntegerTy())) {
+        throw "Both binary operators have to be either primitive or complex.";
+      }
+
       if (op == "+")        return c->builder->CreateAdd(l, r, "addtmp");
       else if (op == "-")   return c->builder->CreateSub(l, r, "subtmp");
       else if (op == "*")   return c->builder->CreateMul(l, r, "multmp");

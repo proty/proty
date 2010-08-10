@@ -2,9 +2,15 @@
 
 namespace pyrite {
 
-  void ProgramModel::mergeIn(ProgramModel* p) {
+  void ProgramModel::mergeIn(ProgramModel* p, bool main) {
+    imports.insert(imports.end(), p->imports.begin(), p->imports.end());
     classes.insert(classes.end(), p->classes.begin(), p->classes.end());
     functions.insert(functions.end(), p->functions.begin(), p->functions.end());
+    if (main) exprs.insert(exprs.end(), p->exprs.begin(), p->exprs.end());
+  }
+
+  void ProgramModel::addImport(std::string name) {
+    imports.push_back(name);
   }
 
   void ProgramModel::addClass(ClassModel* c) {
@@ -16,26 +22,31 @@ namespace pyrite {
   }
 
   void ProgramModel::generate(Compiler* c) {
-    std::vector<ClassModel*>::iterator cit;
-    std::vector<FunctionModel*>::iterator fit;
+    std::vector<std::string>::iterator importIt;
+    std::vector<ClassModel*>::iterator classIt;
+    std::vector<FunctionModel*>::iterator funcIt;
 
-    for (cit = classes.begin(); cit != classes.end(); ++cit)
-      (*cit)->generatePlaceholder(c);
+    // !! imports.end() can be updated during the loop
+    for (importIt = imports.begin(); importIt != imports.end(); importIt++)
+      c->linkPyrite(*importIt + ".pr");
 
-    for (cit = classes.begin(); cit != classes.end(); ++cit)
-      (*cit)->generateType(c);
+    for (classIt = classes.begin(); classIt != classes.end(); classIt++)
+      (*classIt)->generatePlaceholder(c);
 
-    for (fit = functions.begin(); fit != functions.end(); ++fit)
-      (*fit)->generatePrototype(c);
+    for (classIt = classes.begin(); classIt != classes.end(); classIt++)
+      (*classIt)->generateType(c);
 
-    for (cit = classes.begin(); cit != classes.end(); ++cit)
-      (*cit)->generateMethodPrototypes(c);
+    for (funcIt = functions.begin(); funcIt != functions.end(); funcIt++)
+      (*funcIt)->generatePrototype(c);
 
-    for (cit = classes.begin(); cit != classes.end(); ++cit)
-      (*cit)->generateMethodFunctions(c);
+    for (classIt = classes.begin(); classIt != classes.end(); classIt++)
+      (*classIt)->generateMethodPrototypes(c);
 
-    for (fit = functions.begin(); fit != functions.end(); ++fit)
-      (*fit)->generateFunction(c);
+    for (classIt = classes.begin(); classIt != classes.end(); classIt++)
+      (*classIt)->generateMethodFunctions(c);
+
+    for (funcIt = functions.begin(); funcIt != functions.end(); funcIt++)
+      (*funcIt)->generateFunction(c);
 
     codegen(c);
   }

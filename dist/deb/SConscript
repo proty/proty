@@ -1,0 +1,60 @@
+import os, shutil, sys, subprocess
+
+Import('env')
+
+DEBNAME = "pyrite"
+DEBVERSION = env.VERSION
+DEBMAINT = "Pyrite Developers"
+DEBDEPENDS = ""
+DEBDESC = "the pyrite programming language"
+
+p = subprocess.Popen(["dpkg", "--print-architecture"], stdout=subprocess.PIPE)
+DEBARCH = p.communicate()[0].split("\n")[0]
+
+DEBFILES = [
+    ("usr/bin/pyrite",        "#pyrite"),
+    ("usr/lib/libpyrite.so",  "#libpyrite.so"),
+    ("usr/lib/pyrite/",       "#lib/")
+]
+
+debpkg = '#%s-%s_%s.deb' % (DEBNAME, DEBVERSION, DEBARCH)
+env.Alias("dist/deb", debpkg)
+
+DEBCONTROLFILE = os.path.join(DEBNAME, "DEBIAN/control")
+
+for f in DEBFILES:
+    dest = os.path.join(DEBNAME, f[0])
+    env.Depends(debpkg, dest)
+    env.Command(dest, f[1], Copy('$TARGET','$SOURCE'))
+    env.Depends(DEBCONTROLFILE, dest)
+
+CONTROL_TEMPLATE = """Package: %s
+Priority: extra
+Section: devel
+Installed-Size: %s
+Maintainer: %s
+Architecture: %s
+Version: %s
+Depends: %s
+Description: %s
+"""
+
+env.Depends(debpkg, DEBCONTROLFILE)
+
+def make_control(target=None, source=None, env=None):
+    installed_size = 0
+    for i in DEBFILES:
+        installed_size += os.stat(str(i[1])[1:])[6]
+    
+    control_info = CONTROL_TEMPLATE % (
+        DEBNAME, installed_size, DEBMAINT, DEBARCH, DEBVERSION,
+        DEBDEPENDS, DEBDESC)
+    
+    f = open(str(target[0]), 'w')
+    f.write(control_info)
+    f.close()
+
+env.Command(DEBCONTROLFILE, None, make_control)
+
+env.Command(debpkg, DEBCONTROLFILE,
+            "fakeroot dpkg-deb -b %s %s" % ("dist/deb/%s" % DEBNAME, "$TARGET"))

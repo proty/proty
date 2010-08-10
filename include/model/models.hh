@@ -25,7 +25,7 @@
 #include "model/bool.hh"
 #include "model/nil.hh"
 #include "model/assign.hh"
-#include "model/import.hh"
 #include "model/return.hh"
+#include "model/value.hh"
 
 #endif

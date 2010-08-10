@@ -33,13 +33,14 @@ namespace pyrite {
     module->addTypeName("prim_int", Type::getInt32Ty(getGlobalContext()));
     module->addTypeName("prim_bool", Type::getInt1Ty(getGlobalContext()));
     module->addTypeName("prim_double", Type::getDoubleTy(getGlobalContext()));
-
+ 
     linkPyrite("core/object.pr");
     linkPyrite("core/type.pr");
     linkPyrite("core/string.pr");
     linkPyrite("core/bool.pr");
     linkPyrite("core/nil.pr");
-    //linkPyrite("core/integer.pr");
+    linkPyrite("core/integer.pr");
+    linkPyrite("core/io.pr");
   }
 
   Module* Compiler::compile(ProgramModel* root, bool main) {
@@ -50,7 +51,7 @@ namespace pyrite {
     BasicBlock *BB = BasicBlock::Create(getGlobalContext(), "entry", F);
     builder->SetInsertPoint(BB);
 
-    program->mergeIn(root);
+    program->mergeIn(root, main);
 
     try {
       program->generate(this);
