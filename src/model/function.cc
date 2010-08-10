@@ -2,7 +2,7 @@
 
 namespace pyrite {
 
-  std::string FunctionModel::get_name() {
+  std::string FunctionModel::getName() {
     return name;
   }
 
@@ -46,7 +46,7 @@ namespace pyrite {
 
     block->codegen(c);
 
-    if (!BB->getTerminator()) {
+    if (!c->builder->GetInsertBlock()->getTerminator()) {
       NilModel* ret = new NilModel();
       (new ReturnModel(ret))->codegen(c);
     }

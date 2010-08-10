@@ -129,6 +129,10 @@ namespace pyrite {
             else if (nextch == '.') {
               state = st_decimal;
             }
+            else if (nextch == 'p') {
+              stream->get();
+              return Token(Token::prim_int, loc->copy(), buf.str());
+            }
             else {
               return Token(Token::integer, loc->copy(), buf.str());
             }
@@ -286,6 +290,11 @@ namespace pyrite {
           if (nextch == '.') {
             state = st_decimal;
           }
+          else if (nextch == 'p') {
+            stream->get();
+            state = st_none;
+            return Token(Token::prim_int, loc->copy(), buf.str());
+          }
           else if (!isdigit(nextch)) {
             state = st_none;
             return Token(Token::integer, loc->copy(), buf.str());
@@ -294,7 +303,12 @@ namespace pyrite {
 
         case st_decimal:
           buf << currch;
-          if (!isdigit(nextch)) {
+          if (nextch == 'p') {
+            stream->get();
+            state = st_none;
+            return Token(Token::prim_dec, loc->copy(), buf.str());
+          }
+          else if (!isdigit(nextch)) {
             state = st_none;
             return Token(Token::decimal, loc->copy(), buf.str());
           }

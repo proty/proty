@@ -4,6 +4,8 @@
 .DS_Store
 *~
 .sconsign.dblite
+include/version.hh
+dist/deb/pyrite
 
 # Binaries
 pyrite
@@ -18,3 +20,4 @@ pyrite
 *.kdev4
 .settings/
 .project
+*.xcodeproj/

@@ -1,0 +1,4 @@
+extern printf(format : prim_str)
+
+def print(string : String)
+    printf(string.get_value())

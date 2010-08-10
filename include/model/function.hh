@@ -15,7 +15,7 @@ namespace pyrite {
       FunctionModel(std::string name, FunctionArgsModel* args, TypeModel* returnType, BlockModel* block)
         : name(name), args(args), returnType(returnType), block(block), klass(0) {}
 
-      std::string get_name();
+      std::string getName();
       void methodOf(ClassModel*);
 
       void generatePrototype(Compiler* c);

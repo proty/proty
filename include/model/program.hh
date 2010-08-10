@@ -9,15 +9,17 @@ namespace pyrite {
   class FunctionModel;
 
   class ProgramModel : public BlockModel {
-    private:
+    protected:
+      std::vector<std::string> imports;
       std::vector<ClassModel*> classes;
       std::vector<FunctionModel*> functions;
 
     public:
       ProgramModel() {}
 
-      void mergeIn(ProgramModel*);
+      void mergeIn(ProgramModel*, bool=false);
 
+      void addImport(std::string);
       void addClass(ClassModel*);
       void addFunction(FunctionModel*);
 

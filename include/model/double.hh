@@ -6,11 +6,12 @@ namespace pyrite {
   class DoubleModel : public ExprModel {
     private:
       double value;
-    
+      bool primitive;
+
     public:
-      DoubleModel(double value)
-        : value(value) { }
-    
+      DoubleModel(double value, bool primitive=false)
+        : value(value), primitive(primitive) { }
+
       Value* codegen(Compiler*);
   };
 

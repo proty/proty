@@ -1,6 +1,9 @@
 #ifndef PYRITE_MODEL_CLASS_HH
 #define PYRITE_MODEL_CLASS_HH
 
+#include <map>
+#include <vector>
+
 namespace pyrite {
 
   class ClassModel {

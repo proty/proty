@@ -10,7 +10,7 @@ namespace pyrite {
       CallArgsModel* args;
 
     public:
-      MethodCallModel(ExprModel* instance, std::string name, CallArgsModel* args)
+      MethodCallModel(ExprModel* instance, std::string name, CallArgsModel* args=0)
         : instance(instance), name(name), args(args) { }
 
       Value* codegen(Compiler*);

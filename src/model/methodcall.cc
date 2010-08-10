@@ -10,13 +10,20 @@ namespace pyrite {
     }
 
     std::string classname = c->module->getTypeName(instTy);
-    
+
     Function* F = c->module->getFunction(classname + "::" + name);
+    if (!F) {
+      throw classname + " has no method " + name;
+    }
+
+
     std::vector<Value*> argValues;
     argValues.push_back(inst);
     
-    for (unsigned int i = 0; i < args->size(); i++) {
-      argValues.push_back(args->get(i)->codegen(c));
+    if (args) {
+      for (unsigned int i = 0; i < args->size(); i++) {
+        argValues.push_back(args->get(i)->codegen(c));
+      }
     }
 
     return c->builder->CreateCall(F, argValues.begin(), argValues.end(), "calltmp");

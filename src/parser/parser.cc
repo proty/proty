@@ -75,13 +75,8 @@ namespace pyrite {
 
         case Token::importKw: {
           tokenizer->skip();
-          Token t2 = tokenizer->next();
-          if (t2.getType() == Token::name) {
-            p->addExpr(new ImportModel(t2.getContent()));
-          }
-          else {
-            unexpected(t2, "name of package to import");
-          }
+          std::string name = match("name of package to import", Token::name).getContent();
+          p->addImport(name);
           break;
         }
 
@@ -319,6 +314,14 @@ namespace pyrite {
 
       case Token::string:
         lhs = new StringModel(t.getContent());
+        break;
+
+      case Token::prim_int:
+        lhs = new IntegerModel(std::atoi(t.getContent().c_str()), true);
+        break;
+
+      case Token::prim_dec:
+        lhs = new DoubleModel(std::atof(t.getContent().c_str()), true);
         break;
 
       case Token::at: {

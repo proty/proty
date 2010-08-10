@@ -1,5 +1,5 @@
-def assert(x)
-  if x
-    print("+")
-  else
-    print("-")
+def assert(x : Bool)
+    if x
+        print("+")
+    else
+        print("-")

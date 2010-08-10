@@ -3,7 +3,11 @@
 namespace pyrite {
 
   Value* IfModel::codegen(Compiler* c) {
-    Value* condition = cond->codegen(c);
+    MethodCallModel* call = new MethodCallModel(cond, "__bool__");
+    Value* condition = call->codegen(c);
+    call = new MethodCallModel(new ValueModel(condition), "get_value");
+    condition = call->codegen(c);
+
     condition = c->builder->CreateICmpEQ(condition, ConstantInt::get(Type::getInt1Ty(getGlobalContext()), 1), "ifcond");
     
     Function* Function = c->builder->GetInsertBlock()->getParent();

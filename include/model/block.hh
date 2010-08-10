@@ -6,9 +6,9 @@
 namespace pyrite {
 
   class BlockModel {
-    private:
+    protected:
       std::vector<ExprModel*> exprs;
-    
+
     public:
       BlockModel() { }
 

@@ -9,7 +9,7 @@ namespace pyrite {
       CallArgsModel* args;
 
     public:
-      CallModel(std::string name, CallArgsModel* args)
+      CallModel(std::string name, CallArgsModel* args=0)
         : name(name), args(args) { }
 
       Value* codegen(Compiler*);
