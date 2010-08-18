@@ -16,9 +16,6 @@ namespace pyrite {
 
       std::vector<Token>* tokens;
       int pos;
-      
-      int indent_level;
-      int indent_length;
 
     public:
       Tokenizer(std::string);

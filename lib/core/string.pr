@@ -1,10 +1,13 @@
-extern strcmp(first : prim_str, second : prim_str) => prim_bool
+extern strcmp(first : #str, second : #str) => #bool
 
 class String < Object
-    value : prim_str
+    value : #str
 
-    def init(value : prim_str)
+    def init(value : #str)
         @value = value
+    end
 
     def ==(other : String) => Bool
         return Bool::new(strcmp(@value, other.value))
+    end
+end

@@ -1,8 +1,11 @@
 class Bool < Object
-    value : prim_bool
+    value : #bool
 
-    def init(value : prim_bool)
+    def init(value : #bool)
         @value = value
+    end
 
-    def __bool__() => Bool
+    def bool() => Bool
         return self
+    end
+end

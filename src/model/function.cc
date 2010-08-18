@@ -19,7 +19,7 @@ namespace pyrite {
       argTypes.push_back(args->getType(i)->get(c));
     }
 
-    FunctionType* FT = FunctionType::get(returnType->get(c), argTypes, false);
+    FunctionType* FT = FunctionType::get(returnType->get(c), argTypes, args->getVarArg());
     Function::Create(FT, Function::ExternalLinkage, name, c->module);
   }
 
@@ -47,8 +47,7 @@ namespace pyrite {
     block->codegen(c);
 
     if (!c->builder->GetInsertBlock()->getTerminator()) {
-      NilModel* ret = new NilModel();
-      (new ReturnModel(ret))->codegen(c);
+      (new ReturnModel(new NilModel()))->codegen(c);
     }
 
     // Delete last block if empty

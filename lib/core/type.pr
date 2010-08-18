@@ -3,3 +3,5 @@ class Type < Object
 
     def ==(other : Type) => Bool
         return @name == other.name
+    end
+end

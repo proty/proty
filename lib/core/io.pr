@@ -1,4 +1,5 @@
-extern printf(format : prim_str)
+extern printf(format : #str, ...) => #int
 
 def print(string : String)
-    printf(string.get_value())
+    printf(string.value)
+end

@@ -7,6 +7,14 @@ namespace pyrite {
     types.push_back(type);
   }
 
+  void FunctionArgsModel::setVarArg() {
+    isVarArg = true;
+  }
+
+  bool FunctionArgsModel::getVarArg() {
+    return isVarArg;
+  }
+
   unsigned int FunctionArgsModel::size() {
     return names.size();
   }

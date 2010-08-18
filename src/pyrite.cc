@@ -1,7 +1,7 @@
 #include <iostream>
 #include "parser/parser.hh"
 #include "compiler/compiler.hh"
-#include "version.hh"
+#include "config.hh"
 
 void version() {
   std::cout << "Pyrite " PYRITE_VERSION " " BUILD_MODE " (" BUILD_TIME ")" << std::endl;
@@ -58,6 +58,10 @@ int main(int argc, char** argv) {
   Module* m = c->compile(pm);
 
   if (dump) m->dump();
+
+  std::vector<GenericValue> args;
+  Function* main = c->executionEngine->FindFunctionNamed("main");
+  c->executionEngine->runFunction(main, args);
 
   return 0;
 }
