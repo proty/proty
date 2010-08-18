@@ -10,7 +10,7 @@ env.COPYRIGHT = "Thomas Gatzweiler"
 # #################### Configure ####################
 def CheckProgram(context, name):
   context.Message("Checking for %s..." % name)
-  result = not int(os.system("which %s > /dev/null" % name))
+  result = not int(os.system("which %s > /dev/null 2> /dev/null" % name))
   context.Result(result)
   return result
 
@@ -48,6 +48,9 @@ env.Replace(SHOBJSUFFIX = ".o") # .o suffix for shared objects
 env.Replace(CXXCOMSTR = "c++ $SOURCE", LINKCOMSTR = "ld $TARGET") # comstrings for static objects
 env.Replace(SHCXXCOMSTR = "c++ $SOURCE", SHLINKCOMSTR = "ld $TARGET") # comstrings for shared objects
 
+# Get prefix
+prefix = ARGUMENTS.get('prefix', '/usr/local')
+
 # Choose build mode
 mode = ARGUMENTS.get('mode', 'debug')
 if mode == 'release':
@@ -61,20 +64,21 @@ else:
   Exit(1)
 
 # #################### Generate version.hh ##############
-version_template = """#ifndef PYRITE_VERSION_HH
+config_template = """#ifndef PYRITE_VERSION_HH
 #define PYRITE_VERSION_HH
 
 #define PYRITE_VERSION    "%s"
 #define PYRITE_COPYRIGHT  "Copyright © 2009-%i %s"
 #define BUILD_TIME        "%s"
 #define BUILD_MODE        "%s"
+#define BUILD_PREFIX      "%s"
 
 #endif""" % (env.VERSION, datetime.today().year, env.COPYRIGHT,
-            datetime.now().strftime("%d %b %Y, %H:%M:%S"), mode)
+            datetime.now().strftime("%d %b %Y, %H:%M:%S"), mode, prefix)
 
-version_file = open("include/version.hh", "w")
-version_file.write(version_template)
-version_file.close()
+config_file = open("include/config.hh", "w")
+config_file.write(config_template)
+config_file.close()
 # #################### version.hh END ###################
 
 objs = [
@@ -88,7 +92,6 @@ libpyrite = env.SharedLibrary('pyrite', objs)
 env.Replace(LINKFLAGS="")
 pyrite = env.Program('pyrite', ['src/pyrite.cc', libpyrite])
 
-prefix = ARGUMENTS.get('prefix', '/usr/local')
 env.Install(prefix + '/bin', [pyrite])
 env.Install(prefix + '/lib', [libpyrite])
 env.Install(prefix + '/lib/pyrite', Glob('lib/*'))

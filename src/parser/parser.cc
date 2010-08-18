@@ -91,22 +91,17 @@ namespace pyrite {
 
   BlockModel* Parser::parseBlock() {
     BlockModel* b = new BlockModel();
-    match("indent", Token::indent);
-    
+
     while (true) {
       Token t = tokenizer->peek();
 
       switch (t.getType()) {
-        case Token::dedent:
+        case Token::endKw:
           tokenizer->skip();
           // fall through
 
         case Token::eof:
           return b;
-
-        case Token::pass:
-          tokenizer->skip();
-          break;
 
         case Token::elseKw:
           return b;
@@ -138,7 +133,6 @@ namespace pyrite {
 
   ModuleModel* Parser::parseModule() {
     Token t = match("module name", Token::name);
-    match("indent", Token::indent);
 
     ModuleModel* mm = new ModuleModel(t.getContent());
 
@@ -146,16 +140,12 @@ namespace pyrite {
       Token t = tokenizer->peek();
 
       switch (t.getType()) {
-        case Token::dedent:
+        case Token::endKw:
           tokenizer->skip();
           // fall through
 
         case Token::eof:
           return mm;
-
-        case Token::pass:
-          tokenizer->skip();
-          break;
 
         case Token::defKw:
           tokenizer->skip();
@@ -187,22 +177,16 @@ namespace pyrite {
       cm->addBase(base);
     }
 
-    match("indent", Token::indent);
-
     while (true) {
       t = tokenizer->peek();
 
       switch (t.getType()) {
-        case Token::dedent:
+        case Token::endKw:
           tokenizer->skip();
           // fall through
 
         case Token::eof:
           return cm;
-
-        case Token::pass:
-          tokenizer->skip();
-          break;
 
         case Token::defKw:
           tokenizer->skip();
@@ -266,6 +250,15 @@ namespace pyrite {
     }
 
     while (true) {
+      if (isNext(Token::dot)) {
+        args->setVarArg();
+        match("...", Token::dot);
+        match("...", Token::dot);
+        match("...", Token::dot);
+        match(")", Token::rpar);
+        return args;
+      }
+
       Token t = match("parameter name", Token::name);
       std::string n = t.getContent();
       TypeModel* type;
@@ -316,12 +309,20 @@ namespace pyrite {
         lhs = new StringModel(t.getContent());
         break;
 
-      case Token::prim_int:
-        lhs = new IntegerModel(std::atoi(t.getContent().c_str()), true);
-        break;
-
-      case Token::prim_dec:
-        lhs = new DoubleModel(std::atof(t.getContent().c_str()), true);
+      case Token::hash:
+        t = tokenizer->next();
+        if (t.getType() == Token::integer) {
+          lhs = new IntegerModel(std::atoi(t.getContent().c_str()), true);
+        }
+        else if (t.getType() == Token::decimal) {
+          lhs = new DoubleModel(std::atof(t.getContent().c_str()), true);
+        }
+        else if (t.getType() == Token::string) {
+          lhs = new StringModel(t.getContent(), true);
+        }
+        else {
+          unexpected(t, "integer, decimal or string");
+        }
         break;
 
       case Token::at: {
@@ -457,7 +458,15 @@ namespace pyrite {
   }
 
   TypeModel* Parser::parseTypeName() {
-    std::string name = match("type name", Token::name).getContent();
+    Token t = tokenizer->peek();
+    std::string name;
+
+    if (t.getType() == Token::hash) {
+      tokenizer->skip();
+      name += "#";
+    }
+
+    name += match("type name", Token::name).getContent();
     return new TypeModel(name);
   }
 

@@ -8,7 +8,10 @@ namespace pyrite {
       value.replace(pos, 2, "\n");
       pos += 1;
     }
+
     Value* string = c->builder->CreateGlobalStringPtr(value.c_str(), ".str");
+
+    if (primitive) return string;
 
     CallArgsModel* args = new CallArgsModel();
     args->push(new ValueModel(string));

@@ -3,7 +3,7 @@
 namespace pyrite {
 
   Value* IfModel::codegen(Compiler* c) {
-    MethodCallModel* call = new MethodCallModel(cond, "__bool__");
+    MethodCallModel* call = new MethodCallModel(cond, "bool");
     Value* condition = call->codegen(c);
     call = new MethodCallModel(new ValueModel(condition), "get_value");
     condition = call->codegen(c);

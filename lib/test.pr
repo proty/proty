@@ -3,3 +3,5 @@ def assert(x : Bool)
         print("+")
     else
         print("-")
+    end
+end

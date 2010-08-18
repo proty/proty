@@ -16,11 +16,13 @@ without types:
 
     def multiply(a, b)
         return a*b
+    end
 
 with types:
 
     def multiply(a : Integer, b : Integer) => Integer
         return a*b
+    end
 
 Classes
 -------
@@ -31,6 +33,7 @@ Classes
         color : String
         speed : Integer
         running : Bool
+    end
 
 ### Method definitions
 
@@ -41,6 +44,7 @@ Classes
 
         def stop()
             @running = false
+    end
 
 Variables
 ---------
@@ -57,4 +61,4 @@ with types:
 
     let a : Integer = 5
     a = 9
-    a = "Hello, World" // Error - a is of type Integer!      
+    a = "Hello, World" // Error - a is of type Integer!

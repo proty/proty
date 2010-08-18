@@ -12,7 +12,10 @@ namespace pyrite {
     
     block->codegen(c);
     
-    Value* condition = cond->codegen(c);
+    MethodCallModel* call = new MethodCallModel(cond, "bool");
+    Value* condition = call->codegen(c);
+    call = new MethodCallModel(new ValueModel(condition), "get_value");
+    condition = call->codegen(c);
     
     condition = c->builder->CreateIsNotNull(condition);
     Value* EndCond = c->builder->CreateICmpEQ(condition, ConstantInt::get(Type::getInt1Ty(getGlobalContext()), 1), "loopcond");

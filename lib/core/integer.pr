@@ -1,38 +1,50 @@
 class Integer < Object
-    value : prim_int
+    value : #int
 
-    def init(value : prim_int)
+    def init(value : #int)
         @value = value
+    end
 
     def +(other : Integer) => Integer
         return Integer::new(@value + other.value)
+    end
 
     def -(other : Integer) => Integer
         return Integer::new(@value - other.value)
+    end
 
     def *(other : Integer) => Integer
         return Integer::new(@value * other.value)
+    end
 
     def /(other : Integer) => Integer
         return Integer::new(@value / other.value)
+    end
 
     def ==(other : Integer) => Bool
         return Bool::new(@value == other.value)
-    
+    end
+
     def !=(other : Integer) => Bool
         return Bool::new(@value != other.value)
+    end
 
     def >(other : Integer) => Bool
         return Bool::new(@value > other.value)
+    end
 
     def >=(other : Integer) => Bool
         return Bool::new(@value >= other.value)
+    end
 
     def <(other : Integer) => Bool
         return Bool::new(@value < other.value)
+    end
 
     def <=(other : Integer) => Bool
         return Bool::new(@value <= other.value)
+    end
 
-    def __bool__() => Bool
-        return Bool::new(@value != 0p)
+    def bool() => Bool
+        return Bool::new(@value != #0)
+    end
