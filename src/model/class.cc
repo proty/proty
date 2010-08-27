@@ -115,6 +115,8 @@ namespace pyrite {
       }
 
       c->builder->CreateRet(Alloca);
+      verifyFunction(*F);
+      c->fpm->run(*F);
     }
 
     std::map<std::string, TypeModel*>::iterator it;
