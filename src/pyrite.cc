@@ -5,7 +5,10 @@
 
 void version() {
   std::cout << "Pyrite " PYRITE_VERSION " " BUILD_MODE " (" BUILD_TIME ")" << std::endl;
-  std::cout << PYRITE_COPYRIGHT << std::endl;
+  std::cout << PYRITE_COPYRIGHT << std::endl << std::endl;
+  std::cout << "This program comes with ABSOLUTELY NO WARRANTY." << std::endl;
+  std::cout << "This is free software, and you are welcome to redistribute it" << std::endl;
+  std::cout << "under certain conditions; see pyrite-lang.org/license for details." << std::endl;
 }
 
 void help() {
