@@ -1,5 +1,6 @@
 extern printf(format : #str, ...) => #int
 
 def print(string : String)
-    printf(string.value)
+    printf(#"print string (%p): ", string)
+    printf(#"%s (%p)\n", string.value, string.value)
 end

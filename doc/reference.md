@@ -41,9 +41,11 @@ Classes
         ...
         def start()
             @running = true
+        end
 
         def stop()
             @running = false
+        end
     end
 
 Variables

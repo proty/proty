@@ -4,13 +4,13 @@ from datetime import datetime
 
 env = Environment(ENV = os.environ)
 
-env.VERSION = "0.1"
+env.VERSION = "0.01"
 env.COPYRIGHT = "Thomas Gatzweiler"
 
 # #################### Configure ####################
 def CheckProgram(context, name):
   context.Message("Checking for %s..." % name)
-  result = not int(os.system("which %s > /dev/null 2> /dev/null" % name))
+  result = not int(os.system("which %s > /dev/null 2>&1" % name))
   context.Result(result)
   return result
 
@@ -99,5 +99,5 @@ env.Install(prefix + '/include/pyrite', Glob('include/*'))
 env.Alias('install', [prefix + '/bin', prefix +'/lib',
                       prefix + '/include' , prefix + '/include/pyrite'])
 
-if 'dist/deb' in COMMAND_LINE_TARGETS:
-  SConscript("dist/deb/SConscript", exports="env")
+if 'deb' in COMMAND_LINE_TARGETS:
+  SConscript("tools/deb/SConscript", exports="env")
