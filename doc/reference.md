@@ -1,16 +1,40 @@
-The Pyrite Reference Manual
-===========================
+# The Pyrite Reference Manual #
 
-Syntax
-------
+## Syntax ##
 
-Program Structure
------------------
+## Program structure ##
 
-Functions
----------
+## Modules ##
 
-### Function definitions
+Usually every file is a module, but without
+a specific namespace.A namespace for a file 
+can be defined by putting *module foo* anywhere
+in the file, but it's recommendable to put it
+near the top.
+
+    // mymodule.py
+    module foo
+    
+    def bar()
+        return "Hello"
+    end
+
+All classes and functions of this file are
+now in the namespace *foo*.
+
+To import a module use the *import* instruction:
+
+    // myprogram.py
+    import foo
+    
+    print foo.bar()
+
+To use an object from inside a module use the dot-syntax
+(object.subobject), in the example *foo.bar*.
+
+## Functions ##
+
+### Function definitions ###
 
 without types:
 
@@ -24,10 +48,9 @@ with types:
         return a*b
     end
 
-Classes
--------
+## Classes ##
 
-### Class definitions
+### Class definitions ###
 
     class Car
         color : String
@@ -35,7 +58,7 @@ Classes
         running : Bool
     end
 
-### Method definitions
+### Method definitions ###
 
     class Car < Object
         ...
@@ -48,10 +71,9 @@ Classes
         end
     end
 
-Variables
----------
+## Variables ##
 
-### Variable assignments
+### Variable assignments ###
 
 without types:
 
