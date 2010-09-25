@@ -2,7 +2,7 @@
 #define PYRITE_COMPILER_HH
 
 #include "llvm.hh"
-#include <vector>
+#include "symtab.hh"
 
 namespace pyrite {
 
@@ -18,6 +18,7 @@ namespace pyrite {
     /// @returns the compiled code as a LLVM Module
     Module* compile(ProgramModel*, bool=true);
     ProgramModel* program;
+    SymbolTable* symtab;
 
     /// LLVM Classes
     IRBuilder<>* builder;

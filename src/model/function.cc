@@ -35,13 +35,17 @@ namespace pyrite {
     // Iterate all arguments
     Function::arg_iterator AI = F->arg_begin();
     if (klass) {
+      AI->setName("self");
       AllocaInst* Alloca = c->builder->CreateAlloca(klass->getType(c), 0, "self");
       c->builder->CreateStore(AI, Alloca);
+      c->symtab->store("self", Alloca);
       AI++;
     }
     for (unsigned int i = 0; i < args->size(); i++, AI++) {
+      AI->setName(args->getName(i));
       AllocaInst* Alloca = c->builder->CreateAlloca(args->getType(i)->get(c), 0, args->getName(i).c_str());
       c->builder->CreateStore(AI, Alloca);
+      c->symtab->store(args->getName(i), Alloca);
     }
 
     block->codegen(c);

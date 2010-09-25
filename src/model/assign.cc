@@ -13,6 +13,7 @@ namespace pyrite {
       Alloca = TmpB.CreateAlloca(t, 0, name);
     }
     c->builder->CreateStore(v, Alloca);
+    c->symtab->store(name, Alloca);
 
     return 0;
   }

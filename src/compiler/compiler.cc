@@ -7,6 +7,7 @@ namespace pyrite {
 
   Compiler::Compiler(std::string name) {
     program = new ProgramModel();
+    symtab = new SymbolTable();
 
     // Initialize LLVM Classes
     builder = new IRBuilder<>(getGlobalContext());
@@ -49,7 +50,9 @@ namespace pyrite {
     program->mergeIn(root, main);
 
     try {
+      symtab->enterScope();
       program->generate(this);
+      symtab->leaveScope();
     }
     catch(std::string s) {
       error(s);
