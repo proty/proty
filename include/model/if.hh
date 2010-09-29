@@ -4,16 +4,16 @@
 namespace pyrite {
 
   class IfModel : public ExprModel {
-    private:
-      ExprModel* cond;
-      BlockModel* thenBlock;
-      BlockModel* elseBlock;
+  private:
+    ExprModel* cond;
+    BlockModel* thenBlock;
+    BlockModel* elseBlock;
 
-    public:
-      IfModel(ExprModel* cond, BlockModel* thenBlock, BlockModel* elseBlock)
-        : cond(cond), thenBlock(thenBlock), elseBlock(elseBlock) { }
+  public:
+    IfModel(ExprModel* cond, BlockModel* thenBlock, BlockModel* elseBlock)
+      : cond(cond), thenBlock(thenBlock), elseBlock(elseBlock) { }
 
-      Value* codegen(Compiler*);
+    Value* codegen(Compiler*);
   };
 
 }

@@ -29,14 +29,6 @@ namespace pyrite {
     fpm->add(createReassociatePass());
     fpm->add(createGVNPass());
     fpm->add(createCFGSimplificationPass());
-
-    linkPyrite("core/object.pr");
-    linkPyrite("core/type.pr");
-    linkPyrite("core/string.pr");
-    linkPyrite("core/bool.pr");
-    linkPyrite("core/nil.pr");
-    linkPyrite("core/integer.pr");
-    linkPyrite("core/io.pr");
   }
 
   Module* Compiler::compile(ProgramModel* root, bool main) {

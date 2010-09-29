@@ -4,10 +4,10 @@
 namespace pyrite {
 
   class NilModel : public ExprModel {
-    public:
-      NilModel() { }
+  public:
+    NilModel() { }
 
-      Value* codegen(Compiler*);
+    Value* codegen(Compiler*);
   };
 
 }

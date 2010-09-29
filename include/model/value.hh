@@ -4,14 +4,14 @@
 namespace pyrite {
 
   class ValueModel : public ExprModel {
-    private:
-      Value* value;
+  private:
+    Value* value;
 
-    public:
-      ValueModel(Value* value)
-        : value(value) { }
+  public:
+    ValueModel(Value* value)
+      : value(value) { }
 
-      Value* codegen(Compiler*) { return value; }
+    Value* codegen(Compiler*) { return value; }
   };
 
 }

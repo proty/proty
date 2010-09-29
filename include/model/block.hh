@@ -6,14 +6,14 @@
 namespace pyrite {
 
   class BlockModel {
-    protected:
-      std::vector<ExprModel*> exprs;
+  protected:
+    std::vector<ExprModel*> exprs;
 
-    public:
-      BlockModel() { }
+  public:
+    BlockModel() { }
 
-      void addExpr(ExprModel*);
-      void codegen(Compiler*);
+    void addExpr(ExprModel*);
+    void codegen(Compiler*);
   };
 
 }

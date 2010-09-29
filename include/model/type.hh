@@ -4,13 +4,13 @@
 namespace pyrite {
 
   class TypeModel {
-    private:
-      std::string name;
-    
-    public:
-      TypeModel(std::string name) : name(name) { }
+  private:
+    std::string name;
+  
+  public:
+    TypeModel(std::string name) : name(name) { }
 
-      const Type* get(Compiler*);
+    const Type* get(Compiler*);
   };
 
 }

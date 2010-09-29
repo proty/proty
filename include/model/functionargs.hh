@@ -6,22 +6,22 @@
 namespace pyrite {
 
   class FunctionArgsModel {
-    private:
-      std::vector<std::string> names;
-      std::vector<TypeModel*> types;
-      bool isVarArg;
+  private:
+    std::vector<std::string> names;
+    std::vector<TypeModel*> types;
+    bool isVarArg;
 
-    public:
-      FunctionArgsModel() { isVarArg = false; }
+  public:
+    FunctionArgsModel() { isVarArg = false; }
 
-      void push(std::string, TypeModel*);
- 
-      void setVarArg();
-      bool getVarArg();
+    void push(std::string, TypeModel*);
 
-      unsigned int size();
-      std::string getName(int);
-      TypeModel* getType(int);
+    void setVarArg();
+    bool getVarArg();
+
+    unsigned int size();
+    std::string getName(int);
+    TypeModel* getType(int);
   };
 
 }

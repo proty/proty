@@ -1,5 +1,0 @@
-extern printf(format : #str, ...) => #int
-
-def print(string : String)
-    printf(#"%s\n", string.value)
-end

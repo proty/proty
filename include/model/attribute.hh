@@ -4,16 +4,16 @@
 namespace pyrite {
 
   class AttributeModel : public ExprModel {
-    private:
-      ExprModel* instance;
-      std::string name;
-      ExprModel* value;
+  private:
+    ExprModel* instance;
+    std::string name;
+    ExprModel* value;
 
-    public:
-      AttributeModel(ExprModel* instance, std::string name, ExprModel* value=0)
-        : instance(instance), name(name), value(value) { }
+  public:
+    AttributeModel(ExprModel* instance, std::string name, ExprModel* value=0)
+      : instance(instance), name(name), value(value) { }
 
-      Value* codegen(Compiler*);
+    Value* codegen(Compiler*);
   };
 
 }

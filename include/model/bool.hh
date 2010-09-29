@@ -4,14 +4,14 @@
 namespace pyrite {
 
   class BoolModel : public ExprModel {
-    private:
-      bool value;
+  private:
+    bool value;
 
-    public:
-      BoolModel(bool value)
-        : value(value) { }
+  public:
+    BoolModel(bool value)
+      : value(value) { }
 
-      Value* codegen(Compiler*);
+    Value* codegen(Compiler*);
   };
 
 }

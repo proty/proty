@@ -309,22 +309,6 @@ namespace pyrite {
         lhs = new StringModel(t.getContent());
         break;
 
-      case Token::hash:
-        t = tokenizer->next();
-        if (t.getType() == Token::integer) {
-          lhs = new IntegerModel(std::atoi(t.getContent().c_str()), true);
-        }
-        else if (t.getType() == Token::decimal) {
-          lhs = new DoubleModel(std::atof(t.getContent().c_str()), true);
-        }
-        else if (t.getType() == Token::string) {
-          lhs = new StringModel(t.getContent(), true);
-        }
-        else {
-          unexpected(t, "integer, decimal or string");
-        }
-        break;
-
       case Token::at: {
         NameModel* self = new NameModel("self");
         std::string name = match("instance variable name", Token::name).getContent();

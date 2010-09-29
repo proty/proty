@@ -4,15 +4,14 @@
 namespace pyrite {
 
   class IntegerModel : public ExprModel {
-    private:
-      int value;
-      bool primitive;
+  private:
+    int value;
 
-    public:
-      IntegerModel(int value, bool primitive=false)
-        : value(value), primitive(primitive) { }
+  public:
+    IntegerModel(int value)
+      : value(value) { }
 
-      Value* codegen(Compiler*);
+    Value* codegen(Compiler*);
   };
 
 }
