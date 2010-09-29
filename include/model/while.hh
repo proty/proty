@@ -4,15 +4,15 @@
 namespace pyrite {
 
   class WhileModel : public ExprModel {
-    private:
-      ExprModel* cond;
-      BlockModel* block;
+  private:
+    ExprModel* cond;
+    BlockModel* block;
 
-    public:
-      WhileModel(ExprModel* cond, BlockModel* block)
-        : cond(cond), block(block) { }
+  public:
+    WhileModel(ExprModel* cond, BlockModel* block)
+      : cond(cond), block(block) { }
 
-      Value* codegen(Compiler*);
+    Value* codegen(Compiler*);
   };
 
 }

@@ -81,6 +81,9 @@ config_file.write(config_template)
 config_file.close()
 # #################### version.hh END ###################
 
+
+##### COMPILER
+
 objs = [
   Glob('src/parser/*.cc'),
   Glob('src/compiler/*.cc'),
@@ -91,6 +94,21 @@ libpyrite = env.SharedLibrary('pyrite', objs)
 
 env.Replace(LINKFLAGS="")
 pyrite = env.Program('pyrite', ['src/pyrite.cc', libpyrite])
+
+
+##### VM
+
+objs = [
+  Glob('src/objects/*.cc'),
+  Glob('src/vm/*.cc'),
+]
+
+vmenv = env.Clone()
+vmenv.Replace(CXXFLAGS="-emit-llvm", CPPDEFINES="")
+vmenv.Replace(LINK="llvm-link", LINKFLAGS="", SHLINKFLAGS="", LIBPATH="", LIBS="")
+pyritevm = vmenv.Program('vm.bc', objs)
+
+##### INSTALL
 
 env.Install(prefix + '/bin', [pyrite])
 env.Install(prefix + '/lib', [libpyrite])

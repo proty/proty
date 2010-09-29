@@ -6,15 +6,15 @@
 namespace pyrite {
 
   class CallArgsModel {
-    private:
-      std::vector<ExprModel*> values;
+  private:
+    std::vector<ExprModel*> values;
 
-    public:
-      CallArgsModel() { }
+  public:
+    CallArgsModel() { }
 
-      void push(ExprModel*);
-      unsigned int size();
-      ExprModel* get(int);
+    void push(ExprModel*);
+    unsigned int size();
+    ExprModel* get(int);
   };
 
 }

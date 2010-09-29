@@ -4,15 +4,14 @@
 namespace pyrite {
 
   class DoubleModel : public ExprModel {
-    private:
-      double value;
-      bool primitive;
+  private:
+    double value;
 
-    public:
-      DoubleModel(double value, bool primitive=false)
-        : value(value), primitive(primitive) { }
+  public:
+    DoubleModel(double value)
+      : value(value) { }
 
-      Value* codegen(Compiler*);
+    Value* codegen(Compiler*);
   };
 
 }

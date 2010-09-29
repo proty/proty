@@ -4,16 +4,16 @@
 namespace pyrite {
 
   class AssignModel : public ExprModel {
-    private:
-      std::string name;
-      ExprModel* value;
-      bool declare;
+  private:
+    std::string name;
+    ExprModel* value;
+    bool declare;
 
-    public:
-      AssignModel(std::string name, ExprModel* value)
-        : name(name), value(value) { }
+  public:
+    AssignModel(std::string name, ExprModel* value)
+      : name(name), value(value) { }
 
-      Value* codegen(Compiler*);
+    Value* codegen(Compiler*);
   };
 
 }

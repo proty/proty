@@ -4,16 +4,16 @@
 namespace pyrite {
 
   class NameModel : public ExprModel {
-    private:
-      std::string name;
+  private:
+    std::string name;
 
-    public:
-      NameModel(std::string name)
-        : name(name) { }
+  public:
+    NameModel(std::string name)
+      : name(name) { }
 
-      std::string get_name();
+    std::string get_name();
 
-      Value* codegen(Compiler*);
+    Value* codegen(Compiler*);
   };
 
 }

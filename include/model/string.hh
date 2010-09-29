@@ -4,15 +4,14 @@
 namespace pyrite {
 
   class StringModel : public ExprModel {
-    private:
-      std::string value;
-      bool primitive;
+  private:
+    std::string value;
 
-    public:
-      StringModel(std::string value, bool primitive=false)
-        : value(value), primitive(primitive) { }
+  public:
+    StringModel(std::string value)
+      : value(value) { }
 
-      Value* codegen(Compiler*);
+    Value* codegen(Compiler*);
   };
 
 }

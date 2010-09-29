@@ -4,8 +4,8 @@
 namespace pyrite {
 
   class ExprModel {
-    public:
-      virtual Value* codegen(Compiler*) = 0;
+  public:
+    virtual Value* codegen(Compiler*) = 0;
   };
 
 }

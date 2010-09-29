@@ -4,16 +4,16 @@
 namespace pyrite {
 
   class MethodCallModel : public ExprModel {
-    private:
-      ExprModel* instance;
-      std::string name;
-      CallArgsModel* args;
+  private:
+    ExprModel* instance;
+    std::string name;
+    CallArgsModel* args;
 
-    public:
-      MethodCallModel(ExprModel* instance, std::string name, CallArgsModel* args=0)
-        : instance(instance), name(name), args(args) { }
+  public:
+    MethodCallModel(ExprModel* instance, std::string name, CallArgsModel* args=0)
+      : instance(instance), name(name), args(args) { }
 
-      Value* codegen(Compiler*);
+    Value* codegen(Compiler*);
   };
 
 }

@@ -11,8 +11,6 @@ namespace pyrite {
 
     Value* string = c->builder->CreateGlobalStringPtr(value.c_str(), ".str");
 
-    if (primitive) return string;
-
     CallArgsModel* args = new CallArgsModel();
     args->push(new ValueModel(string));
     CallModel* call = new CallModel("String::new", args);
