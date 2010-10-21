@@ -2,15 +2,17 @@
 #define PYRITE_OBJECTS_STRING_HH
 
 namespace pyrite {
-  
-  class String : Object {
+
+  class String : public Object {
   private:
     char* value;
 
   public:
-    String(char* value) : value(value) {};
+    String(const char* value) : value((char*)value) {};
 
     Integer* length();
+
+    char* get_value() { return value; };
   };
 
 }

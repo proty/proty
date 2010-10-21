@@ -3,7 +3,7 @@
 
 namespace pyrite {
 
-  class Type : Object {
+  class Type : public Object {
   private:
     String* name;
 

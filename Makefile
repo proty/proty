@@ -21,10 +21,4 @@ uninstall:
 test:
 	@bash test/test
 
-pull:
-	git pull origin master
-
-push:
-	git push origin master
-
-.PHONY: all release debug clean install uninstall test pull push doc
+.PHONY: all release debug clean install uninstall test doc

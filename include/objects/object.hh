@@ -6,6 +6,7 @@ namespace pyrite {
   class Object {
   private:
     Type* type;
+    Dictionary* attributes;
 
   public:
     Bool* kind_of(Type*);

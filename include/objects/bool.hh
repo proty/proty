@@ -3,7 +3,7 @@
 
 namespace pyrite {
 
-  class Bool : Object {
+  class Bool : public Object {
   private:
     bool value;
 
