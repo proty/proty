@@ -3,12 +3,14 @@
 
 namespace pyrite {
 
-  class Integer : Object {
+  class Integer : public Object {
   private:
     int value;
 
   public:
     Integer(int value) : value(value) {};
+    
+    int get_value() { return value; };
   };
 
 }
