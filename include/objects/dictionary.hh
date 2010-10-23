@@ -3,11 +3,11 @@
 
 namespace pyrite {
 
-  class Bucket;
+  struct DictBucket;
 
   class Dictionary : public Object {
   private:
-    Bucket** content;
+    DictBucket** content;
     unsigned int size;
     unsigned int bounds;
 

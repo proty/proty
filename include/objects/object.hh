@@ -10,6 +10,13 @@ namespace pyrite {
 
   public:
     Bool* kind_of(Type*);
+
+    Bool* operator==(Object*);
+    Bool* operator!=(Object*);
+    Bool* operator>(Object*);
+    Bool* operator<(Object*);
+    Bool* operator>=(Object*);
+    Bool* operator<=(Object*);
   };
 
 }
