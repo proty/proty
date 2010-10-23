@@ -1,10 +1,10 @@
 #include "objects/objects.hh"
 
-#include <iostream>
+#include <memory>
 
 namespace pyrite {
 
-  struct Bucket {
+  struct DictBucket {
     Object* key;
     Object* value;
   };
@@ -24,22 +24,21 @@ namespace pyrite {
   Dictionary::Dictionary() {
     size = 0;
     bounds = 8;
-    content = new Bucket*[bounds];
+    content = new DictBucket*[bounds];
     
-    memset(content, 0, bounds*sizeof(Bucket*));
+    memset(content, 0, bounds*sizeof(DictBucket*));
   }
 
   Object* Dictionary::get(Object* key) {
     unsigned int h = hash(key) % bounds;
-    std::cout << h << std::endl;
     while ((content[h] == 0) || (content[h]->key != key)) h = ((h+1) % bounds);
     return content[h]->value;
   }
 
   Object* Dictionary::set(Object* key, Object* value) {
     if (float(size)/float(bounds) > 0.75) {
-      Bucket** tmp = new Bucket*[bounds*2];
-      memset(tmp, 0, bounds*2*sizeof(Bucket*));
+      DictBucket** tmp = new DictBucket*[bounds*2];
+      memset(tmp, 0, bounds*2*sizeof(DictBucket*));
 
       for (int i = 0; i < bounds; i++) {
         if (content[i] != 0) {
@@ -56,7 +55,7 @@ namespace pyrite {
 
     unsigned int h = hash(key) % bounds;
 
-    Bucket* b = new Bucket;
+    DictBucket* b = new DictBucket;
     b->key = key;
     b->value = value;
 

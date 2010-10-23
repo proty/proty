@@ -9,6 +9,10 @@ namespace pyrite {
 
   public:
     Bool(bool value) : value(value) {};
+    static Bool* get(bool value);
+
+    static Bool* True;
+    static Bool* False;
   };
 
 }

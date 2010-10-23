@@ -104,7 +104,7 @@ objs = [
 ]
 
 vmenv = env.Clone()
-vmenv.Replace(CXXFLAGS="-emit-llvm", CPPDEFINES="")
+vmenv.Replace(CXXFLAGS="-emit-llvm -O3", CPPDEFINES="")
 vmenv.Replace(LINK="llvm-link", LINKFLAGS="", SHLINKFLAGS="", LIBPATH="", LIBS="")
 pyritevm = vmenv.Program('vm.bc', objs)
 
