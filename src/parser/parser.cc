@@ -50,17 +50,17 @@ namespace pyrite {
 
         case Token::classKw:
           tokenizer->skip();
-          p->addClass(parseClass());
+          p->addExpr(parseClass());
           break;
 
         case Token::defKw:
           tokenizer->skip();
-          p->addFunction(parseFunction());
+          p->addExpr(parseFunction());
           break;
 
         case Token::externKw:
           tokenizer->skip();
-          p->addFunction(parseFunction(true));
+          p->addExpr(parseFunction(true));
           break;
 
         case Token::whileKw:
@@ -76,7 +76,7 @@ namespace pyrite {
         case Token::importKw: {
           tokenizer->skip();
           std::string name = match("name of package to import", Token::name).getContent();
-          p->addImport(name);
+          /* p->addImport(name); */
           break;
         }
 
@@ -190,21 +190,13 @@ namespace pyrite {
 
         case Token::defKw:
           tokenizer->skip();
-          cm->addMethod(parseFunction());
+          /* cm->addMethod(parseFunction()); */
           break;
 
         case Token::name: {
           tokenizer->skip();
           std::string n = t.getContent();
-          TypeModel* tp;
-          if (isNext(Token::colon)) {
-            tokenizer->skip();
-            tp = parseTypeName();
-          }
-          else {
-            tp = new TypeModel("Object");
-          }
-          cm->addAttribute(n, tp);
+          /* cm->addAttribute(n); */
           break;
         }
 
@@ -223,20 +215,11 @@ namespace pyrite {
     std::string name = t.getContent();
 
     FunctionArgsModel* args = parseFunctionArgs();
-    
-    TypeModel* returnType;
-    if (isNext(Token::arrow)) {
-      match("arrow", Token::arrow);
-      returnType = parseTypeName();
-    }
-    else {
-      returnType = new TypeModel("Object");
-    }
 
     BlockModel* block = 0;
     if (!isExtern) block = parseBlock();
 
-    return new FunctionModel(name, args, returnType, block);
+    return new FunctionModel(name, args, block);
   }
 
   FunctionArgsModel* Parser::parseFunctionArgs() {
@@ -250,30 +233,12 @@ namespace pyrite {
     }
 
     while (true) {
-      if (isNext(Token::dot)) {
-        args->setVarArg();
-        match("...", Token::dot);
-        match("...", Token::dot);
-        match("...", Token::dot);
-        match(")", Token::rpar);
-        return args;
-      }
-
       Token t = match("parameter name", Token::name);
       std::string n = t.getContent();
-      TypeModel* type;
 
       t = tokenizer->next();
 
-      if (t.getType() == Token::colon) {
-        type = parseTypeName();
-        t = tokenizer->next();
-      }
-      else {
-        type = new TypeModel("Object");
-      }
-
-      args->push(n, type);
+      args->push(n);
 
       if (t.getType() == Token::comma) {
         continue;
@@ -439,19 +404,6 @@ namespace pyrite {
       elseBlock = parseBlock();
     }
     return new IfModel(cond, thenBlock, elseBlock);
-  }
-
-  TypeModel* Parser::parseTypeName() {
-    Token t = tokenizer->peek();
-    std::string name;
-
-    if (t.getType() == Token::hash) {
-      tokenizer->skip();
-      name += "#";
-    }
-
-    name += match("type name", Token::name).getContent();
-    return new TypeModel(name);
   }
 
 }

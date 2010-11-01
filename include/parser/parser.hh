@@ -31,7 +31,6 @@ namespace pyrite {
       WhileModel* parseWhile();
       IfModel* parseIf();
       AssignModel* parseAssign();
-      TypeModel* parseTypeName();
 
       /// Tests if the current token is
       /// of the expected type. If not

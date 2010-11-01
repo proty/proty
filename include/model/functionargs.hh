@@ -1,5 +1,5 @@
-#ifndef PYRITE_FUNCTIONARGS_HH
-#define PYRITE_FUNCTIONARGS_HH
+#ifndef PYRITE_MODEL_FUNCTIONARGS_HH
+#define PYRITE_MODEL_FUNCTIONARGS_HH
 
 #include <vector>
 
@@ -8,20 +8,14 @@ namespace pyrite {
   class FunctionArgsModel {
   private:
     std::vector<std::string> names;
-    std::vector<TypeModel*> types;
-    bool isVarArg;
 
   public:
-    FunctionArgsModel() { isVarArg = false; }
+    FunctionArgsModel() { }
 
-    void push(std::string, TypeModel*);
-
-    void setVarArg();
-    bool getVarArg();
+    void push(std::string);
 
     unsigned int size();
     std::string getName(int);
-    TypeModel* getType(int);
   };
 
 }

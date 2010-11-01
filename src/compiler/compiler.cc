@@ -39,11 +39,9 @@ namespace pyrite {
     BasicBlock *BB = BasicBlock::Create(getGlobalContext(), "entry", F);
     builder->SetInsertPoint(BB);
 
-    program->mergeIn(root, main);
-
     try {
       symtab->enterScope();
-      program->generate(this);
+      program->codegen(this);
       symtab->leaveScope();
     }
     catch(std::string s) {
@@ -66,8 +64,8 @@ namespace pyrite {
 
     Parser* p = new Parser(t);
     ProgramModel* pm = p->parse();
-
-    program->mergeIn(pm);
+    
+    /// @todo: link in another pyrite program
   }
 
   void Compiler::linkLLVMbc(std::string file) {
