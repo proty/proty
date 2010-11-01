@@ -11,12 +11,18 @@ namespace pyrite {
   public:
     Bool* kind_of(Type*);
 
-    Bool* operator==(Object*);
-    Bool* operator!=(Object*);
-    Bool* operator>(Object*);
-    Bool* operator<(Object*);
-    Bool* operator>=(Object*);
-    Bool* operator<=(Object*);
+    virtual Object* operator+(Object*);
+    virtual Object* operator-(Object*);
+    virtual Object* operator*(Object*);
+    virtual Object* operator/(Object*);
+    virtual Object* operator%(Object*);
+
+    virtual Bool* operator==(Object*);
+    virtual Bool* operator!=(Object*);
+    virtual Bool* operator>(Object*);
+    virtual Bool* operator<(Object*);
+    virtual Bool* operator>=(Object*);
+    virtual Bool* operator<=(Object*);
   };
 
 }
