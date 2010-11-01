@@ -10,7 +10,7 @@ namespace pyrite {
   public:
     Integer(int value) : value(value) {};
     
-    int get_value() { return value; };
+    operator int() { return value; };
   };
 
 }

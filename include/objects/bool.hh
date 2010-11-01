@@ -13,6 +13,8 @@ namespace pyrite {
 
     static Bool* True;
     static Bool* False;
+
+    operator bool() { return value; }
   };
 
 }

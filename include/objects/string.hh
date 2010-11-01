@@ -12,7 +12,7 @@ namespace pyrite {
 
     Integer* length();
 
-    char* get_value() { return value; };
+    operator char*() { return value; };
   };
 
 }
