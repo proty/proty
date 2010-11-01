@@ -7,7 +7,6 @@ namespace pyrite {
   private:
     std::string name;
     ExprModel* value;
-    bool declare;
 
   public:
     AssignModel(std::string name, ExprModel* value)

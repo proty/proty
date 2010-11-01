@@ -3,7 +3,6 @@
 
 #include "compiler/compiler.hh"
 #include "model/expr.hh"
-#include "model/type.hh"
 #include "model/block.hh"
 #include "model/program.hh"
 #include "model/functionargs.hh"
@@ -14,7 +13,6 @@
 #include "model/class.hh"
 #include "model/attribute.hh"
 #include "model/methodcall.hh"
-#include "model/new.hh"
 #include "model/module.hh"
 #include "model/while.hh"
 #include "model/if.hh"
