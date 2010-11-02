@@ -2,8 +2,4 @@
 
 namespace pyrite {
 
-  void ProgramModel::codegen(Compiler* c) {
-    codegen(c);
-  }
-
 }

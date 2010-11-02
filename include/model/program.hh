@@ -7,7 +7,6 @@ namespace pyrite {
   public:
     ProgramModel() {}
 
-    void codegen(Compiler*);
   };
 
 }
