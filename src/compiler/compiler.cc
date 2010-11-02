@@ -1,6 +1,7 @@
 #include "compiler/compiler.hh"
 #include "model/models.hh"
 #include "parser/parser.hh"
+#include "config.hh"
 #include <cstdlib>
 
 namespace pyrite {
@@ -29,6 +30,13 @@ namespace pyrite {
     fpm->add(createReassociatePass());
     fpm->add(createGVNPass());
     fpm->add(createCFGSimplificationPass());
+
+    // Fill in search paths
+    search_paths.push_back("./lib");
+    search_paths.push_back(BUILD_PREFIX "/lib/pyrite");
+
+    // link in the virtual machine
+    linkLLVMbc("vm.bc");
   }
 
   Module* Compiler::compile(ProgramModel* root, bool main) {
@@ -63,14 +71,24 @@ namespace pyrite {
     Tokenizer* t = new Tokenizer("lib/" + file);
 
     Parser* p = new Parser(t);
-    ProgramModel* pm = p->parse();
+    p->parse();
     
     /// @todo: link in another pyrite program
   }
 
   void Compiler::linkLLVMbc(std::string file) {
     bool native = false;
-    linker->LinkInFile(sys::Path("lib/" + file), native);
+
+    sys::Path path;
+    std::vector<std::string>::iterator it;
+    for (it = search_paths.begin(); it != search_paths.end(); it++) {
+      path = sys::Path(*it + "/" + file);
+      if (path.exists()) break;
+      else path.clear();
+    }
+    if (path.empty()) error(file + " not found.");
+
+    linker->LinkInFile(path, native);
   }
 
   void Compiler::error(std::string msg) {
