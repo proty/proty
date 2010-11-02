@@ -3,6 +3,7 @@
 
 #include "llvm.hh"
 #include "symtab.hh"
+#include <vector>
 
 namespace pyrite {
 
@@ -11,6 +12,9 @@ namespace pyrite {
   /// A class to handle the compilation
   /// of a ProgramModel to a LLVM Module
   class Compiler {
+  private:
+    std::vector<std::string> search_paths;
+
   public:
     Compiler(std::string);
 
