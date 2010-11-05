@@ -1,6 +1,6 @@
 #include "objects/objects.hh"
 
-#include <memory>
+#include <cstring>
 
 namespace pyrite {
 
@@ -25,7 +25,7 @@ namespace pyrite {
     size = 0;
     bounds = 8;
     content = new DictBucket*[bounds];
-    
+
     memset(content, 0, bounds*sizeof(DictBucket*));
   }
 
