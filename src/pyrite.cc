@@ -28,13 +28,11 @@ int main(int argc, char** argv) {
   std::string file = "<stdin>";
   std::string output;
   bool dump = false;
-  bool run = false;
 
   for (int count = 1; count < argc; count++) {
     if (argv[count][0] == '-') {
       if      (argv[count] == std::string("-d"))          { dump = true; }
       else if (argv[count] == std::string("-h"))          { help(); return 0; }
-      else if (argv[count] == std::string("-r"))          { run = true; }
       else if (argv[count] == std::string("--help"))      { help(); return 0; }
       else if (argv[count] == std::string("-c"))          { output = argv[++count]; }
       else if (argv[count] == std::string("--version"))   { version(); return 0; }
@@ -64,11 +62,9 @@ int main(int argc, char** argv) {
 
   if (dump) m->dump();
 
-  if (run) {
-    std::vector<GenericValue> args;
-    Function* main = c->executionEngine->FindFunctionNamed("main");
-    c->executionEngine->runFunction(main, args);
-  }
+  std::vector<GenericValue> args;
+  Function* main = c->executionEngine->FindFunctionNamed("main");
+  c->executionEngine->runFunction(main, args);
 
   return 0;
 }

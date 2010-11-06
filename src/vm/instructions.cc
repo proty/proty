@@ -1,4 +1,6 @@
 #include "objects/objects.hh"
+#include <cstdio>
+
 using namespace pyrite;
 
 extern "C" {
@@ -17,6 +19,14 @@ extern "C" {
 
   Object* newbool(bool value) {
     return Bool::get(value);
+  }
+
+  Object* newstring(char* value) {
+    return new String(value);
+  }
+
+  void print(Object* obj) {
+    printf("%p\n", obj);
   }
 
 }
