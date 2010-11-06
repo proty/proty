@@ -1,7 +1,7 @@
 #include "model/models.hh"
 
 namespace pyrite {
-  
+
   Value* StringModel::codegen(Compiler* c) {
     size_t pos = 0;
     while((pos = value.find("\\n", pos)) != std::string::npos) {
@@ -13,7 +13,7 @@ namespace pyrite {
 
     CallArgsModel* args = new CallArgsModel();
     args->push(new ValueModel(string));
-    CallModel* call = new CallModel("String::new", args);
+    CallModel* call = new CallModel("newstring", args);
     return call->codegen(c);
   }
 

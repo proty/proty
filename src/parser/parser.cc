@@ -292,7 +292,7 @@ namespace pyrite {
         }
         break;
       }
-      
+
       case Token::name:
         if (isNext(Token::lpar)) {
           std::string name = t.getContent();
