@@ -5,32 +5,31 @@ namespace pyrite {
   Value* BinOpModel::codegen(Compiler* c) {
     Value* l = lhs->codegen(c);
     Value* r = rhs->codegen(c);
-    if (l->getType()->isIntegerTy() || r->getType()->isIntegerTy()) {
 
-      if (!(l->getType()->isIntegerTy() && r->getType()->isIntegerTy())) {
-        throw "Both binary operators have to be either primitive or complex.";
-      }
+    std::string instname = "";
 
-      if (op == "+")        return c->builder->CreateAdd(l, r, "addtmp");
-      else if (op == "-")   return c->builder->CreateSub(l, r, "subtmp");
-      else if (op == "*")   return c->builder->CreateMul(l, r, "multmp");
-      else if (op == "/")   return c->builder->CreateSDiv(l, r, "divtmp");
-      else if (op == "==")  return c->builder->CreateICmpEQ(l, r, "eqtmp");
-      else if (op == "!=")  return c->builder->CreateICmpNE(l, r, "netmp");
-      else if (op == ">")   return c->builder->CreateICmpSGT(l, r, "gttmp");
-      else if (op == ">=")  return c->builder->CreateICmpSGE(l, r, "getmp");
-      else if (op == "<")   return c->builder->CreateICmpSLT(l, r, "lttmp");
-      else if (op == "<=")  return c->builder->CreateICmpSLE(l, r, "letmp");
-      else if (op == "or")  return c->builder->CreateOr(l, r, "ortmp");
-      else if (op == "and") return c->builder->CreateAnd(l, r, "andtmp");
-      else return 0;
-    }
-    else {
-      CallArgsModel* args = new CallArgsModel();
-      args->push(rhs);
-      MethodCallModel* call = new MethodCallModel(lhs, op, args);
-      return call->codegen(c);
-    }
+    if (op == "+")        instname = "add";
+    else if (op == "-")   instname = "sub";
+    else if (op == "*")   instname = "mul";
+    else if (op == "/")   instname = "div";
+    else if (op == "%")   instname = "mod";
+    else if (op == "==")  instname = "eq";
+    else if (op == "!=")  instname = "ne";
+    else if (op == ">")   instname = "gt";
+    else if (op == ">=")  instname = "ge";
+    else if (op == "<")   instname = "lt";
+    else if (op == "<=")  instname = "le";
+    else if (op == "or")  instname = "and";
+    else if (op == "and") instname = "or";
+    else return 0;
+
+    Function* F = c->module->getFunction(instname);
+
+    std::vector<Value*> args;
+    args.push_back(l);
+    args.push_back(r);
+
+    return c->builder->CreateCall(F, args.begin(), args.end(), instname + "tmp");
   }
   
 }

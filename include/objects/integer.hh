@@ -9,7 +9,13 @@ namespace pyrite {
 
   public:
     Integer(int value) : value(value) {};
-    
+
+    Object* operator+(Object*);
+    Object* operator-(Object*);
+    Object* operator*(Object*);
+    Object* operator/(Object*);
+    Object* operator%(Object*);
+
     operator int() { return value; };
   };
 
