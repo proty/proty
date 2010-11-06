@@ -25,10 +25,8 @@ conf = Configure(env, custom_tests = {'CheckProgram': CheckProgram, 'CheckFile':
 # Find a compiler
 if conf.CheckProgram("clang++"):
   env.Replace(CXX = "clang++", LINK = "clang++")
-elif conf.CheckProgram("g++"):
-  env.Replace(CXX = "g++", LINK = "g++")
 else:
-  print "No c++ compiler found. Please install clang or g++."
+  print "clang++ compiler not found. Please install clang."
   Exit(1)
 
 # Check for llvm
