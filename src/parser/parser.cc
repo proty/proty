@@ -29,8 +29,8 @@ namespace pyrite {
   ProgramModel* Parser::parse() {
     tokenizer->tokenize();
     try {
-      ProgramModel* b = parseProgram();
-      return b;
+      ProgramModel* p = parseProgram();
+      return p;
     }
     catch (ParseError* e) {
       e->alert();

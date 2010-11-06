@@ -1,4 +1,5 @@
 #include "model/models.hh"
+#include <iostream>
 
 namespace pyrite {
 
@@ -15,7 +16,7 @@ namespace pyrite {
     c->builder->CreateStore(v, Alloca);
     c->symtab->store(name, Alloca);
 
-    return 0;
+    return Alloca;
   }
 
 }

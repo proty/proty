@@ -47,9 +47,11 @@ namespace pyrite {
     BasicBlock *BB = BasicBlock::Create(getGlobalContext(), "entry", F);
     builder->SetInsertPoint(BB);
 
+    program = root;
+
     try {
       symtab->enterScope();
-      program->codegen(this);
+      program->generate(this);
       symtab->leaveScope();
     }
     catch(std::string s) {
@@ -72,7 +74,7 @@ namespace pyrite {
 
     Parser* p = new Parser(t);
     p->parse();
-    
+
     /// @todo: link in another pyrite program
   }
 
