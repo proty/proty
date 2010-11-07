@@ -61,6 +61,10 @@ extern "C" {
     return new String(value);
   }
 
+  Object* newfunc(FunctionPtr* ref, unsigned int argc) {
+    return new Function(ref, argc);
+  }
+
   bool tobool(Object* obj) {
     return (bool)*obj;
   }

@@ -24,6 +24,10 @@ namespace pyrite {
     ProgramModel* program;
     SymbolTable* symtab;
 
+    /// Pyrite Object Type
+    const Type* ObjectTy;
+    const Type* FunctionPtr;
+
     /// LLVM Classes
     IRBuilder<>* builder;
     Module* module;

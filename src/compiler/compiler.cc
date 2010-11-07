@@ -37,14 +37,22 @@ namespace pyrite {
 
     // link in the virtual machine
     linkLLVMbc("vm.bc");
+
+    // set the pyrite object type (loaded from vm.bc)
+    ObjectTy = PointerType::get(module->getTypeByName("class.pyrite::Object"), 0);
+
+    // set the function pointer type
+    std::vector<const Type*> argTypes;
+    FunctionType* funcTy = FunctionType::get(ObjectTy, argTypes, true);
+    FunctionPtr = PointerType::get(funcTy, 0);
   }
 
   Module* Compiler::compile(ProgramModel* root, bool main) {
     std::vector<const Type*> argTypes;
-    FunctionType *FT = FunctionType::get(Type::getVoidTy(getGlobalContext()), argTypes, false);
-    Function *F = Function::Create(FT, Function::ExternalLinkage, "main", module);
+    FunctionType *funcTy = FunctionType::get(Type::getVoidTy(getGlobalContext()), argTypes, false);
+    Function *func = Function::Create(funcTy, Function::ExternalLinkage, "main", module);
 
-    BasicBlock *BB = BasicBlock::Create(getGlobalContext(), "entry", F);
+    BasicBlock *BB = BasicBlock::Create(getGlobalContext(), "entry", func);
     builder->SetInsertPoint(BB);
 
     program = root;
@@ -63,8 +71,8 @@ namespace pyrite {
 
     builder->CreateRetVoid();
 
-    verifyFunction(*F);
-    fpm->run(*F);
+    verifyFunction(*func);
+    fpm->run(*func);
 
     return module;
   }
