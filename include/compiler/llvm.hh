@@ -1,8 +1,7 @@
-#ifndef PYRITE_Lllvm_HH
-#define PYRITE_Lllvm_HH
+#ifndef PYRITE_LLVM_HH
+#define PYRITE_LLVM_HH
 
 #include <llvm/DerivedTypes.h>
-#include <llvm/ExecutionEngine/GenericValue.h>
 #include <llvm/ExecutionEngine/ExecutionEngine.h>
 #include <llvm/ExecutionEngine/JIT.h>
 #include <llvm/LLVMContext.h>

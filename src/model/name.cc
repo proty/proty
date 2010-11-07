@@ -8,7 +8,7 @@ namespace pyrite {
 
   Value* NameModel::codegen(Compiler* c) {
     Value* v = c->symtab->lookup(name);
-    if (!v) throw "Variable '" + name + "' not declared";
+    if (!v) throw "Variable '" + name + "' is not defined.";
     return c->builder->CreateLoad(v, name.c_str());
   }
 

@@ -23,6 +23,10 @@ namespace pyrite {
     virtual Bool* operator<(Object*);
     virtual Bool* operator>=(Object*);
     virtual Bool* operator<=(Object*);
+
+    virtual operator int();
+    virtual operator bool();
+    virtual operator char*();
   };
 
 }

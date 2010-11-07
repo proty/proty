@@ -1,4 +1,5 @@
 #include "objects/objects.hh"
+#include <cstdio>
 
 namespace pyrite {
 
@@ -20,6 +21,16 @@ namespace pyrite {
 
   Object* Integer::operator%(Object* b) {
     return new Integer(this->value % (int)*(Integer*)b);
+  }
+
+  Integer::operator int() {
+    return value;
+  }
+
+  Integer::operator char*() {
+    char* buffer = new char[50];
+    sprintf(buffer, "%d", value);
+    return buffer;
   }
 
 }

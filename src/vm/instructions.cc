@@ -61,8 +61,12 @@ extern "C" {
     return new String(value);
   }
 
+  bool tobool(Object* obj) {
+    return (bool)*obj;
+  }
+
   void print(Object* obj) {
-    printf("%i\n", (int)*(Integer*)obj);
+    printf("%s\n", (char*)*obj);
   }
 
 }
