@@ -98,9 +98,6 @@ namespace pyrite {
       switch (t.getType()) {
         case Token::endKw:
           tokenizer->skip();
-          // fall through
-
-        case Token::eof:
           return b;
 
         case Token::elseKw:

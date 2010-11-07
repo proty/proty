@@ -22,7 +22,7 @@ void help() {
   "--           Stop reading options\n";
 }
 
-int main(int argc, char** argv) {
+int main(int argc, char** argv, const char** envp) {
   using namespace pyrite;
 
   std::string file = "<stdin>";
@@ -62,9 +62,9 @@ int main(int argc, char** argv) {
 
   if (dump) m->dump();
 
-  std::vector<GenericValue> args;
+  std::vector<std::string> args;
   Function* main = c->executionEngine->FindFunctionNamed("main");
-  c->executionEngine->runFunction(main, args);
+  c->executionEngine->runFunctionAsMain(main, args, envp);
 
   return 0;
 }

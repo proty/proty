@@ -16,7 +16,8 @@ namespace pyrite {
     Object* operator/(Object*);
     Object* operator%(Object*);
 
-    operator int() { return value; };
+    operator int();
+    operator char*();
   };
 
 }
