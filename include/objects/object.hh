@@ -24,6 +24,8 @@ namespace pyrite {
     virtual Bool* operator>=(Object*);
     virtual Bool* operator<=(Object*);
 
+    virtual Object* operator()(unsigned int, Object**);
+
     virtual operator int();
     virtual operator bool();
     virtual operator const char*();
