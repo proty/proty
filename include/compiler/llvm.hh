@@ -4,6 +4,7 @@
 #include <llvm/DerivedTypes.h>
 #include <llvm/ExecutionEngine/ExecutionEngine.h>
 #include <llvm/ExecutionEngine/JIT.h>
+#include <llvm/ExecutionEngine/GenericValue.h>
 #include <llvm/LLVMContext.h>
 #include <llvm/Linker.h>
 #include <llvm/Module.h>
