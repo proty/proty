@@ -4,23 +4,47 @@
 namespace pyrite {
 
   Object* Integer::operator+(Object* b) {
-    return new Integer(this->value + (int)*(Integer*)b);
+    return new Integer(this->value + (int)*b);
   }
 
   Object* Integer::operator-(Object* b) {
-    return new Integer(this->value - (int)*(Integer*)b);
+    return new Integer(this->value - (int)*b);
   }
 
   Object* Integer::operator*(Object* b) {
-    return new Integer(this->value * (int)*(Integer*)b);
+    return new Integer(this->value * (int)*b);
   }
 
   Object* Integer::operator/(Object* b) {
-    return new Integer(this->value / (int)*(Integer*)b);
+    return new Integer(this->value / (int)*b);
   }
 
   Object* Integer::operator%(Object* b) {
-    return new Integer(this->value % (int)*(Integer*)b);
+    return new Integer(this->value % (int)*b);
+  }
+
+  Bool* Integer::operator==(Object* b) {
+    return Bool::get(this->value == (int)*b);
+  }
+
+  Bool* Integer::operator!=(Object* b) {
+    return Bool::get(this->value != (int)*b);
+  }
+
+  Bool* Integer::operator>(Object* b) {
+    return Bool::get(this->value > (int)*b);
+  }
+
+  Bool* Integer::operator<(Object* b) {
+    return Bool::get(this->value < (int)*b);
+  }
+
+  Bool* Integer::operator>=(Object* b) {
+    return Bool::get(this->value >= (int)*b);
+  }
+
+  Bool* Integer::operator<=(Object* b) {
+    return Bool::get(this->value <= (int)*b);
   }
 
   Integer::operator int() {

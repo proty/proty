@@ -16,6 +16,13 @@ namespace pyrite {
     Object* operator/(Object*);
     Object* operator%(Object*);
 
+    Bool* operator==(Object*);
+    Bool* operator!=(Object*);
+    Bool* operator>(Object*);
+    Bool* operator<(Object*);
+    Bool* operator>=(Object*);
+    Bool* operator<=(Object*);
+
     operator int();
     operator char*();
   };
