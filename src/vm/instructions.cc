@@ -1,5 +1,6 @@
 #include "objects/objects.hh"
 #include <cstdio>
+#include <cstdarg>
 
 using namespace pyrite;
 
@@ -63,6 +64,11 @@ extern "C" {
 
   Object* newfunc(FunctionPtr* ref, unsigned int argc) {
     return new Function(ref, argc);
+  }
+
+  Object* call(Object* obj, unsigned int argc, ...) {
+    va_list args;
+    return obj->operator()(argc, (Object**)args);
   }
 
   bool tobool(Object* obj) {

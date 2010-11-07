@@ -11,10 +11,10 @@ namespace pyrite {
 
     Value* string = c->builder->CreateGlobalStringPtr(value.c_str(), ".str");
 
-    CallArgsModel* args = new CallArgsModel();
-    args->push(new ValueModel(string));
-    CallModel* call = new CallModel("newstring", args);
-    return call->codegen(c);
+    Function* func = c->module->getFunction("newstring");
+    std::vector<Value*> args;
+    args.push_back(string);
+    return c->builder->CreateCall(func, args.begin(), args.end(), "stringtmp");
   }
 
 }

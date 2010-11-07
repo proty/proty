@@ -12,6 +12,8 @@ namespace pyrite {
 
   public:
     Function(FunctionPtr* ref, unsigned int argc) : ref(ref), argc(argc) {};
+
+    Object* operator()(unsigned int, Object**);
   };
 
 }
