@@ -66,7 +66,7 @@ extern "C" {
   }
 
   void print(Object* obj) {
-    printf("%s\n", (char*)*obj);
+    puts((const char*)*obj);
   }
 
 }

@@ -24,7 +24,7 @@ namespace pyrite {
     Bool* operator<=(Object*);
 
     operator int();
-    operator char*();
+    operator const char*();
   };
 
 }
