@@ -3,12 +3,15 @@
 
 namespace pyrite {
 
+  typedef Object* (FunctionPtr)(...);
+
   class Function : public Object {
   private:
-    Object* (*ref)(...);
+    FunctionPtr* ref;
+    unsigned int argc;
 
   public:
-    Function(Object* (ref)(...)) : ref(ref) {};
+    Function(FunctionPtr* ref, unsigned int argc) : ref(ref), argc(argc) {};
   };
 
 }
