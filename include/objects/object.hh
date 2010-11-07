@@ -26,7 +26,7 @@ namespace pyrite {
 
     virtual operator int();
     virtual operator bool();
-    virtual operator char*();
+    virtual operator const char*();
   };
 
 }

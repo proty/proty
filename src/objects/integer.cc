@@ -51,10 +51,10 @@ namespace pyrite {
     return value;
   }
 
-  Integer::operator char*() {
+  Integer::operator const char*() {
     char* buffer = new char[50];
     sprintf(buffer, "%d", value);
-    return buffer;
+    return (const char*)buffer;
   }
 
 }

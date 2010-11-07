@@ -5,14 +5,19 @@ namespace pyrite {
 
   class String : public Object {
   private:
-    char* value;
+    const char* value;
 
   public:
-    String(const char* value) : value((char*)value) {};
+    String(const char* value) : value(value) {}
 
     Integer* length();
 
-    operator char*() { return value; };
+    Object* operator+(Object*);
+
+    Bool* operator==(Object*);
+    Bool* operator!=(Object*);
+
+    operator const char*() { return value; };
   };
 
 }

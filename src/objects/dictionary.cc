@@ -10,7 +10,7 @@ namespace pyrite {
   };
 
   unsigned int hash(Object* obj) {
-    char* value = (char*)(*(String*)obj);
+    const char* value = (const char*)(*(String*)obj);
 
     int i;
     int h = 0;
