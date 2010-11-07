@@ -3,7 +3,7 @@
 
 namespace pyrite {
 
-  typedef Object* (FunctionPtr)(...);
+  typedef Object* (FunctionPtr)(Object**);
 
   class Function : public Object {
   private:
