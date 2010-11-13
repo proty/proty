@@ -40,11 +40,6 @@ namespace pyrite {
 
     // set the pyrite object type (loaded from vm.bc)
     ObjectTy = PointerType::get(module->getTypeByName("class.pyrite::Object"), 0);
-
-    // set the function pointer type
-    std::vector<const Type*> argTypes;
-    FunctionType* funcTy = FunctionType::get(ObjectTy, argTypes, true);
-    FunctionPtr = PointerType::get(funcTy, 0);
   }
 
   Module* Compiler::compile(ProgramModel* root, bool main) {

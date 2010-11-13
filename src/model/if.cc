@@ -3,16 +3,13 @@
 namespace pyrite {
 
   Value* IfModel::codegen(Compiler* c) {
-    Function* F = c->module->getFunction("tobool");
-
     Function* func = c->builder->GetInsertBlock()->getParent();
     BasicBlock* ThenBB = BasicBlock::Create(getGlobalContext(), "then", func);
     BasicBlock* ElseBB = BasicBlock::Create(getGlobalContext(), "else");
     BasicBlock* MergeBB = BasicBlock::Create(getGlobalContext(), "ifcont");
 
-    std::vector<Value*> args;
-    args.push_back(cond->codegen(c));
-    Value* EndCond = c->builder->CreateCall(F, args.begin(), args.end(), "booltmp");
+    Function* CondF = c->module->getFunction("tobool");
+    Value* EndCond = c->builder->CreateCall(CondF, cond->codegen(c), "booltmp");
     c->builder->CreateCondBr(EndCond, ThenBB, ElseBB);
 
     c->builder->SetInsertPoint(ThenBB);

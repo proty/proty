@@ -33,12 +33,15 @@ namespace pyrite {
     verifyFunction(*func);
     c->fpm->run(*func);
 
-    Value* funcPtr = c->builder->CreateBitCast(func, c->FunctionPtr);
+    std::vector<const Type*> funcPtrArgTypes;
+    FunctionType* funcPtrTy = FunctionType::get(c->ObjectTy, funcPtrArgTypes, true);
+    const Type* FunctionPtr = PointerType::get(funcPtrTy, 0);
+    Value* funcPtr = c->builder->CreateBitCast(func, FunctionPtr);
+
     Function* newFuncInst = c->module->getFunction("newfunc");
     std::vector<Value*> newFuncArgs;
-    newFuncArgs.push_back(funcPtr);
-    newFuncArgs.push_back(ConstantInt::get(Type::getInt32Ty(getGlobalContext()), argc));
-    ValueModel* funcObj = new ValueModel(c->builder->CreateCall(newFuncInst, newFuncArgs.begin(), newFuncArgs.end(), "functmp"));
+    Value* argcValue= ConstantInt::get(Type::getInt32Ty(getGlobalContext()), argc);
+    ValueModel* funcObj = new ValueModel(c->builder->CreateCall2(newFuncInst, funcPtr, argcValue, "functmp"));
 
     AssignModel* assignment = new AssignModel(name, funcObj);
     assignment->codegen(c);
