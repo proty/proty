@@ -85,7 +85,6 @@ config_file.close()
 objs = [
   Glob('src/parser/*.cc'),
   Glob('src/compiler/*.cc'),
-  Glob('src/model/*.cc'),
 ]
 
 libpyrite = env.SharedLibrary('pyrite', objs)
@@ -97,7 +96,6 @@ pyrite = env.Program('pyrite', ['src/pyrite.cc', libpyrite])
 ##### VM
 
 objs = [
-  Glob('src/objects/*.cc'),
   Glob('src/vm/*.cc'),
 ]
 

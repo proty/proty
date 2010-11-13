@@ -1,5 +1,5 @@
 #include "compiler/compiler.hh"
-#include "model/models.hh"
+#include "compiler/models.hh"
 #include "parser/parser.hh"
 #include "config.hh"
 #include <cstdlib>

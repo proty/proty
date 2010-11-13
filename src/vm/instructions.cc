@@ -1,4 +1,4 @@
-#include "objects/objects.hh"
+#include "vm/objects.hh"
 #include <cstdio>
 #include <cstdarg>
 

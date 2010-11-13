@@ -2,7 +2,7 @@
 #define PYRITE_PARSER_HH
 
 #include "parser/tokenizer.hh"
-#include "model/models.hh"
+#include "compiler/models.hh"
 
 namespace pyrite {
 
