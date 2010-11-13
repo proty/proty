@@ -4,10 +4,16 @@
 namespace pyrite {
 
   class Class : public Object {
-  public:
-    Class() {};
+  private:
+    Dictionary* attributes;
 
-    Instance* new_instance(...);
+  public:
+    Class();
+
+    Object* get_attribute(Object*);
+    Object* set_attribute(Object*, Object*);
+
+    Instance* new_instance(Object**);
   };
 
 }

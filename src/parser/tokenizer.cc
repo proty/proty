@@ -217,8 +217,6 @@ namespace pyrite {
               return Token(Token::bFalse, loc->copy(), "false");
             else if (name == "nil")
               return Token(Token::nil, loc->copy(), "nil");
-            else if (name == "extern")
-              return Token(Token::externKw, loc->copy(), "extern");
             else if (name == "end")
               return Token(Token::endKw, loc->copy(), "end");
             else

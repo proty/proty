@@ -9,13 +9,18 @@ namespace pyrite {
   class ClassModel : public ExprModel {
   private:
     std::string name;
-    std::vector<std::string> bases;
+    std::string base;
     std::vector<FunctionModel*> methods;
+    std::map<std::string, ExprModel*> attributes;
 
   public:
     ClassModel(std::string name) : name(name) {}
 
-    void addBase(std::string);
+    void setBase(std::string);
+    void addMethod(FunctionModel*);
+    void addAttribute(std::string, ExprModel*);
+
+    std::string getName();
 
     Value* codegen(Compiler*);
   };

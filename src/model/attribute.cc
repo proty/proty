@@ -3,19 +3,18 @@
 namespace pyrite {
 
   Value* AttributeModel::codegen(Compiler* c) {
-    CallArgsModel* args = new CallArgsModel();
+    Value* inst = instance->codegen(c);
+    Value* keyValue = (new StringModel(name))->codegen(c);
 
-    std::string n;
-    if (value) {
-      args->push(value);
-      n = "set_" + name;
+    if (!value) {
+      Function* getattrFunc = c->module->getFunction("getattr");
+      return c->builder->CreateCall2(getattrFunc, inst, keyValue, "attrtmp");
     }
     else {
-      n = "get_" + name;
+      Value* valueValue = value->codegen(c);
+      Function* setattrFunc = c->module->getFunction("setattr");
+      return c->builder->CreateCall3(setattrFunc, inst, keyValue, valueValue, "attrtmp");
     }
-
-    MethodCallModel* call = new MethodCallModel(instance, n, args);
-    return call->codegen(c);
   }
 
 }

@@ -23,7 +23,7 @@ namespace pyrite {
       BlockModel* parseBlock();
       ModuleModel* parseModule();
       ClassModel* parseClass();
-      FunctionModel* parseFunction(bool=false);
+      FunctionModel* parseFunction();
       FunctionArgsModel* parseFunctionArgs();
       ExprModel* parseExpression();
       CallModel* parseCall();

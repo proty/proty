@@ -1,5 +1,6 @@
 #include "objects/objects.hh"
 
+#include <cstdio>
 #include <cstring>
 
 namespace pyrite {
@@ -10,7 +11,7 @@ namespace pyrite {
   };
 
   unsigned int hash(Object* obj) {
-    const char* value = (const char*)(*(String*)obj);
+    const char* value = (const char*)(*obj);
 
     int i;
     int h = 0;

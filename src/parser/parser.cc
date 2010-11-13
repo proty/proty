@@ -58,11 +58,6 @@ namespace pyrite {
           p->addExpr(parseFunction());
           break;
 
-        case Token::externKw:
-          tokenizer->skip();
-          p->addExpr(parseFunction(true));
-          break;
-
         case Token::whileKw:
           tokenizer->skip();
           p->addExpr(parseWhile());
@@ -171,7 +166,7 @@ namespace pyrite {
     if (t.getType() == Token::binOp && t.getContent() == "<") {
       tokenizer->skip();
       std::string base = match("base class", Token::name).getContent();
-      cm->addBase(base);
+      cm->setBase(base);
     }
 
     while (true) {
@@ -180,20 +175,19 @@ namespace pyrite {
       switch (t.getType()) {
         case Token::endKw:
           tokenizer->skip();
-          // fall through
-
-        case Token::eof:
           return cm;
 
         case Token::defKw:
           tokenizer->skip();
-          /* cm->addMethod(parseFunction()); */
+          cm->addMethod(parseFunction());
           break;
 
         case Token::name: {
           tokenizer->skip();
-          std::string n = t.getContent();
-          /* cm->addAttribute(n); */
+          std::string key = t.getContent();
+          match("=", Token::assign);
+          ExprModel* val = parseExpression();
+          cm->addAttribute(key, val);
           break;
         }
 
@@ -204,7 +198,7 @@ namespace pyrite {
     return 0;
   }
 
-  FunctionModel* Parser::parseFunction(bool isExtern) {
+  FunctionModel* Parser::parseFunction() {
     Token t = tokenizer->next();
     if (!(t.getType() == Token::name || t.getType() == Token::binOp)) {
       unexpected(t, "function name");
@@ -213,8 +207,7 @@ namespace pyrite {
 
     FunctionArgsModel* args = parseFunctionArgs();
 
-    BlockModel* block = 0;
-    if (!isExtern) block = parseBlock();
+    BlockModel* block = parseBlock();
 
     return new FunctionModel(name, args, block);
   }
@@ -222,7 +215,12 @@ namespace pyrite {
   FunctionArgsModel* Parser::parseFunctionArgs() {
     FunctionArgsModel* args = new FunctionArgsModel();
 
-    match("(", Token::lpar);
+    if (!isNext(Token::lpar)) {
+      return args;
+    }
+    else {
+      tokenizer->skip();
+    }
 
     if (isNext(Token::rpar)) {
       tokenizer->skip();

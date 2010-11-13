@@ -1,6 +1,10 @@
 #include "objects/objects.hh"
+#include <cstdio>
 
 namespace pyrite {
+
+  Object* Object::get_attribute(Object*) { /* throw error */ return 0; };
+  Object* Object::set_attribute(Object*, Object*) { /* throw error */ return 0; };
 
   Object* Object::operator+(Object*) { /* throw error */ return 0; }
   Object* Object::operator-(Object*) { /* throw error */ return 0; }
@@ -20,4 +24,5 @@ namespace pyrite {
   Object::operator int() { /* throw error */ return 0; }
   Object::operator bool() { return true; }
   Object::operator const char*() { return "<Object>"; };
+
 }
