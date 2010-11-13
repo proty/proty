@@ -1,16 +1,22 @@
 #ifndef PYRITE_MODEL_MODELS_HH
 #define PYRITE_MODEL_MODELS_HH
 
+namespace pyrite {
+
+  class ClassModel;
+
+}
+
 #include "compiler/compiler.hh"
 #include "model/expr.hh"
 #include "model/block.hh"
 #include "model/program.hh"
 #include "model/functionargs.hh"
 #include "model/function.hh"
+#include "model/class.hh"
 #include "model/name.hh"
 #include "model/callargs.hh"
 #include "model/call.hh"
-#include "model/class.hh"
 #include "model/attribute.hh"
 #include "model/methodcall.hh"
 #include "model/module.hh"

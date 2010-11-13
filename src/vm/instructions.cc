@@ -50,6 +50,14 @@ extern "C" {
     return *a <= b;
   }
 
+  Object* getattr(Object* obj, Object* key) {
+    return obj->get_attribute(key);
+  }
+  
+  Object* setattr(Object* obj, Object* key, Object* value) {
+    return obj->set_attribute(key, value);
+  }
+
   Object* newint(int value) {
     return new Integer(value);
   }
@@ -80,6 +88,10 @@ extern "C" {
 
     delete[] argv;
     return ret;
+  }
+
+  Object* newclass() {
+    return new Class();
   }
 
   bool tobool(Object* obj) {

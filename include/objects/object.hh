@@ -6,10 +6,12 @@ namespace pyrite {
   class Object {
   private:
     Type* type;
-    Dictionary* attributes;
 
   public:
     Bool* kind_of(Type*);
+
+    virtual Object* get_attribute(Object*);
+    virtual Object* set_attribute(Object*, Object*);
 
     virtual Object* operator+(Object*);
     virtual Object* operator-(Object*);

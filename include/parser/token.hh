@@ -13,7 +13,7 @@ namespace pyrite {
       typedef enum {
         unknown, eof,
         name, string, integer, decimal,
-        ifKw, elseKw, whileKw, externKw, defKw, classKw, moduleKw, returnKw,
+        ifKw, elseKw, whileKw, defKw, classKw, moduleKw, returnKw,
         endKw, importKw,
         lpar, rpar, lsqb, rsqb, lbrace, rbrace, arrow, at, hash,
         assign, colon, dblcolon, comma, dot, binOp, bTrue, bFalse, nil

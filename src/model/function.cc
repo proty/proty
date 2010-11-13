@@ -2,10 +2,19 @@
 
 namespace pyrite {
 
+  void FunctionModel::setMethodOf(ClassModel* classModel) {
+    baseClass = classModel;
+  }
+
   Value* FunctionModel::codegen(Compiler* c) {
     int argc = args->size();
 
+    std::string name;
+    if (baseClass) name += baseClass->getName() + ".";
+    name += this->name;
+
     std::vector<const Type*> argTypes;
+    if (baseClass) argTypes.push_back(c->ObjectTy);
     for(unsigned int i = 0; i < argc; i++) {
       argTypes.push_back(c->ObjectTy);
     }
@@ -18,6 +27,12 @@ namespace pyrite {
     c->builder->SetInsertPoint(mainBB);
 
     Function::arg_iterator AI = func->arg_begin();
+    if (baseClass) {
+      AI->setName("self");
+      AllocaInst* alloca = c->builder->CreateAlloca(c->ObjectTy, 0, "self");
+      c->builder->CreateStore(AI, alloca);
+      c->symtab->store("self", alloca);
+    }
     for (unsigned int i = 0; i < argc; i++, AI++) {
       AI->setName(args->getName(i));
       AllocaInst* alloca = c->builder->CreateAlloca(c->ObjectTy, 0, args->getName(i).c_str());
@@ -44,9 +59,8 @@ namespace pyrite {
     ValueModel* funcObj = new ValueModel(c->builder->CreateCall2(newFuncInst, funcPtr, argcValue, "functmp"));
 
     AssignModel* assignment = new AssignModel(name, funcObj);
-    assignment->codegen(c);
 
-    return 0;
+    return assignment->codegen(c);
   }
 
 }
