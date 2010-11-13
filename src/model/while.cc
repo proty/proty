@@ -13,9 +13,7 @@ namespace pyrite {
     c->builder->SetInsertPoint(CondBB);
 
     Function* CondF = c->module->getFunction("tobool");
-    std::vector<Value*> args;
-    args.push_back(cond->codegen(c));
-    Value* EndCond = c->builder->CreateCall(CondF, args.begin(), args.end(), "booltmp");
+    Value* EndCond = c->builder->CreateCall(CondF, cond->codegen(c), "booltmp");
 
     c->builder->CreateCondBr(EndCond, LoopBB, AfterBB);
 

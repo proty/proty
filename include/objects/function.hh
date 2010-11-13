@@ -3,7 +3,7 @@
 
 namespace pyrite {
 
-  typedef Object* (FunctionPtr)(Object**);
+  typedef Object* (FunctionPtr)(...);
 
   class Function : public Object {
   private:
@@ -13,7 +13,7 @@ namespace pyrite {
   public:
     Function(FunctionPtr* ref, unsigned int argc) : ref(ref), argc(argc) {};
 
-    Object* operator()(unsigned int, Object**);
+    Object* operator()(int, Object*[]);
   };
 
 }

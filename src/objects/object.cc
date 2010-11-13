@@ -15,7 +15,7 @@ namespace pyrite {
   Bool* Object::operator>=(Object*) { return Bool::False; }
   Bool* Object::operator<=(Object*) { return Bool::False; }
 
-  Object* Object::operator()(unsigned int, Object**) { /* throw error */ return 0; }
+  Object* Object::operator()(int, Object*[]) { /* throw error */ return 0; }
 
   Object::operator int() { /* throw error */ return 0; }
   Object::operator bool() { return true; }
