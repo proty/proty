@@ -9,9 +9,6 @@ namespace pyrite {
     if (file == "<stdin>") stream = &std::cin;
     else stream = new std::ifstream(file.c_str(), std::ifstream::in);
     if (!*stream) { throw "can't open file " + file; }
-
-    indent_length = 0;
-    indent_level = 0;
   }
 
   void Tokenizer::tokenize() {
@@ -61,47 +58,6 @@ namespace pyrite {
 
       if (currch == '\n') {
         loc->incLineNumber();
-
-        // Get number of spaces
-        int length = 0;
-        while (stream->peek() == ' ') {
-          stream->get();
-          length++;
-        }
-        if (stream->peek() == '\n') continue;
-
-        // if there has been no indent before
-        if ((!indent_length && indent_level == 0)) {
-          if (length != 0) {
-            indent_length = length;
-            indent_level++;
-            return Token(Token::indent, loc->copy(), "indent");
-          }
-        }
-        else {
-          // if the indent doesn't match the indents before
-          if (length % indent_length != 0) {
-            throw "invalid indentation";
-            return Token(Token::dedent, loc->copy(), "dedent");
-          }
-          else {
-            // if the indent is greater than before
-            if (length > indent_level*indent_length) {
-              indent_level++;
-              return Token(Token::indent, loc->copy(), "indent");
-            }
-            // if the indent is smaller than before
-            else if (length < indent_level*indent_length) {
-              // not a good way, but working for multiple dedents at the same time
-              for (int i = 1; i < indent_level - (length / indent_length); i++) {
-                indent_level--;
-                tokens->push_back(Token(Token::dedent, loc->copy(), "dedent"));
-              }
-              indent_level--;
-              return Token(Token::dedent, loc->copy(), "dedent");
-            }
-          }
-        }
       }
 
       switch(state) {
@@ -261,6 +217,8 @@ namespace pyrite {
               return Token(Token::bFalse, loc->copy(), "false");
             else if (name == "nil")
               return Token(Token::nil, loc->copy(), "nil");
+            else if (name == "end")
+              return Token(Token::endKw, loc->copy(), "end");
             else
               return Token(Token::name, loc->copy(), name);
           }
