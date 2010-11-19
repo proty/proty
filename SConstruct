@@ -112,6 +112,3 @@ env.Install(prefix + '/lib/pyrite', Glob('lib/*'))
 env.Install(prefix + '/include/pyrite', Glob('include/*'))
 env.Alias('install', [prefix + '/bin', prefix +'/lib',
                       prefix + '/include' , prefix + '/include/pyrite'])
-
-if 'deb' in COMMAND_LINE_TARGETS:
-  SConscript("tools/deb/SConscript", exports="env")
