@@ -87,17 +87,12 @@ namespace pyrite {
   BlockModel* Parser::parseBlock() {
     BlockModel* b = new BlockModel();
 
-    match("indent", Token::indent);
-
     while (true) {
       Token t = tokenizer->peek();
 
       switch (t.getType()) {
-        case Token::dedent:
+        case Token::endKw:
           tokenizer->skip();
-          // fall through
-        
-        case Token::eof:
           return b;
 
         case Token::elseKw:
@@ -137,7 +132,7 @@ namespace pyrite {
       Token t = tokenizer->peek();
 
       switch (t.getType()) {
-        case Token::dedent:
+        case Token::endKw:
           tokenizer->skip();
           // fall through
 
@@ -174,17 +169,12 @@ namespace pyrite {
       cm->setBase(base);
     }
 
-    match("indent", Token::indent);
-
     while (true) {
       t = tokenizer->peek();
 
       switch (t.getType()) {
-        case Token::dedent:
+        case Token::endKw:
           tokenizer->skip();
-          // fall through
-
-        case Token::eof:
           return cm;
 
         case Token::defKw:
