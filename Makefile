@@ -1,24 +1,27 @@
-# A Makefile that wraps the scons script
-# May be helpful for some IDEs
+VM_OBJECTS := $(patsubst %.cc,%.o,$(wildcard src/vm/*.cc))
 
-all: debug
+INCLUDES = -Iinclude/
+CXX = clang++
+CXXFLAGS = -emit-llvm $(INCLUDES) -O3 -c -o
 
-release:
-	@scons -Q mode=release
+all: vm
 
-debug:
-	@scons -Q mode=debug
+vm: $(VM_OBJECTS)
+	llvm-link $(VM_OBJECTS) -o lib/vm.bc
+
+%.o: %.cc
+	$(CXX) $(CXXFLAGS) $@ $<
 
 clean:
-	@scons -Q -c
+	rm -f $(VM_OBJECTS)
 
 install:
-	@scons -Q mode=release install
+	echo "not implemented"
 
 uninstall:
-	@scons -Q -c mode=release install
+	echo "not implemented"
 
 test:
 	@bash test/test
 
-.PHONY: all release debug clean install uninstall test doc
+.PHONY: all vm clean install uninstall test
