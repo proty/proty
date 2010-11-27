@@ -1,5 +1,5 @@
-#ifndef PYRITE_OBJECTS_OBJECT_HH
-#define PYRITE_OBJECTS_OBJECT_HH
+#ifndef PYRITE_VM_OBJECT_HH
+#define PYRITE_VM_OBJECT_HH
 
 namespace pyrite {
 
