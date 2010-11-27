@@ -1,10 +1,8 @@
-#include "vm/objects.hh"
+#include "instructions.hh"
 #include <cstdio>
 #include <cstdarg>
 
-using namespace pyrite;
-
-extern "C" {
+namespace pyrite {
 
   Object* add(Object* a, Object* b) {
     return *a + b;
@@ -53,7 +51,7 @@ extern "C" {
   Object* getattr(Object* obj, Object* key) {
     return obj->get_attribute(key);
   }
-  
+
   Object* setattr(Object* obj, Object* key, Object* value) {
     return obj->set_attribute(key, value);
   }

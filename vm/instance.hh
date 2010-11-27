@@ -1,5 +1,5 @@
-#ifndef PYRITE_OBJECTS_INSTANCE_HH
-#define PYRITE_OBJECTS_INSTANCE_HH
+#ifndef PYRITE_VM_INSTANCE_HH
+#define PYRITE_VM_INSTANCE_HH
 
 namespace pyrite {
 

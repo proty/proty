@@ -1,4 +1,4 @@
-VM_OBJECTS := $(patsubst %.cc,%.o,$(wildcard src/vm/*.cc))
+VM_OBJECTS := $(patsubst %.cc,%.o,$(wildcard vm/*.cc))
 
 INCLUDES = -Iinclude/
 CXX = clang++

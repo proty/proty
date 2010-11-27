@@ -1,5 +1,5 @@
-#ifndef PYRITE_OBJECTS_OBJECTS_HH
-#define PYRITE_OBJECTS_OBJECTS_HH
+#ifndef PYRITE_VM_OBJECTS_HH
+#define PYRITE_VM_OBJECTS_HH
 
 namespace pyrite {
   class Object;
@@ -14,15 +14,15 @@ namespace pyrite {
   class List;
 }
 
-#include "vm/object.hh"
-#include "vm/integer.hh"
-#include "vm/string.hh"
-#include "vm/bool.hh"
-#include "vm/type.hh"
-#include "vm/function.hh"
-#include "vm/instance.hh"
-#include "vm/class.hh"
-#include "vm/dictionary.hh"
-#include "vm/list.hh"
+#include "object.hh"
+#include "integer.hh"
+#include "string.hh"
+#include "bool.hh"
+#include "type.hh"
+#include "function.hh"
+#include "instance.hh"
+#include "class.hh"
+#include "dictionary.hh"
+#include "list.hh"
 
 #endif

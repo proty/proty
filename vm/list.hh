@@ -1,5 +1,5 @@
-#ifndef PYRITE_OBJECTS_LIST_HH
-#define PYRITE_OBJECTS_LIST_HH
+#ifndef PYRITE_VM_LIST_HH
+#define PYRITE_VM_LIST_HH
 
 namespace pyrite {
 

@@ -1,4 +1,4 @@
-require 'builder'
+require './builder'
 
 class Compiler
   def initialize
@@ -6,7 +6,7 @@ class Compiler
   end
 
   def compile
-    @builder.instr(:add, ["1", "2"])
+    @builder.instr(:add, [1, 2])
     puts @builder.write()
   end
 end
