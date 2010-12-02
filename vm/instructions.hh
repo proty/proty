@@ -5,32 +5,32 @@
 
 namespace pyrite {
 
-  Object* add(Object*, Object*);
-  Object* sub(Object*, Object*);
-  Object* mul(Object*, Object*);
-  Object* div(Object*, Object*);
-  Object* mod(Object*, Object*);
+  inline Object* add(Object*, Object*);
+  inline Object* sub(Object*, Object*);
+  inline Object* mul(Object*, Object*);
+  inline Object* div(Object*, Object*);
+  inline Object* mod(Object*, Object*);
 
-  Object* eq(Object*, Object*);
-  Object* ne(Object*, Object*);
-  Object* gt(Object*, Object*);
-  Object* ge(Object*, Object*);
-  Object* lt(Object*, Object*);
-  Object* le(Object*, Object*);
+  inline Object* eq(Object*, Object*);
+  inline Object* ne(Object*, Object*);
+  inline Object* gt(Object*, Object*);
+  inline Object* ge(Object*, Object*);
+  inline Object* lt(Object*, Object*);
+  inline Object* le(Object*, Object*);
 
-  Object* getattr(Object*, Object*);
-  Object* setattr(Object*, Object*, Object*);
+  inline Object* getattr(Object*, Object*);
+  inline Object* setattr(Object*, Object*, Object*);
 
-  Object* newint(int);
-  Object* newbool(bool);
-  Object* newstring(char*);
-  Object* newfunc(FunctionPtr*, unsigned int);
-  Object* newclass();
+  inline Object* newint(int);
+  inline Object* newbool(bool);
+  inline Object* newstring(char*);
+  inline Object* newfunc(FunctionPtr*, unsigned int);
+  inline Object* newclass();
 
-  Object* call(Object*, int, ...);
+  inline Object* call(Object*, int, ...);
 
-  bool tobool(Object*);
-  void print(Object*);
+  inline bool tobool(Object*);
+  inline void print(Object*);
 
 }
 
