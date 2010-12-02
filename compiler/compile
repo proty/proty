@@ -5,4 +5,4 @@ clang++ -I../../ -emit-llvm -o tmp.bc -c tmp.cc
 llvm-link -o out.bc ../lib/vm.bc tmp.bc
 llc -o out.s out.bc
 g++ -o a.out out.s
-rm tmp.bc tmp.cc out.bc out.s
+#rm tmp.bc tmp.cc out.bc out.s
