@@ -1,51 +1,43 @@
-import builder
+from builder import Builder
+from parser import Parser
+import ast
 
 class Compiler(object):
     def __init__(self):
-        self.builder = builder.Builder()
+        self.builder = Builder()
 
-    def compile(self, ast):
-        for exp in ast:
-            self.compile_exp(exp)
-
+        parser = Parser()
+        root = parser.get_block()
+        self.compile(root)
         print(self.builder.write())
 
-    def compile_exp(self, exp):
-        if type(exp) == list:
-            if   exp[0] == "+": self.compile_binop(exp) 
-            elif exp[0] == "call": self.compile_call(exp[1])
-        else:
-            if type(exp)   == int: return self.compile_int(exp)
-            elif type(exp) == str: return self.compile_string(exp)
+    def compile(self, node):
+        node.compile(self)
 
-    def compile_binop(self, exp):
-        op, params = exp
-        if op == "+": instr = "add"
-        if op == "-": instr = "sub"
-        if op == "*": instr = "mul"
-        if op == "/": instr = "div"
-        params = [self.compile_exp(param) for param in params]
-        self.builder.write_instr(instr, params)
+    def compile_block(self, node):
+        for exp in node.exps:
+            self.compile(exp)
 
-    def compile_call(self, exp):
-        name, params = exp
-        params = [self.compile_exp(param) for param in params]
-        if name == "print":
+    def compile_binop(self, node):
+        if node.op == "+": instr = "add"
+        if node.op == "-": instr = "sub"
+        if node.op == "*": instr = "mul"
+        if node.op == "/": instr = "div"
+        a = self.compile(node.a)
+        b = self.compile(node.b)
+        self.builder.write_instr(instr, [a, b])
+
+    def compile_call(self, node):
+        params = [self.compile(param) for param in node.params]
+        if node.name == "print":
             self.builder.write_instr("print", params)
         else:
-            self.builder.write_instr("call", [str(name), str(len(params))] + params)
+            self.builder.write_instr("call", [str(node.name), str(len(params))] + params)
 
-    def compile_int(self, val):
-        return self.builder.build_instr("newint", [str(val)])
+    def compile_integer(self, node):
+        return self.builder.build_instr("newint", [str(node.value)])
 
-    def compile_string(self, val):
-        return self.builder.build_instr("newstring", [str(val)])
-
-
-ast = [
-  ["+", [5, 5]],
-  ["call", ["print", [5]]],
-]
+    def compile_string(self, node):
+        return self.builder.build_instr("newstring", [str(node.value)])
 
 c = Compiler()
-c.compile(ast)
