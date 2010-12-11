@@ -1,7 +1,7 @@
 #include "objects.hh"
 #include <cstdio>
 
-namespace pyrite {
+namespace proty {
 
   Object* Object::get_attribute(Object*) { /* throw error */ return 0; };
   Object* Object::set_attribute(Object*, Object*) { /* throw error */ return 0; };

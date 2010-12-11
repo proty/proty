@@ -1,7 +1,7 @@
 #ifndef PYRITE_VM_INSTANCE_HH
 #define PYRITE_VM_INSTANCE_HH
 
-namespace pyrite {
+namespace proty {
 
   class Instance : public Object {
   private:

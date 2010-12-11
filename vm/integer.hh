@@ -1,7 +1,7 @@
 #ifndef PYRITE_VM_INTEGER_HH
 #define PYRITE_VM_INTEGER_HH
 
-namespace pyrite {
+namespace proty {
 
   class Integer : public Object {
   private:

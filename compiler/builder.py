@@ -9,8 +9,8 @@ class Builder(object):
         return name + "(" + ", ".join(params) + ")"
 
     def write(self):
-        output = "#include <pyrite/vm/instructions.hh>\n\n"
-        output += "using namespace pyrite;\n\n"
+        output = "#include <proty/vm/instructions.hh>\n\n"
+        output += "using namespace proty;\n\n"
         output += "int main() {\n"
         output += "\n".join(self.instructions)
         output += "\n}"

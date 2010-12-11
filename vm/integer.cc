@@ -1,7 +1,7 @@
 #include "objects.hh"
 #include <cstdio>
 
-namespace pyrite {
+namespace proty {
 
   Object* Integer::operator+(Object* b) {
     return new Integer(this->value + (int)*b);

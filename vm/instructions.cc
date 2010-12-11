@@ -2,7 +2,7 @@
 #include <cstdio>
 #include <cstdarg>
 
-namespace pyrite {
+namespace proty {
 
   Object* add(Object* a, Object* b) {
     return *a + b;

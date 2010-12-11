@@ -1,7 +1,7 @@
 #include "objects.hh"
 #include <cstdio>
 
-namespace pyrite {
+namespace proty {
 
   Class::Class() {
     attributes = new Dictionary();

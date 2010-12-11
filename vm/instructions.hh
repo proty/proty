@@ -3,7 +3,7 @@
 
 #include "objects.hh"
 
-namespace pyrite {
+namespace proty {
 
   inline Object* add(Object*, Object*);
   inline Object* sub(Object*, Object*);

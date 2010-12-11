@@ -1,7 +1,7 @@
 #ifndef PYRITE_VM_OBJECTS_HH
 #define PYRITE_VM_OBJECTS_HH
 
-namespace pyrite {
+namespace proty {
   class Object;
   class Integer;
   class String;

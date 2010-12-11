@@ -1,7 +1,7 @@
 #ifndef PYRITE_VM_BOOL_HH
 #define PYRITE_VM_BOOL_HH
 
-namespace pyrite {
+namespace proty {
 
   class Bool : public Object {
   private:

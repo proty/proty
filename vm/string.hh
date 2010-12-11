@@ -1,7 +1,7 @@
 #ifndef PYRITE_VM_STRING_HH
 #define PYRITE_VM_STRING_HH
 
-namespace pyrite {
+namespace proty {
 
   class String : public Object {
   private:

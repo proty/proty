@@ -1,7 +1,7 @@
 #ifndef PYRITE_VM_OBJECT_HH
 #define PYRITE_VM_OBJECT_HH
 
-namespace pyrite {
+namespace proty {
 
   class Object {
   private:

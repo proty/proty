@@ -1,5 +1,5 @@
 #include "objects.hh"
 
-namespace pyrite {
+namespace proty {
 
 }
