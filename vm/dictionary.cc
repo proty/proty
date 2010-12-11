@@ -3,7 +3,7 @@
 #include <cstdio>
 #include <cstring>
 
-namespace pyrite {
+namespace proty {
 
   struct DictBucket {
     Object* key;

@@ -1,7 +1,7 @@
 #include "objects.hh"
 #include <cstdio>
 
-namespace pyrite {
+namespace proty {
 
   Object* Function::operator()(int argc, Object* argv[]) {
     // @todo: find a better method to pass the arguments

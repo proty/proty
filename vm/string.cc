@@ -2,7 +2,7 @@
 #include <cstring>
 #include <cstdio>
 
-namespace pyrite {
+namespace proty {
 
   Integer* String::length() {
     return new Integer(strlen(value));

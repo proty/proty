@@ -2,6 +2,6 @@
 
 for file in `find test -name test*.pr`; do
   printf "running %s: " $file
-  ./pyrite $file 2> /dev/null
+  ./proty $file 2> /dev/null
   printf " done\n"
 done

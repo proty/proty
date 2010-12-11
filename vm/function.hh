@@ -1,7 +1,7 @@
 #ifndef PYRITE_VM_FUNCTION_HH
 #define PYRITE_VM_FUNCTION_HH
 
-namespace pyrite {
+namespace proty {
 
   typedef Object* (FunctionPtr)(...);
 

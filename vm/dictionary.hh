@@ -1,7 +1,7 @@
 #ifndef PYRITE_VM_DICTIONARY_HH
 #define PYRITE_VM_DICTIONARY_HH
 
-namespace pyrite {
+namespace proty {
 
   struct DictBucket;
 

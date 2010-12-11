@@ -1,7 +1,7 @@
 #ifndef PYRITE_VM_LIST_HH
 #define PYRITE_VM_LIST_HH
 
-namespace pyrite {
+namespace proty {
 
   class List : public Object {
   private:
