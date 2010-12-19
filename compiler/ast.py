@@ -9,7 +9,8 @@ class Block(Node):
         self.exps.append(exp)
 
     def compile(self, c):
-        pass
+        for exp in self.exps:
+            exp.compile(c)
 
 class Module(Node):
     def __init__(self, name):
@@ -45,12 +46,29 @@ class Call(Node):
         self.params = params
 
     def compile(self, c):
-        pass
+        params = [param.compile(c) for param in self.params]
+        if self.name == "print":
+            c.builder.write_instr("print", params)
+        else:
+            c.builder.write_instr("call", [str(self.name), str(len(params))] + params)
 
 class BinOp(Node):
     def __init__(self, op, a, b):
         self.op = op
         self.a, self.b = a, b
+
+    def compile(self, c):
+        if self.op == "+": instr = "add"
+        if self.op == "-": instr = "sub"
+        if self.op == "*": instr = "mul"
+        if self.op == "/": instr = "div"
+        a = a.compile(c)
+        b = b.compile(c)
+        c.builder.write_instr(instr, [a, b])
+
+class Name(Node):
+    def __init__(self, name):
+        self.name = name
 
     def compile(self, c):
         pass
@@ -60,11 +78,11 @@ class Integer(Node):
         self.value = value
 
     def compile(self, c):
-        pass
+        return c.builder.build_instr("newint", [self.value])
 
 class String(Node):
     def __init__(self, value):
         self.value = value
 
     def compile(self, c):
-        pass
+        return c.builder.build_instr("newstring", [self.value])
