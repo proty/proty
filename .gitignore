@@ -1,17 +1,12 @@
 # Temporary Files
 *.bc
+*.pyc
 *.log
 .DS_Store
 *~
-.sconsign.dblite
-include/config.hh
-dist/deb/pyrite
 
 # Binaries
-pyrite
-*.a
 *.o
-*.dylib
 
 # IDE Stuff
 .cproject
@@ -21,3 +16,5 @@ pyrite
 .settings/
 .project
 *.xcodeproj/
+.pydevproject
+
