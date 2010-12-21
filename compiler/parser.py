@@ -51,4 +51,10 @@ class Parser(object):
             expr = ast.Name(value)
 
         else:
+            expr = None
             self.unexpected("expression", self.peek().name)
+
+        if self.is_next("DOT"):
+            self.next()
+            expr2 = self.parse_expression()
+            return ast.Call(".", expr2)

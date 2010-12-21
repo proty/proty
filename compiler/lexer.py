@@ -12,7 +12,10 @@ class Lexer(object):
         self.pos = 0
 
     def peek(self, i=0):
-        return self.data[self.pos+i]
+        if self.pos + i < len(self.data):
+            return self.data[self.pos+i]
+        else:
+            return ' '
 
     def next(self):
         char = self.data[self.pos]
@@ -58,9 +61,9 @@ class Lexer(object):
             # comment
             elif self.peek() == '#':
                 while self.peek() != '\n' and self.pos < len(self.data):
-                    self.next() 
+                    self.next()
 
-            #  lpar
+            # lpar
             elif self.peek() == '(':
                 tokens.append(Token("LPAR", self.next()))
 
@@ -83,7 +86,7 @@ class Lexer(object):
                     self.next()
                     tokens.append(Token("BINOP", "=="))
                 else:
-                    tokens.append(Token("ASSIGN", "="))  
+                    tokens.append(Token("ASSIGN", "="))
 
             # simply binary operators
             elif self.peek() in ['+', '-', '*', '/', '%']:
