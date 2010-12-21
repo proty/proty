@@ -40,17 +40,17 @@ class Function(Node):
     def compile(self, c):
         pass
 
-class Call(Node):
-    def __init__(self, name, params):
+class Message(Node):
+    def __init__(self, receiver, name, params):
+        self.receiver = receiver
         self.name = name
         self.params = params
 
     def compile(self, c):
         params = [param.compile(c) for param in self.params]
-        if self.name == "print":
-            c.builder.write_instr("print", params)
-        else:
-            c.builder.write_instr("call", [str(self.name), str(len(params))] + params)
+        receiver = self.receiver.compile(c)
+        print receiver, self.name, params
+        c.builder.write_instr("send", [receiver, str(self.name), str(len(params))] + params)
 
 class BinOp(Node):
     def __init__(self, op, a, b):
@@ -71,7 +71,7 @@ class Name(Node):
         self.name = name
 
     def compile(self, c):
-        pass
+        return c.builder.build_instr("load", ['"%s"' % self.name])
 
 class Integer(Node):
     def __init__(self, value):
