@@ -4,7 +4,7 @@ class Parser(object):
     def __init__(self, lexer):
         self.tokens = lexer.tokenize()
         self.pos = 0
-        self.block = ast.Block()
+        self.root = ast.Block()
 
     def peek(self, i=0):
         return self.tokens[self.pos+i]
@@ -28,11 +28,12 @@ class Parser(object):
 
     def parse(self):
         self.parse_program()
-        return self.block
+        return self.root
 
     def parse_program(self):
         while not self.is_next("EOF"):
-            self.parse_expression()
+            expr = self.parse_expression()
+            self.root.add(expr)
 
     def parse_block(self):
         pass
@@ -49,12 +50,37 @@ class Parser(object):
         elif self.is_next("NAME"):
             value = self.match("NAME").value
             expr = ast.Name(value)
-
         else:
             expr = None
             self.unexpected("expression", self.peek().name)
 
         if self.is_next("DOT"):
-            self.next()
+            self.match("DOT")
             expr2 = self.parse_expression()
-            return ast.Call(".", expr2)
+            return ast.Message(expr, ".", [expr2])
+
+        elif self.is_next("LPAR"):
+            args = self.parse_call_args()
+            return ast.Message(expr, "()", args)
+
+        else:
+            return expr
+
+    def parse_call_args(self):
+        self.match("LPAR")
+        args = []
+
+        while True:
+            if self.is_next("RPAR"):
+                self.match("RPAR")
+                return args
+            else:
+                args.append(self.parse_expression())
+
+            if self.is_next("RPAR"):
+                self.match("RPAR")
+                return args
+            elif self.is_next("COMMAN"):
+                self.match("COMMA")
+            else:
+                self.unexpected("comma or rpar", self.peek())
