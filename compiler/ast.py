@@ -52,18 +52,19 @@ class Message(Node):
         print receiver, self.name, params
         c.builder.write_instr("send", [receiver, str(self.name), str(len(params))] + params)
 
-class BinOp(Node):
+class Operation(Node):
     def __init__(self, op, a, b):
         self.op = op
         self.a, self.b = a, b
 
     def compile(self, c):
         if self.op == "+": instr = "add"
-        if self.op == "-": instr = "sub"
-        if self.op == "*": instr = "mul"
-        if self.op == "/": instr = "div"
-        a = a.compile(c)
-        b = b.compile(c)
+        elif self.op == "-": instr = "sub"
+        elif self.op == "*": instr = "mul"
+        elif self.op == "/": instr = "div"
+        else: instr = "unknown"
+        a = self.a.compile(c)
+        b = self.b.compile(c)
         c.builder.write_instr(instr, [a, b])
 
 class Name(Node):
