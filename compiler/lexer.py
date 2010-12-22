@@ -1,9 +1,10 @@
 import re
 
 class Token(object):
-    def __init__(self, name, value):
+    def __init__(self, name, value, precedence=0):
         self.name = name
         self.value = value
+        self.precedence = precedence
 
 class Lexer(object):
     def __init__(self, filename):
@@ -71,10 +72,6 @@ class Lexer(object):
             elif self.peek() == ')':
                 tokens.append(Token("RPAR", self.next()))
 
-            # dot
-            elif self.peek() == '.':
-                tokens.append(Token("DOT", self.next()))
-
             # comma
             elif self.peek() == ',':
                 tokens.append(Token("COMMA", self.next()))
@@ -84,31 +81,37 @@ class Lexer(object):
                 self.next()
                 if self.peek() == '=':
                     self.next()
-                    tokens.append(Token("BINOP", "=="))
+                    tokens.append(Token("OPERATOR", "==", 15))
                 else:
-                    tokens.append(Token("ASSIGN", "="))
+                    tokens.append(Token("ASSIGN", "=", 20))
 
-            # simply binary operators
-            elif self.peek() in ['+', '-', '*', '/', '%']:
-                tokens.append(Token("BINOP", self.next()))
+            elif self.peek() in ['+', '-']:
+                tokens.append(Token("OPERATOR", self.next(), 5))
+
+            elif self.peek() in ['*', '/', '%']:
+                tokens.append(Token("OPERATOR", self.next(), 10))
 
             # greater/greater equal
             elif self.peek() == '>':
                 self.next()
                 if self.peek() == '=':
                     self.next()
-                    tokens.append(Token("BINOP", ">="))
+                    tokens.append(Token("OPERATOR", ">=", 15))
                 else:
-                    tokens.append(Token("BINOP", ">"))
+                    tokens.append(Token("OPERATOR", ">", 15))
 
             # less/less equal
             elif self.peek() == '<':
                 self.next()
                 if self.peek() == '=':
                     self.next()
-                    tokens.append(Token("BINOP", "<="))
+                    tokens.append(Token("OPERATOR", "<=", 15))
                 else:
-                    tokens.append(Token("BINOP", "<"))
+                    tokens.append(Token("OPERATOR", "<", 15))
+
+            # dot
+            elif self.peek() == '.':
+                tokens.append(Token("OPERATOR", self.next(), 25))
 
             else:
                 tokens.append(Token("UNKNOWN", self.next()))

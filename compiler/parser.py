@@ -39,32 +39,45 @@ class Parser(object):
         pass
 
     def parse_expression(self):
+        lhs = self.parse_primary()
+        
+        if self.is_next("OPERATOR"):
+            return self.parse_expression_pre(lhs)
+        else:
+            return lhs
+
+    def parse_expression_pre(self, lhs, precedence=0):
+        while self.is_next("OPERATOR") and self.peek().precedence >= precedence:
+            op = self.next()
+            rhs = self.parse_primary()
+            while self.is_next("OPERATOR") and self.peek().precedence > precedence:
+                next_precedence = self.peek().precedence
+                rhs = parse_precedence(rhs, next_precedence)
+            lhs = ast.Operation(op.value, lhs, rhs)
+        return lhs
+
+    def parse_primary(self):
         if self.is_next("INTEGER"):
             value = self.match("INTEGER").value
-            expr = ast.Integer(value)
+            primary = ast.Integer(value)
 
         elif self.is_next("STRING"):
             value = self.match("STRING").value
-            expr = ast.String(value)
+            primary = ast.String(value)
 
         elif self.is_next("NAME"):
             value = self.match("NAME").value
-            expr = ast.Name(value)
+            primary = ast.Name(value)
+
         else:
-            expr = None
-            self.unexpected("expression", self.peek().name)
+            primary = None
+            self.unexpected("primary", self.peek().name)
 
-        if self.is_next("DOT"):
-            self.match("DOT")
-            expr2 = self.parse_expression()
-            return ast.Message(expr, ".", [expr2])
-
-        elif self.is_next("LPAR"):
+        if self.is_next("LPAR"):
             args = self.parse_call_args()
-            return ast.Message(expr, "()", args)
+            primary = ast.Message(primary, "()", args)
 
-        else:
-            return expr
+        return primary
 
     def parse_call_args(self):
         self.match("LPAR")
