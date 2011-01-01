@@ -52,7 +52,7 @@ class Parser(object):
             rhs = self.parse_primary()
             while self.is_next("OPERATOR") and self.peek().precedence > precedence:
                 next_precedence = self.peek().precedence
-                rhs = parse_precedence(rhs, next_precedence)
+                rhs = self.parse_expression_pre(rhs, next_precedence)
             lhs = ast.Operation(op.value, lhs, rhs)
         return lhs
 

@@ -83,7 +83,7 @@ class Lexer(object):
                     self.next()
                     tokens.append(Token("OPERATOR", "==", 15))
                 else:
-                    tokens.append(Token("ASSIGN", "=", 20))
+                    tokens.append(Token("OPERATOR", "=", 20))
 
             elif self.peek() in ['+', '-']:
                 tokens.append(Token("OPERATOR", self.next(), 5))
