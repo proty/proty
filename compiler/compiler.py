@@ -13,6 +13,6 @@ class Compiler(object):
 
 
         root.compile(self)
-        print(self.builder.write())
+        print(self.builder.build())
 
 c = Compiler("test.pr")
