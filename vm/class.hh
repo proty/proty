@@ -1,11 +1,11 @@
-#ifndef PYRITE_VM_CLASS_HH
-#define PYRITE_VM_CLASS_HH
+#ifndef PROTY_VM_CLASS_HH
+#define PROTY_VM_CLASS_HH
 
 namespace proty {
 
   class Class : public Object {
   private:
-    Dictionary* attributes;
+    Hash* attributes;
 
   public:
     Class();

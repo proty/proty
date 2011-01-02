@@ -1,5 +1,5 @@
-#ifndef PYRITE_VM_FUNCTION_HH
-#define PYRITE_VM_FUNCTION_HH
+#ifndef PROTY_VM_FUNCTION_HH
+#define PROTY_VM_FUNCTION_HH
 
 namespace proty {
 

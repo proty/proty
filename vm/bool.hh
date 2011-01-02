@@ -1,5 +1,5 @@
-#ifndef PYRITE_VM_BOOL_HH
-#define PYRITE_VM_BOOL_HH
+#ifndef PROTY_VM_BOOL_HH
+#define PROTY_VM_BOOL_HH
 
 namespace proty {
 

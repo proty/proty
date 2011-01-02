@@ -4,7 +4,7 @@
 namespace proty {
 
   Class::Class() {
-    attributes = new Dictionary();
+    attributes = new Hash();
   }
 
   Object* Class::get_attribute(Object* key) {

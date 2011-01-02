@@ -1,0 +1,3 @@
+#ifndef PROTY_COMPILER_HH
+#define PROTY_COMPILER_HH
+#endif

@@ -1,5 +1,5 @@
-#ifndef PYRITE_VM_INSTRUCTIONS_HH
-#define PYRITE_VM_INSTRUCTIONS_HH
+#ifndef PROTY_VM_INSTRUCTIONS_HH
+#define PROTY_VM_INSTRUCTIONS_HH
 
 #include "objects.hh"
 
