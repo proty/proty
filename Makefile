@@ -1,27 +1,24 @@
-VM_OBJECTS := $(patsubst %.cc,%.o,$(wildcard vm/*.cc))
+VERSION   = 0.1
 
-INCLUDES = -Iinclude/
-CXX = clang++
-CXXFLAGS = -emit-llvm $(INCLUDES) -O3 -c -o
+COMPILER  = $(patsubst %.cc,%.o,$(wildcard compiler/*.cc))
+VM        = $(patsubst %.cc,%.o,$(wildcard vm/*.cc))
 
-all: vm
+compiler: CXXFLAGS = -DVERSION=$(VERSION) -O3 -c
+vm:       CXXFLAGS = -emit-llvm -O3 -c
 
-vm: $(VM_OBJECTS)
-	llvm-link $(VM_OBJECTS) -o lib/vm.bc
+all: compiler vm
+
+compiler: $(COMPILER)
+	clang++ $(COMPILER) -o proty
+
+vm: $(VM)
+	llvm-link $(VM) -o lib/vm.bc
 
 %.o: %.cc
-	$(CXX) $(CXXFLAGS) $@ $<
+	clang++ $(CXXFLAGS) -o $@ $<
 
 clean:
-	rm -f $(VM_OBJECTS)
+	rm -f $(COMPILER) proty
+	rm -f $(VM) lib/vm.bc
 
-install:
-	echo "not implemented"
-
-uninstall:
-	echo "not implemented"
-
-test:
-	@bash test/test
-
-.PHONY: all vm clean install uninstall test
+.PHONY: all compiler vm clean

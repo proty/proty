@@ -1,18 +1,18 @@
-#ifndef PYRITE_VM_DICTIONARY_HH
-#define PYRITE_VM_DICTIONARY_HH
+#ifndef PROTY_VM_HASH_HH
+#define PROTY_VM_HASH_HH
 
 namespace proty {
 
-  struct DictBucket;
+  struct HashBucket;
 
-  class Dictionary : public Object {
+  class Hash : public Object {
   private:
-    DictBucket** content;
+    HashBucket** content;
     unsigned int size;
     unsigned int bounds;
 
   public:
-    Dictionary();
+    Hash();
 
     Object* get(Object*);
     Object* set(Object*, Object*);

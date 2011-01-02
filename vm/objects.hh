@@ -1,5 +1,5 @@
-#ifndef PYRITE_VM_OBJECTS_HH
-#define PYRITE_VM_OBJECTS_HH
+#ifndef PROTY_VM_OBJECTS_HH
+#define PROTY_VM_OBJECTS_HH
 
 namespace proty {
   class Object;
@@ -10,7 +10,7 @@ namespace proty {
   class Function;
   class Class;
   class Instance;
-  class Dictionary;
+  class Hash;
   class List;
 }
 
@@ -22,7 +22,7 @@ namespace proty {
 #include "function.hh"
 #include "instance.hh"
 #include "class.hh"
-#include "dictionary.hh"
+#include "hash.hh"
 #include "list.hh"
 
 #endif

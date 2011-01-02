@@ -5,7 +5,7 @@
 
 namespace proty {
 
-  struct DictBucket {
+  struct HashBucket {
     Object* key;
     Object* value;
   };
@@ -22,24 +22,24 @@ namespace proty {
     return h;
   }
 
-  Dictionary::Dictionary() {
+  Hash::Hash() {
     size = 0;
     bounds = 8;
-    content = new DictBucket*[bounds];
+    content = new HashBucket*[bounds];
 
-    memset(content, 0, bounds*sizeof(DictBucket*));
+    memset(content, 0, bounds*sizeof(HashBucket*));
   }
 
-  Object* Dictionary::get(Object* key) {
+  Object* Hash::get(Object* key) {
     unsigned int h = hash(key) % bounds;
     while ((content[h] == 0) || (content[h]->key != key)) h = ((h+1) % bounds);
     return content[h]->value;
   }
 
-  Object* Dictionary::set(Object* key, Object* value) {
+  Object* Hash::set(Object* key, Object* value) {
     if (float(size)/float(bounds) > 0.75) {
-      DictBucket** tmp = new DictBucket*[bounds*2];
-      memset(tmp, 0, bounds*2*sizeof(DictBucket*));
+      HashBucket** tmp = new HashBucket*[bounds*2];
+      memset(tmp, 0, bounds*2*sizeof(HashBucket*));
 
       for (int i = 0; i < bounds; i++) {
         if (content[i] != 0) {
@@ -56,7 +56,7 @@ namespace proty {
 
     unsigned int h = hash(key) % bounds;
 
-    DictBucket* b = new DictBucket;
+    HashBucket* b = new HashBucket;
     b->key = key;
     b->value = value;
 
