@@ -8,25 +8,28 @@ public:
     unaryop,
     integer,
     decimal,
+    string,
+    name,
     lpar,
     rpar,
     lsqb,
     rsqb,
     lbrace,
     rbrace,
+    eof,
     unknown,
-  } TokenType;
+  } Type;
 
 private:
-  TokenType type;
+  Type type;
   std::string value;
   int precedence;
 
 public:
-  Token(TokenType type, std::string value, int precedence=0)
+  Token(Type type, std::string value, int precedence=0)
     : type(type), value(value), precedence(precedence) {}
 
-  TokenType getType() { return type; }
+  Type getType() { return type; }
   std::string getValue() { return value; }
   int getPrecedence() { return precedence; }
 };

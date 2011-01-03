@@ -12,8 +12,8 @@ void version() {
 }
 
 void help() {
-  std::cerr << 
-  "Usage: pyrite [options ...] [file] [arguments]\n"
+  std::cerr <<
+  "Usage: proty [options ...] [file] [arguments]\n"
   "-d           Dump code\n"
   "--help, -h   Shows this message\n"
   "-r           Run the genereted code\n"
@@ -43,18 +43,17 @@ int main(int argc, char** argv) {
     else { file = std::string(argv[count]); break; }
   }
 
-  Lexer* lexer;
   try {
-    lexer = new Lexer(file);
+    Lexer* lexer = new Lexer(file);
+    Parser* parser = new Parser(lexer);
+    Node* root = parser->parse();
   }
   catch (std::string s) {
-    std::cout << "pyrite: error: " << s << std::endl;
+    std::cout << "error: " << s << std::endl;
     return 0;
   }
-/*
-  Parser* p = new Parser(t);
-  ProgramModel* pm = p->parse();
 
+  /*
   Compiler* c = new Compiler(file);
   Module* m = c->compile(pm);
 
@@ -64,6 +63,7 @@ int main(int argc, char** argv) {
   Function* main = c->executionEngine->FindFunctionNamed("main");
   c->executionEngine->runStaticConstructorsDestructors(false);
   c->executionEngine->runFunction(main, args);
-*/
+  */
+
   return 0;
 }
