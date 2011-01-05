@@ -1,6 +1,7 @@
 #include "lexer.hh"
 #include <fstream>
 #include <sstream>
+#include <cstdlib>
 
 Lexer::Lexer(std::string filename) {
   if (filename == "<stdin>") stream = &std::cin;
