@@ -5,7 +5,10 @@
 Lexer::Lexer(std::string filename) {
   if (filename == "<stdin>") stream = &std::cin;
   else stream = new std::ifstream(filename.c_str(), std::ifstream::in);
-  if (!*stream) { throw "cannot open file " + filename; }
+  if (!*stream) { 
+    std::cerr << "cannot open file " + filename << std::endl;
+    exit(1);
+  }
 
   tokens = new std::vector<Token>;
   pos = 0;
@@ -24,13 +27,14 @@ Token Lexer::peek(int i) {
 }
 
 bool Lexer::isNext(Token::Type type) {
-  return tokens->at(pos+1).getType() == type;
+  return tokens->at(pos).getType() == type;
 }
 
 Token Lexer::match(Token::Type expected, std::string name) {
   Token t = next();
   if (t.getType() != expected) {
-    throw "expected " + name + ", found " + t.getValue();
+    std::cerr << "expected " + name + ", found " + t.getValue() << std::endl;
+    exit(1);
   }
   return t;
 }
@@ -54,9 +58,19 @@ void Lexer::tokenize() {
     else if (isdigit(currch)) {
       buf << currch;
       while(isdigit(stream->peek())) {
-	buf << stream->get();
+        buf << stream->get();
       }
       add(Token(Token::integer, buf.str()));
+      buf.clear();
+    }
+
+    // name
+    else if (isalpha(currch)) {
+      buf << currch;
+      while(isalpha(stream->peek())) {
+        buf << stream->get();
+      }
+      add(Token(Token::name, buf.str()));
       buf.clear();
     }
 
@@ -64,7 +78,7 @@ void Lexer::tokenize() {
     else if (currch == '"') {
       buf << currch;
       while (stream->peek() != '"') {
-	buf << stream->get();
+        buf << stream->get();
       }
       stream->get();
       add(Token(Token::string, buf.str()));
@@ -127,6 +141,10 @@ void Lexer::tokenize() {
       else {
         add(Token(Token::binaryop, "/"));
       }
+    }
+
+    else {
+      add(Token(Token::unknown, "" + currch));
     }
   }
 }

@@ -1,6 +1,4 @@
 #include "parser.hh"
-#include "lexer.hh"
-#include "ast.hh"
 #include <sstream>
 
 Parser::Parser(Lexer* lexer) {
@@ -13,10 +11,11 @@ Node* Parser::parse() {
 }
 
 Node* Parser::parseProgram() {
+  BlockNode* prog = new BlockNode;
   while (!lexer->isNext(Token::eof)) {
-    parseExpression();
+    prog->add(parseExpression());
   }
-  return 0;
+  return prog;
 }
 
 Node* Parser::parseExpression() {
@@ -58,5 +57,9 @@ Node* Parser::parseAtom() {
     std::string value = lexer->match(Token::name).getValue();
     return new NameNode(value);
   }
-  return 0;
+  else {
+    std::cerr << "unkown token " << lexer->peek().getValue() << std::endl;
+    exit(0);
+    return 0;
+  }
 }
