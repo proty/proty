@@ -3,11 +3,14 @@ VERSION   = 0.1
 COMPILER  = $(patsubst %.cc,%.o,$(wildcard compiler/*.cc))
 VM        = $(patsubst %.cc,%.o,$(wildcard vm/*.cc))
 
-compiler: CXXFLAGS = -DVERSION=$(VERSION) -c `llvm-config --cxxflags`
-compiler: LDFLAGS = `llvm-config --ldflags --libs core jit interpreter linker native bitwriter`
-vm:       CXXFLAGS = -emit-llvm -O3 -c
+compiler: CXXFLAGS += -DVERSION=$(VERSION) -c `llvm-config --cxxflags`
+compiler: LDFLAGS  += `llvm-config --ldflags --libs core jit interpreter linker native bitwriter`
+vm:       CXXFLAGS += -emit-llvm -O3 -c
 
 all: compiler vm
+
+debug: CXXFLAGS += -g
+debug: all
 
 compiler: $(COMPILER)
 	clang++ $(LDFLAGS) $(COMPILER) -o proty

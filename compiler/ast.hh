@@ -2,13 +2,22 @@
 #define PROTY_AST_HH
 
 #include <iostream>
+#include "llvm.hh"
 
-namespace llvm { class Value; }
 class Compiler;
 
 class Node {
 public:
   virtual llvm::Value* codegen(Compiler*) = 0;
+};
+
+class BlockNode : public Node {
+private:
+  std::vector<Node*> nodes;
+
+public:
+  void add(Node* n) { nodes.push_back(n); }
+  llvm::Value* codegen(Compiler*);
 };
 
 class IntegerNode : public Node {

@@ -1,8 +1,8 @@
 #ifndef PROTY_PARSER_HH
 #define PROTY_PARSER_HH
 
-class Node;
-class Lexer;
+#include "lexer.hh"
+#include "ast.hh"
 
 class Parser {
 private:

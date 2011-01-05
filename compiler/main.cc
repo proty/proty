@@ -43,27 +43,19 @@ int main(int argc, char** argv) {
     else { file = std::string(argv[count]); break; }
   }
 
-  try {
-    Lexer* lexer = new Lexer(file);
-    Parser* parser = new Parser(lexer);
-    Node* root = parser->parse();
-  }
-  catch (std::string s) {
-    std::cout << "error: " << s << std::endl;
-    return 0;
-  }
+  Lexer* lexer = new Lexer(file);
+  Parser* parser = new Parser(lexer);
+  Node* root = parser->parse();
 
-  /*
-  Compiler* c = new Compiler(file);
-  Module* m = c->compile(pm);
+  Compiler* compiler = new Compiler(file);
+  llvm::Module* module = compiler->compile(root);
 
-  if (dump) m->dump();
+  if (dump) module->dump();
 
-  std::vector<GenericValue> args;
-  Function* main = c->executionEngine->FindFunctionNamed("main");
-  c->executionEngine->runStaticConstructorsDestructors(false);
-  c->executionEngine->runFunction(main, args);
-  */
+  std::vector<llvm::GenericValue> args;
+  llvm::Function* main = compiler->executionEngine->FindFunctionNamed("main");
+  compiler->executionEngine->runStaticConstructorsDestructors(false);
+  compiler->executionEngine->runFunction(main, args);
 
   return 0;
 }

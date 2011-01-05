@@ -4,6 +4,7 @@
 #include "objects.hh"
 
 namespace proty {
+extern "C" {
 
   inline Object* add(Object*, Object*);
   inline Object* sub(Object*, Object*);
@@ -32,6 +33,6 @@ namespace proty {
   inline bool tobool(Object*);
   inline void print(Object*);
 
-}
+}}
 
 #endif
