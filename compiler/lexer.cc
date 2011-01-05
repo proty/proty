@@ -44,13 +44,13 @@ void Lexer::tokenize() {
   std::stringstream buf;
 
   while (true) {
+    char currch = stream->get();
+    char nextch = stream->peek();
+
     if (stream->eof()) {
       add(Token(Token::eof, "<eof>"));
       break;
     }
-
-    char currch = stream->get();
-    char nextch = stream->peek();
 
     // whitespace
     if (isspace(currch)) continue;
