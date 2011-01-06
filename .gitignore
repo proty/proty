@@ -8,6 +8,12 @@
 # Binaries
 *.o
 
+# CMake Stuff
+Makefile
+CMakeCache.txt
+*.cmake
+CMakeFiles
+
 # IDE Stuff
 .cproject
 .kdev4/

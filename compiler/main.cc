@@ -3,6 +3,8 @@
 #include "parser.hh"
 #include "compiler.hh"
 
+#define VERSION 0.1
+
 void version() {
   std::cerr << "Proty " << VERSION << " (" __DATE__ ", " __TIME__ ")" << std::endl;
   std::cerr << std::endl;
