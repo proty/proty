@@ -41,8 +41,6 @@ Token Lexer::match(Token::Type expected, std::string name) {
 }
 
 void Lexer::tokenize() {
-  std::stringstream buf;
-
   while (true) {
     char currch = stream->get();
     char nextch = stream->peek();
@@ -57,33 +55,33 @@ void Lexer::tokenize() {
 
     // integer
     else if (isdigit(currch)) {
+      std::stringstream buf;
       buf << currch;
       while(isdigit(stream->peek())) {
-        buf << stream->get();
+        buf << (char)stream->get();
       }
       add(Token(Token::integer, buf.str()));
-      buf.clear();
     }
 
     // name
     else if (isalpha(currch)) {
+      std::stringstream buf;
       buf << currch;
       while(isalpha(stream->peek())) {
-        buf << stream->get();
+        buf << (char)stream->get();
       }
       add(Token(Token::name, buf.str()));
-      buf.clear();
     }
 
     // string
     else if (currch == '"') {
+      std::stringstream buf;
       buf << currch;
       while (stream->peek() != '"') {
-        buf << stream->get();
+        buf << (char)stream->get();
       }
       stream->get();
       add(Token(Token::string, buf.str()));
-      buf.clear();
     }
 
     else if (currch == '(') add(Token(Token::lpar, "("));
@@ -133,7 +131,8 @@ void Lexer::tokenize() {
     else if (currch == '-') add(Token(Token::binaryop, "-"));
     else if (currch == '*') add(Token(Token::binaryop, "*"));
     else if (currch == '%') add(Token(Token::binaryop, "%"));
-
+    else if (currch == '.') add(Token(Token::binaryop, "."));
+  
     // division and comment
     else if (currch == '/') {
       if (nextch == '/') {

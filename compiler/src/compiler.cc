@@ -27,7 +27,7 @@ Compiler::Compiler(std::string name) {
 
   // Link in the VM
   bool native = false;
-  linker->LinkInFile(sys::Path("lib/vm.bc"), native);
+  linker->LinkInFile(sys::Path("build/vm.bc"), native);
 }
 
 Module* Compiler::compile(Node* root) {
