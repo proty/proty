@@ -8,9 +8,11 @@ exec_program(${LLVM_CONFIG} ARGS --cxxflags OUTPUT_VARIABLE LLVM_CXXFLAGS)
 exec_program(${LLVM_CONFIG} ARGS --ldflags OUTPUT_VARIABLE LLVM_LDFLAGS)
 exec_program(${LLVM_CONFIG} ARGS --libs core jit interpreter linker native bitwriter OUTPUT_VARIABLE LLVM_LIBS)
 
-
 set(CMAKE_EXE_LINKER_FLAGS ${LLVM_LDFLAGS})
 set(CMAKE_CXX_FLAGS ${LLVM_CXXFLAGS})
+set(CMAKE_CXX_FLAGS_RELEASE "")
+
+configure_file("config.hh.in" "config.hh")
 
 add_executable(proty
   lexer.cc
