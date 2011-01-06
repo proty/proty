@@ -18,8 +18,8 @@ configure_file("include/config.hh.in" "include/config.hh")
 add_executable(proty
   src/lexer.cc
   src/parser.cc
-  src/ast.cc
   src/compiler.cc
+  src/codegen.cc
   src/main.cc
 )
 
