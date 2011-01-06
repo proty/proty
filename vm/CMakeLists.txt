@@ -1,7 +1,7 @@
-SET(CMAKE_CXX_OUTPUT_EXTENSION ".bc")
-SET(CMAKE_CXX_FLAGS "-emit-llvm")
+set(CMAKE_CXX_LINK_EXECUTABLE "llvm-link <OBJECTS> -o <TARGET>")
+set(CMAKE_CXX_FLAGS "-emit-llvm")
 
-add_library(vm.bc
+add_executable(vm.bc
   object.cc
   bool.cc
   integer.cc
