@@ -12,14 +12,15 @@ set(CMAKE_EXE_LINKER_FLAGS ${LLVM_LDFLAGS})
 set(CMAKE_CXX_FLAGS ${LLVM_CXXFLAGS})
 set(CMAKE_CXX_FLAGS_RELEASE "")
 
-configure_file("config.hh.in" "config.hh")
+include_directories(include)
+configure_file("include/config.hh.in" "include/config.hh")
 
 add_executable(proty
-  lexer.cc
-  parser.cc
-  ast.cc
-  compiler.cc
-  main.cc
+  src/lexer.cc
+  src/parser.cc
+  src/ast.cc
+  src/compiler.cc
+  src/main.cc
 )
 
 target_link_libraries(proty ${LLVM_LIBS})
