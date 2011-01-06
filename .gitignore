@@ -4,9 +4,8 @@
 *.log
 .DS_Store
 *~
-
-# Binaries
-*.o
+config.hh
+build
 
 # CMake Stuff
 Makefile
@@ -23,4 +22,3 @@ CMakeFiles
 .project
 *.xcodeproj/
 .pydevproject
-

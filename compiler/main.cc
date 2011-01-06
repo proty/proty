@@ -2,11 +2,10 @@
 #include "lexer.hh"
 #include "parser.hh"
 #include "compiler.hh"
-
-#define VERSION 0.1
+#include "config.hh"
 
 void version() {
-  std::cerr << "Proty " << VERSION << " (" __DATE__ ", " __TIME__ ")" << std::endl;
+  std::cerr << "Proty " VERSION " " BUILD_TYPE " (" __DATE__ ", " __TIME__ ")" << std::endl;
   std::cerr << std::endl;
   std::cerr << "This program comes with ABSOLUTELY NO WARRANTY." << std::endl;
   std::cerr << "This is free software, and you are welcome to redistribute it" << std::endl;

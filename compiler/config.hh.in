@@ -1,0 +1,7 @@
+#ifndef PROTY_CONFIG_HH
+#define PROTY_CONFIG_HH
+
+#define VERSION "@VERSION@"
+#define BUILD_TYPE "@CMAKE_BUILD_TYPE@"
+
+#endif
