@@ -16,6 +16,7 @@ public:
     rsqb,
     lbrace,
     rbrace,
+    comma,
     eof,
     unknown,
   } Type;

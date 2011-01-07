@@ -90,6 +90,7 @@ void Lexer::tokenize() {
     else if (currch == ']') add(Token(Token::rsqb, "["));
     else if (currch == '{') add(Token(Token::lbrace, "{"));
     else if (currch == '}') add(Token(Token::rbrace, "}"));
+    else if (currch == ',') add(Token(Token::comma, ","));
 
     // = and ==
     else if (currch == '=') {

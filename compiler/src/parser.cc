@@ -24,6 +24,9 @@ Node* Parser::parseExpression() {
   if (lexer->isNext(Token::binaryop)) {
     return parseExpressionPre(lhs);
   }
+  else if (lexer->isNext(Token::lpar)) {
+    return parseCall(lhs);
+  }
   else return lhs;
 }
 
@@ -43,23 +46,51 @@ Node* Parser::parseExpressionPre(Node* lhs, int precedence) {
 
 Node* Parser::parseAtom() {
   if (lexer->isNext(Token::integer)) {
-    std::string value = lexer->match(Token::integer).getValue();
+    std::string value = lexer->next().getValue();
     std::stringstream ss(value);
     int v;
     ss >> v;
     return new IntegerNode(v);
   }
   else if (lexer->isNext(Token::string)) {
-    std::string value = lexer->match(Token::string).getValue();
+    std::string value = lexer->next().getValue();
     return new StringNode(value);
   }
   else if (lexer->isNext(Token::name)) {
-    std::string value = lexer->match(Token::name).getValue();
+    std::string value = lexer->next().getValue();
     return new NameNode(value);
   }
+  else if (lexer->isNext(Token::lpar)) {
+    lexer->next();
+    Node* expr = parseExpression();
+    lexer->match(Token::rpar, ")");
+    return expr;
+  }
   else {
-    std::cerr << "unkown token " << lexer->peek().getValue() << std::endl;
+    std::cerr << "unkown token " << lexer->next().getValue() << std::endl;
     exit(0);
     return 0;
   }
+}
+
+Node* Parser::parseCall(Node* callee) {
+  lexer->match(Token::lpar);
+
+  CallNode* call = new CallNode(callee);
+
+  while (true) {
+    if (lexer->isNext(Token::rpar)) {
+      break;
+    }
+    else {
+      call->addArg(parseExpression());
+      if (lexer->isNext(Token::rpar)) {
+        lexer->next();
+        break;
+      }
+      else lexer->match(Token::comma, ",");
+    }
+  }
+
+  return call;
 }

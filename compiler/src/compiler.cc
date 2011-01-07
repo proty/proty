@@ -5,6 +5,7 @@
 using namespace llvm;
 
 Compiler::Compiler(std::string name) {
+  symtab = new SymbolTable();
   builder = new IRBuilder<>(getGlobalContext());
   module = new Module(name, getGlobalContext());
   linker = new Linker(name, module);

@@ -42,7 +42,12 @@ Value* BinaryOpNode::codegen(Compiler* c) {
 }
 
 Value* NameNode::codegen(Compiler* c) {
-  return 0;
+  Value* v = c->symtab->lookup(value);
+  if (!v) {
+    std::cerr << "undefined variable " << value << std::endl;
+    exit(0);
+  }
+  return c->builder->CreateLoad(v, value.c_str());
 }
 
 Value* IntegerNode::codegen(Compiler* c) {
@@ -64,4 +69,19 @@ Value* StringNode::codegen(Compiler* c) {
   std::vector<Value*> args;
   args.push_back(string);
   return c->builder->CreateCall(func, args.begin(), args.end(), "stringtmp");
+}
+
+Value* CallNode::codegen(Compiler* c) {
+  int argc = args.size();
+  Function* callFunc = c->module->getFunction("call");
+
+  std::vector<Value*> argValues;
+  argValues.push_back(callee->codegen(c));
+  argValues.push_back(ConstantInt::get(Type::getInt32Ty(getGlobalContext()), argc));
+
+  for (unsigned int i = 0; i < argc; i++) {
+    argValues.push_back(args.at(i)->codegen(c));
+  }
+
+  return c->builder->CreateCall(callFunc, argValues.begin(), argValues.end(), "calltmp");
 }

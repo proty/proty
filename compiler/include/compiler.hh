@@ -3,9 +3,11 @@
 
 #include "llvm.hh"
 #include "ast.hh"
+#include "symtab.hh"
 
 class Compiler {
 public:
+  SymbolTable* symtab;
   llvm::IRBuilder<>* builder;
   llvm::Module* module;
   llvm::ExecutionEngine *executionEngine;
