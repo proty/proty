@@ -19,6 +19,7 @@ add_executable(proty
   src/lexer.cc
   src/parser.cc
   src/compiler.cc
+  src/symtab.cc
   src/codegen.cc
   src/main.cc
 )
