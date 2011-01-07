@@ -13,7 +13,8 @@ set(CMAKE_CXX_FLAGS ${LLVM_CXXFLAGS})
 set(CMAKE_CXX_FLAGS_RELEASE "")
 
 include_directories(include)
-configure_file("include/config.hh.in" "include/config.hh")
+configure_file("${CMAKE_CURRENT_SOURCE_DIR}/include/config.hh.in" 
+               "${CMAKE_CURRENT_SOURCE_DIR}/include/config.hh")
 
 add_executable(proty
   src/lexer.cc
