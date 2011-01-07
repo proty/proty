@@ -30,6 +30,7 @@ Value* BinaryOpNode::codegen(Compiler* c) {
   else if (op == "<=")  instname = "le";
   else if (op == "or")  instname = "and";
   else if (op == "and") instname = "or";
+  else if (op == ".")   instname = "attr";
   else return 0;
 
   Function* F = c->module->getFunction(instname);
