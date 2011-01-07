@@ -39,7 +39,9 @@ Module* Compiler::compile(Node* root) {
   BasicBlock *BB = BasicBlock::Create(getGlobalContext(), "entry", func);
   builder->SetInsertPoint(BB);
 
+  symtab->enterScope();
   root->codegen(this);
+  symtab->leaveScope();
 
   builder->CreateRetVoid();
   verifyFunction(*func);

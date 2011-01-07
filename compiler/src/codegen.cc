@@ -12,9 +12,6 @@ Value* BlockNode::codegen(Compiler* c) {
 }
 
 Value* BinaryOpNode::codegen(Compiler* c) {
-  Value* l = lhs->codegen(c);
-  Value* r = rhs->codegen(c);
-
   std::string instname = "";
 
   if (op == "+")        instname = "add";
@@ -31,9 +28,26 @@ Value* BinaryOpNode::codegen(Compiler* c) {
   else if (op == "or")  instname = "and";
   else if (op == "and") instname = "or";
   else if (op == ".")   instname = "attr";
+  else if (op == "=") {
+    std::string name = ((NameNode*)lhs)->getValue();
+    Value* v = rhs->codegen(c);
+    AllocaInst* alloca = (AllocaInst*)c->symtab->lookup(name);
+    if (!alloca) {
+      alloca = c->builder->CreateAlloca(v->getType(), 0, name);
+      c->builder->CreateStore(v, alloca);
+      c->symtab->store(name, alloca);
+    }
+    else {
+      c->builder->CreateStore(v, alloca);
+    }
+    return alloca;
+  }
   else return 0;
 
   Function* F = c->module->getFunction(instname);
+
+  Value* l = lhs->codegen(c);
+  Value* r = rhs->codegen(c);
 
   std::vector<Value*> args;
   args.push_back(l);
