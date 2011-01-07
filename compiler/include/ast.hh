@@ -53,6 +53,18 @@ public:
   llvm::Value* codegen(Compiler*);
 };
 
+class CallNode : public Node {
+private:
+  Node* callee;
+  std::vector<Node*> args;
+
+public:
+  CallNode(Node* callee) : callee(callee) {}
+
+  void addArg(Node* n) { args.push_back(n); }
+  llvm::Value* codegen(Compiler*);
+};
+
 class NameNode : public Node {
 private:
   std::string value;

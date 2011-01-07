@@ -16,6 +16,7 @@ public:
   Node* parseExpression();
   Node* parseExpressionPre(Node*, int=0);
   Node* parseAtom();
+  Node* parseCall(Node*);
 };
 
 #endif
