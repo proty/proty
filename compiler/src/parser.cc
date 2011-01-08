@@ -22,7 +22,7 @@ Node* Parser::parseExpression() {
   Node* lhs = parseAtom();
 
   if (lexer->isNext(Token::binaryop)) {
-    return parseExpressionPre(lhs);
+    return parseOperation(lhs, 0);
   }
   else if (lexer->isNext(Token::lpar)) {
     return parseCall(lhs);
@@ -30,14 +30,15 @@ Node* Parser::parseExpression() {
   else return lhs;
 }
 
-Node* Parser::parseExpressionPre(Node* lhs, int precedence) {
-  while (lexer->isNext(Token::binaryop)) {
+Node* Parser::parseOperation(Node* lhs, int precedence) {
+  while (lexer->isNext(Token::binaryop)
+         && lexer->peek().getPrecedence() >= precedence) {
     Token op = lexer->next();
     Node* rhs = parseAtom();
     while (lexer->isNext(Token::binaryop)
-           && lexer->peek().getPrecedence() > precedence) {
+           && lexer->peek().getPrecedence() > op.getPrecedence()) {
       int nextPrecedence = lexer->peek().getPrecedence();
-      rhs = parseExpressionPre(rhs, nextPrecedence);
+      rhs = parseOperation(rhs, nextPrecedence);
     }
     lhs = new BinaryOpNode(op.getValue(), lhs, rhs);
   }
