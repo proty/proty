@@ -10,10 +10,7 @@ add_executable(vm.bc
   src/string.cc
   src/hash.cc
   src/list.cc
-  src/class.cc
   src/function.cc
-  src/type.cc
-  src/instance.cc
   src/instructions.cc
 )
 
