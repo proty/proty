@@ -36,7 +36,7 @@ Node* Parser::parseOperation(Node* lhs, int precedence) {
     Token op = lexer->next();
     Node* rhs = parseAtom();
     while (lexer->isNext(Token::binaryop)
-           && lexer->peek().getPrecedence() > op.getPrecedence()) {
+           && (lexer->peek().getPrecedence() > op.getPrecedence())) {
       int nextPrecedence = lexer->peek().getPrecedence();
       rhs = parseOperation(rhs, nextPrecedence);
     }

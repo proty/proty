@@ -6,7 +6,7 @@
 Lexer::Lexer(std::string filename) {
   if (filename == "<stdin>") stream = &std::cin;
   else stream = new std::ifstream(filename.c_str(), std::ifstream::in);
-  if (!*stream) { 
+  if (!*stream) {
     std::cerr << "cannot open file " + filename << std::endl;
     exit(1);
   }
@@ -96,16 +96,16 @@ void Lexer::tokenize() {
     else if (currch == '=') {
       if (nextch == '=') {
         stream->get();
-        add(Token(Token::binaryop, "==", 15));
+        add(Token(Token::binaryop, "==", 20));
       }
-      else add(Token(Token::binaryop, "=", 25));
+      else add(Token(Token::binaryop, "=", 5));
     }
 
     // > and >=
     else if (currch == '>') {
       if (nextch == '=') {
         stream->get();
-        add(Token(Token::binaryop, ">=", 15));
+        add(Token(Token::binaryop, ">=", 20));
       }
       else add(Token(Token::binaryop, ">", 15));
     }
@@ -114,33 +114,33 @@ void Lexer::tokenize() {
     else if (currch == '<') {
       if (nextch == '=') {
         stream->get();
-        add(Token(Token::binaryop, "<=", 15));
+        add(Token(Token::binaryop, "<=", 20));
       }
-      else add(Token(Token::binaryop, "<", 15));
+      else add(Token(Token::binaryop, "<", 20));
     }
 
     // != and @todo: !
     else if (currch == '!') {
       if (nextch == '=') {
         stream->get();
-        add(Token(Token::binaryop, "!=", 15));
+        add(Token(Token::binaryop, "!=", 20));
       }
       else add(Token(Token::unknown, "unknown"));
     }
 
-    else if (currch == '+') add(Token(Token::binaryop, "+", 5));
-    else if (currch == '-') add(Token(Token::binaryop, "-", 5));
-    else if (currch == '*') add(Token(Token::binaryop, "*", 10));
-    else if (currch == '%') add(Token(Token::binaryop, "%", 10));
-    else if (currch == '.') add(Token(Token::binaryop, ".", 20));
-  
+    else if (currch == '+') add(Token(Token::binaryop, "+", 10));
+    else if (currch == '-') add(Token(Token::binaryop, "-", 10));
+    else if (currch == '*') add(Token(Token::binaryop, "*", 15));
+    else if (currch == '%') add(Token(Token::binaryop, "%", 15));
+    else if (currch == '.') add(Token(Token::binaryop, ".", 25));
+
     // division and comment
     else if (currch == '/') {
       if (nextch == '/') {
         while (stream->get() != '\n');
       }
       else {
-        add(Token(Token::binaryop, "/", 10));
+        add(Token(Token::binaryop, "/", 15));
       }
     }
 
