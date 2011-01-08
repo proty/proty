@@ -96,43 +96,43 @@ void Lexer::tokenize() {
     else if (currch == '=') {
       if (nextch == '=') {
         stream->get();
-        add(Token(Token::binaryop, "=="));
+        add(Token(Token::binaryop, "==", 15));
       }
-      else add(Token(Token::binaryop, "="));
+      else add(Token(Token::binaryop, "=", 25));
     }
 
     // > and >=
     else if (currch == '>') {
       if (nextch == '=') {
         stream->get();
-        add(Token(Token::binaryop, ">="));
+        add(Token(Token::binaryop, ">=", 15));
       }
-      else add(Token(Token::binaryop, ">"));
+      else add(Token(Token::binaryop, ">", 15));
     }
 
     // < and <=
     else if (currch == '<') {
       if (nextch == '=') {
         stream->get();
-        add(Token(Token::binaryop, "<="));
+        add(Token(Token::binaryop, "<=", 15));
       }
-      else add(Token(Token::binaryop, "<"));
+      else add(Token(Token::binaryop, "<", 15));
     }
 
     // != and @todo: !
     else if (currch == '!') {
       if (nextch == '=') {
         stream->get();
-        add(Token(Token::binaryop, "!="));
+        add(Token(Token::binaryop, "!=", 15));
       }
       else add(Token(Token::unknown, "unknown"));
     }
 
-    else if (currch == '+') add(Token(Token::binaryop, "+"));
-    else if (currch == '-') add(Token(Token::binaryop, "-"));
-    else if (currch == '*') add(Token(Token::binaryop, "*"));
-    else if (currch == '%') add(Token(Token::binaryop, "%"));
-    else if (currch == '.') add(Token(Token::binaryop, "."));
+    else if (currch == '+') add(Token(Token::binaryop, "+", 5));
+    else if (currch == '-') add(Token(Token::binaryop, "-", 5));
+    else if (currch == '*') add(Token(Token::binaryop, "*", 10));
+    else if (currch == '%') add(Token(Token::binaryop, "%", 10));
+    else if (currch == '.') add(Token(Token::binaryop, ".", 20));
   
     // division and comment
     else if (currch == '/') {
@@ -140,7 +140,7 @@ void Lexer::tokenize() {
         while (stream->get() != '\n');
       }
       else {
-        add(Token(Token::binaryop, "/"));
+        add(Token(Token::binaryop, "/", 10));
       }
     }
 
