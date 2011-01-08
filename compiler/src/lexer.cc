@@ -16,6 +16,7 @@ Lexer::Lexer(std::string filename) {
 }
 
 void Lexer::add(Token token) {
+  std::cout << token.getType() << ": " << token.getValue() << std::endl;
   tokens->push_back(token);
 }
 
@@ -44,11 +45,6 @@ void Lexer::tokenize() {
   while (true) {
     char currch = stream->get();
     char nextch = stream->peek();
-
-    if (stream->eof()) {
-      add(Token(Token::eof, "<eof>"));
-      break;
-    }
 
     // whitespace
     if (isspace(currch)) continue;
@@ -146,6 +142,11 @@ void Lexer::tokenize() {
 
     else {
       add(Token(Token::unknown, "" + currch));
+    }
+
+    if (stream->eof()) {
+      add(Token(Token::eof, "<eof>"));
+      break;
     }
   }
 }
