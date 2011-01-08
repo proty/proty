@@ -12,10 +12,10 @@ public:
   Parser(Lexer* lexer);
 
   Node* parse();
-  Node* parseProgram();
+  Node* parseBlock();
   Node* parseExpression();
   Node* parseOperation(Node*, int);
-  Node* parseAtom();
+  Node* parsePrimary();
   Node* parseCall(Node*);
 };
 

@@ -65,6 +65,20 @@ public:
   llvm::Value* codegen(Compiler*);
 };
 
+class FunctionNode : public Node {
+private:
+ Node* block;
+  std::vector<std::string> args;
+
+public:
+  FunctionNode(Node* block=0) : block(block) {}
+
+  void addArg(std::string arg) { args.push_back(arg); }
+  void setBlock(Node* block) { this->block = block; }
+  llvm::Value* codegen(Compiler*);
+};
+
+
 class NameNode : public Node {
 private:
   std::string value;

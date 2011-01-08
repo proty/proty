@@ -7,19 +7,28 @@ Parser::Parser(Lexer* lexer) {
 }
 
 Node* Parser::parse() {
-  return parseProgram();
+  return parseBlock();
 }
 
-Node* Parser::parseProgram() {
-  BlockNode* prog = new BlockNode;
-  while (!lexer->isNext(Token::eof)) {
-    prog->add(parseExpression());
+Node* Parser::parseBlock() {
+  BlockNode* block = new BlockNode;
+  while (true) {
+    switch (lexer->peek().getType()) {
+      case Token::endKw:
+        lexer->next();
+        return block;
+
+      case Token::eof:
+        return block;
+
+      default:
+        block->add(parseExpression());
+    }
   }
-  return prog;
 }
 
 Node* Parser::parseExpression() {
-  Node* lhs = parseAtom();
+  Node* lhs = parsePrimary();
 
   if (lexer->isNext(Token::binaryop)) {
     return parseOperation(lhs, 0);
@@ -34,7 +43,7 @@ Node* Parser::parseOperation(Node* lhs, int precedence) {
   while (lexer->isNext(Token::binaryop)
          && lexer->peek().getPrecedence() >= precedence) {
     Token op = lexer->next();
-    Node* rhs = parseAtom();
+    Node* rhs = parsePrimary();
     while (lexer->isNext(Token::binaryop)
            && (lexer->peek().getPrecedence() > op.getPrecedence())) {
       int nextPrecedence = lexer->peek().getPrecedence();
@@ -45,7 +54,7 @@ Node* Parser::parseOperation(Node* lhs, int precedence) {
   return lhs;
 }
 
-Node* Parser::parseAtom() {
+Node* Parser::parsePrimary() {
   if (lexer->isNext(Token::integer)) {
     std::string value = lexer->next().getValue();
     std::stringstream ss(value);
@@ -66,6 +75,13 @@ Node* Parser::parseAtom() {
     Node* expr = parseExpression();
     lexer->match(Token::rpar, ")");
     return expr;
+  }
+  else if (lexer->isNext(Token::doKw)) {
+    lexer->next();
+    FunctionNode* f = new FunctionNode();
+
+    f->setBlock(parseBlock());
+    return f;
   }
   else {
     std::cerr << "unkown token " << lexer->next().getValue() << std::endl;

@@ -16,7 +16,6 @@ Lexer::Lexer(std::string filename) {
 }
 
 void Lexer::add(Token token) {
-  std::cout << token.getType() << ": " << token.getValue() << std::endl;
   tokens->push_back(token);
 }
 

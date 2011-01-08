@@ -7,12 +7,13 @@
 
 class Compiler {
 public:
-  SymbolTable* symtab;
   llvm::IRBuilder<>* builder;
   llvm::Module* module;
   llvm::ExecutionEngine *executionEngine;
   llvm::FunctionPassManager* fpm;
   llvm::Linker* linker;
+  const llvm::Type* ObjectTy;
+  SymbolTable* symtab;
 
 public:
   Compiler(std::string);
