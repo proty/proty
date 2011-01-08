@@ -88,10 +88,6 @@ namespace proty {
     return ret;
   }
 
-  Object* newclass() {
-    return new Class();
-  }
-
   bool tobool(Object* obj) {
     return (bool)*obj;
   }
