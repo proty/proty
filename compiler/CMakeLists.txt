@@ -26,3 +26,5 @@ add_executable(proty
 )
 
 target_link_libraries(proty ${LLVM_LIBS})
+
+install(TARGETS proty RUNTIME DESTINATION bin)

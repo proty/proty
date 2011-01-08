@@ -16,3 +16,5 @@ add_executable(vm.bc
   src/instance.cc
   src/instructions.cc
 )
+
+install(TARGETS vm.bc RUNTIME DESTINATION lib/proty)
