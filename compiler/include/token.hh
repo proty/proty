@@ -4,19 +4,34 @@
 class Token {
 public:
   typedef enum {
+    // operators
     binaryop,
     unaryop,
+
+    // primitive data types
     integer,
     decimal,
     string,
     name,
+
+    // keywords
+    doKw,
+    ifKw,
+    elseKw,
+    whileKw,
+    endKw,
+
+    // braces
     lpar,
     rpar,
     lsqb,
     rsqb,
     lbrace,
     rbrace,
+
+    // other symbols
     comma,
+
     eof,
     unknown,
   } Type;

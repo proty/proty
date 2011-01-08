@@ -59,14 +59,21 @@ void Lexer::tokenize() {
       add(Token(Token::integer, buf.str()));
     }
 
-    // name
+    // name and keywords
     else if (isalpha(currch)) {
       std::stringstream buf;
       buf << currch;
       while(isalpha(stream->peek())) {
         buf << (char)stream->get();
       }
-      add(Token(Token::name, buf.str()));
+      std::string value = buf.str();
+
+      if (value == "do") add(Token(Token::doKw, value));
+      else if (value == "if") add(Token(Token::ifKw, value));
+      else if (value == "else") add(Token(Token::elseKw, value));
+      else if (value == "while") add(Token(Token::whileKw, value));
+      else if (value == "end") add(Token(Token::endKw, value));
+      else add(Token(Token::name, value));
     }
 
     // string
