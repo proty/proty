@@ -5,10 +5,11 @@ using namespace llvm;
 
 Value* BlockNode::codegen(Compiler* c) {
   std::vector<Node*>::iterator it;
+  Value* last = 0;
   for (it = nodes.begin(); it != nodes.end(); it++) {
-    (*it)->codegen(c);
+    last = (*it)->codegen(c);
   }
-  return 0;
+  return last;
 }
 
 Value* BinaryOpNode::codegen(Compiler* c) {
@@ -99,4 +100,48 @@ Value* CallNode::codegen(Compiler* c) {
   }
 
   return c->builder->CreateCall(callFunc, argValues.begin(), argValues.end(), "calltmp");
+}
+
+Value* FunctionNode::codegen(Compiler* c) {
+  int argc = args.size();
+
+  std::vector<const Type*> argTypes;
+  for(unsigned int i = 0; i < argc; i++) {
+    argTypes.push_back(c->ObjectTy);
+  }
+
+  FunctionType* funcTy = FunctionType::get(c->ObjectTy, argTypes, false);
+  Function* func = Function::Create(funcTy, Function::ExternalLinkage, "proty_func", c->module);
+
+  // backup current block and setup new block
+  BasicBlock* oldBB = c->builder->GetInsertBlock();
+  BasicBlock* mainBB = BasicBlock::Create(getGlobalContext(), "entry", func);
+  c->builder->SetInsertPoint(mainBB);
+
+  // allocate all args
+  Function::arg_iterator AI = func->arg_begin();
+  for (unsigned int i = 0; i < argc; i++, AI++) {
+      AI->setName(args.at(i));
+      AllocaInst* alloca = c->builder->CreateAlloca(c->ObjectTy, 0, args.at(i));
+      c->builder->CreateStore(AI, alloca);
+      c->symtab->store(args.at(i), alloca);
+  }
+
+  c->symtab->enterScope();
+  Value* returnValue = block->codegen(c);
+  c->builder->CreateRet(returnValue);
+  c->symtab->leaveScope();
+
+  // restore old block
+  c->builder->SetInsertPoint(oldBB);
+
+  // get a pointer to the generated function
+  std::vector<const Type*> funcPtrArgTypes;
+  FunctionType* funcPtrTy = FunctionType::get(c->ObjectTy, funcPtrArgTypes, true);
+  const Type* FunctionPtr = PointerType::get(funcPtrTy, 0);
+  Value* funcPtr = c->builder->CreateBitCast(func, FunctionPtr);
+
+  Function* newFunc = c->module->getFunction("newfunc");
+  Value* argcValue= ConstantInt::get(Type::getInt32Ty(getGlobalContext()), argc);
+  return c->builder->CreateCall2(newFunc, funcPtr, argcValue, "functmp");
 }
