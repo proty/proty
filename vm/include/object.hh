@@ -5,13 +5,11 @@ namespace proty {
 
   class Object {
   private:
-    Type* type;
+    Hash* properties;
 
   public:
-    Bool* kind_of(Type*);
-
-    virtual Object* get_attribute(Object*);
-    virtual Object* set_attribute(Object*, Object*);
+    virtual Object* getProperty(Object*);
+    virtual Object* setProperty(Object*, Object*);
 
     virtual Object* operator+(Object*);
     virtual Object* operator-(Object*);

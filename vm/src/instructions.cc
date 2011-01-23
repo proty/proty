@@ -48,12 +48,12 @@ namespace proty {
     return *a <= b;
   }
 
-  Object* getattr(Object* obj, Object* key) {
-    return obj->get_attribute(key);
+  Object* getprop(Object* obj, Object* key) {
+    return obj->getProperty(key);
   }
 
-  Object* setattr(Object* obj, Object* key, Object* value) {
-    return obj->set_attribute(key, value);
+  Object* setprop(Object* obj, Object* key, Object* value) {
+    return obj->setProperty(key, value);
   }
 
   Object* newint(int value) {

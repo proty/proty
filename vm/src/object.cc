@@ -3,8 +3,14 @@
 
 namespace proty {
 
-  Object* Object::get_attribute(Object*) { /* throw error */ return 0; };
-  Object* Object::set_attribute(Object*, Object*) { /* throw error */ return 0; };
+  Object* Object::getProperty(Object* key) {
+    return properties->get(key);
+  }
+
+  Object* Object::setProperty(Object* key, Object* value) {
+    properties->set(key, value);
+    return value;
+  }
 
   Object* Object::operator+(Object*) { /* throw error */ return 0; }
   Object* Object::operator-(Object*) { /* throw error */ return 0; }
