@@ -1,7 +1,7 @@
-def assert(x : Bool)
-    if x
-        print("+")
-    else
-        print("-")
-    end
+assert = do x
+  if x
+    io.print("+")
+  else
+    io.print("-")
+  end
 end

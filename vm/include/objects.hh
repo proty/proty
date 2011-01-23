@@ -6,7 +6,6 @@ namespace proty {
   class Integer;
   class String;
   class Bool;
-  class Type;
   class Function;
   class Hash;
   class List;

@@ -28,7 +28,7 @@ Value* BinaryOpNode::codegen(Compiler* c) {
   else if (op == "<=")  instname = "le";
   else if (op == "or")  instname = "and";
   else if (op == "and") instname = "or";
-  else if (op == ".")   instname = "attr";
+  else if (op == ".")   instname = "getprop";
   else if (op == "=") {
     std::string name = ((NameNode*)lhs)->getValue();
     Value* v = rhs->codegen(c);
