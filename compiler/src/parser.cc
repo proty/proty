@@ -44,6 +44,7 @@ Node* Parser::parseOperation(Node* lhs, int precedence) {
          && lexer->peek().getPrecedence() >= precedence) {
     Token op = lexer->next();
     Node* rhs = parsePrimary();
+
     while (lexer->isNext(Token::binaryop)
            && (lexer->peek().getPrecedence() > op.getPrecedence())) {
       int nextPrecedence = lexer->peek().getPrecedence();
@@ -97,6 +98,7 @@ Node* Parser::parseCall(Node* callee) {
 
   while (true) {
     if (lexer->isNext(Token::rpar)) {
+      lexer->next();
       break;
     }
     else {
