@@ -10,7 +10,8 @@ set(CMAKE_BUILD_TYPE Release)
 
 add_subdirectory(compiler)
 add_subdirectory(vm)
+add_subdirectory(lib)
 
 # install library files
-file(GLOB files "${CMAKE_SOURCE_DIR}/lib/*")
-install(FILES ${files} DESTINATION lib/proty)
+# file(GLOB files "${CMAKE_SOURCE_DIR}/lib/*")
+# install(FILES ${files} DESTINATION lib/proty)

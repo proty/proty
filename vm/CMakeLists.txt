@@ -3,7 +3,7 @@ set(CMAKE_CXX_FLAGS "-emit-llvm")
 
 include_directories(include)
 
-add_executable(vm.bc
+add_executable(lib/vm.bc
   src/object.cc
   src/bool.cc
   src/integer.cc
@@ -14,4 +14,4 @@ add_executable(vm.bc
   src/instructions.cc
 )
 
-install(TARGETS vm.bc RUNTIME DESTINATION lib/proty)
+install(TARGETS lib/vm.bc RUNTIME DESTINATION lib/proty)
