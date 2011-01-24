@@ -34,7 +34,10 @@ Node* Parser::parseExpression() {
     return parseOperation(lhs, 0);
   }
   else if (lexer->isNext(Token::lpar)) {
-    return parseCall(lhs);
+    lexer->next();
+    Node* expr = parseExpression();
+    lexer->match(Token::rpar, ")");
+    return expr;
   }
   else return lhs;
 }
@@ -56,38 +59,40 @@ Node* Parser::parseOperation(Node* lhs, int precedence) {
 }
 
 Node* Parser::parsePrimary() {
+  Node* prim;
   if (lexer->isNext(Token::integer)) {
     std::string value = lexer->next().getValue();
     std::stringstream ss(value);
     int v;
     ss >> v;
-    return new IntegerNode(v);
+    prim = new IntegerNode(v);
   }
   else if (lexer->isNext(Token::string)) {
     std::string value = lexer->next().getValue();
-    return new StringNode(value);
+    prim = new StringNode(value);
   }
   else if (lexer->isNext(Token::name)) {
     std::string value = lexer->next().getValue();
-    return new NameNode(value);
-  }
-  else if (lexer->isNext(Token::lpar)) {
-    lexer->next();
-    Node* expr = parseExpression();
-    lexer->match(Token::rpar, ")");
-    return expr;
+    prim = new NameNode(value);
   }
   else if (lexer->isNext(Token::doKw)) {
     lexer->next();
     FunctionNode* f = new FunctionNode();
 
     f->setBlock(parseBlock());
-    return f;
+    prim = f;
   }
   else {
     std::cerr << "unkown token " << lexer->next().getValue() << std::endl;
-    exit(0);
+    exit(1);
     return 0;
+  }
+
+  if (lexer->isNext(Token::lpar)) {
+    return parseCall(prim);
+  }
+  else {
+    return prim;
   }
 }
 
