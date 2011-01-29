@@ -37,6 +37,7 @@ private:
 public:
   StringNode(std::string value) : value(value) {}
 
+  std::string getValue() { return value; }
   llvm::Value* codegen(Compiler*);
 };
 

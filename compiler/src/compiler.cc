@@ -52,3 +52,9 @@ Module* Compiler::compile(Node* root) {
 
   return module;
 }
+
+void Compiler::loadModule(std::string name) {
+  bool native = false;
+  sys::Path path = sys::Path("build/lib/" + name + ".bc");
+  linker->LinkInFile(path, native);
+}
