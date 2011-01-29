@@ -78,7 +78,6 @@ void Lexer::tokenize() {
     // string
     else if (currch == '"') {
       std::stringstream buf;
-      buf << currch;
       while (stream->peek() != '"') {
         buf << (char)stream->get();
       }

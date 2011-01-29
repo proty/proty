@@ -88,18 +88,29 @@ Value* StringNode::codegen(Compiler* c) {
 }
 
 Value* CallNode::codegen(Compiler* c) {
-  int argc = args.size();
-  Function* callFunc = c->module->getFunction("call");
+  NameNode* name = reinterpret_cast<NameNode*>(callee);
+  if (name && name->getValue() == "load") {
+    StringNode* loadName = reinterpret_cast<StringNode*>(args.at(0));
+    std::string ln = loadName->getValue();
+    c->loadModule(ln);
 
-  std::vector<Value*> argValues;
-  argValues.push_back(callee->codegen(c));
-  argValues.push_back(ConstantInt::get(Type::getInt32Ty(getGlobalContext()), argc));
-
-  for (unsigned int i = 0; i < argc; i++) {
-    argValues.push_back(args.at(i)->codegen(c));
+    Function* initFunc = c->module->getFunction(ln + "_init");
+    return c->builder->CreateCall(initFunc, ln);
   }
+  else {
+    int argc = args.size();
+    Function* callFunc = c->module->getFunction("call");
 
-  return c->builder->CreateCall(callFunc, argValues.begin(), argValues.end(), "calltmp");
+    std::vector<Value*> argValues;
+    argValues.push_back(callee->codegen(c));
+    argValues.push_back(ConstantInt::get(Type::getInt32Ty(getGlobalContext()), argc));
+
+    for (unsigned int i = 0; i < argc; i++) {
+      argValues.push_back(args.at(i)->codegen(c));
+    }
+
+    return c->builder->CreateCall(callFunc, argValues.begin(), argValues.end(), "calltmp");
+  }
 }
 
 Value* FunctionNode::codegen(Compiler* c) {

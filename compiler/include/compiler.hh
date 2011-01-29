@@ -19,6 +19,7 @@ public:
   Compiler(std::string);
 
   llvm::Module* compile(Node*);
+  void loadModule(std::string);
 };
 
 #endif

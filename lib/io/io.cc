@@ -8,7 +8,7 @@ Object* io_print(Object* obj) {
   return Bool::False;
 }
 
-Object* io_init() {
+extern "C" Object* io_init() {
   Object* io = new Object();
 
   Function* write = new Function((FunctionPtr*)io_print, 1);
