@@ -88,12 +88,17 @@ Node* Parser::parsePrimary() {
     return 0;
   }
 
-  if (lexer->isNext(Token::lpar)) {
-    return parseCall(prim);
+  while (lexer->isNext(Token::lpar) || lexer->isNext(Token::dot)) {
+    if (lexer->isNext(Token::lpar)) {
+      prim = parseCall(prim);
+    }
+    else if (lexer->isNext(Token::dot)) {
+      lexer->next();
+      std::string n = lexer->match(Token::name, "slot name").getValue();
+      prim = new SlotNode(prim, n);
+    }
   }
-  else {
-    return prim;
-  }
+  return prim;
 }
 
 Node* Parser::parseCall(Node* callee) {

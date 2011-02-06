@@ -4,7 +4,7 @@
 using namespace proty;
 
 Object* io_print(Object* obj) {
-  printf("%s", (const char*)obj);
+  printf("%s", (const char*)(*obj));
   return Bool::False;
 }
 
@@ -12,7 +12,7 @@ extern "C" Object* io_init() {
   Object* io = new Object();
 
   Function* write = new Function((FunctionPtr*)io_print, 1);
-  io->setProperty(new String("write"), write);
+  io->setSlot("write", write);
 
   return io;
 }

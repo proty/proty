@@ -91,4 +91,16 @@ public:
   llvm::Value* codegen(Compiler*);
 };
 
+class SlotNode : public Node {
+private:
+  Node* obj;
+  std::string name;
+
+public:
+  SlotNode(Node* obj, std::string name) : obj(obj), name(name) {}
+
+  llvm::Value* codegen(Compiler*);
+};
+
+
 #endif

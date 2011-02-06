@@ -28,7 +28,6 @@ Value* BinaryOpNode::codegen(Compiler* c) {
   else if (op == "<=")  instname = "le";
   else if (op == "or")  instname = "and";
   else if (op == "and") instname = "or";
-  else if (op == ".")   instname = "getprop";
   else if (op == "=") {
     std::string name = ((NameNode*)lhs)->getValue();
     Value* v = rhs->codegen(c);
@@ -64,6 +63,13 @@ Value* NameNode::codegen(Compiler* c) {
     exit(0);
   }
   return c->builder->CreateLoad(v, value.c_str());
+}
+
+Value* SlotNode::codegen(Compiler* c) {
+  Function* getslot = c->module->getFunction("getslot");
+  Value* object = obj->codegen(c);
+  Value* slot = c->builder->CreateGlobalStringPtr(name.c_str(), ".str");
+  return c->builder->CreateCall2(getslot, object, slot, name + "_tmp");
 }
 
 Value* IntegerNode::codegen(Compiler* c) {

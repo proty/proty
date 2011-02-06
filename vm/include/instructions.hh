@@ -19,8 +19,8 @@ extern "C" {
   inline Object* lt(Object*, Object*);
   inline Object* le(Object*, Object*);
 
-  inline Object* getattr(Object*, Object*);
-  inline Object* setattr(Object*, Object*, Object*);
+  inline Object* getslot(Object*, const char*);
+  inline void    setslot(Object*, const char*, Object*);
 
   inline Object* newint(int);
   inline Object* newbool(bool);

@@ -10,10 +10,9 @@ exec_program(${LLVM_CONFIG} ARGS --libs core jit interpreter linker native bitwr
 
 set(CMAKE_EXE_LINKER_FLAGS ${LLVM_LDFLAGS})
 set(CMAKE_CXX_FLAGS ${LLVM_CXXFLAGS})
-set(CMAKE_CXX_FLAGS_RELEASE "")
 
 include_directories(include)
-configure_file("${CMAKE_CURRENT_SOURCE_DIR}/include/config.hh.in" 
+configure_file("${CMAKE_CURRENT_SOURCE_DIR}/include/config.hh.in"
                "${CMAKE_CURRENT_SOURCE_DIR}/include/config.hh")
 
 add_executable(proty

@@ -28,7 +28,7 @@ Compiler::Compiler(std::string name) {
 
   // Link in the VM
   bool native = false;
-  linker->LinkInFile(sys::Path("build/vm.bc"), native);
+  linker->LinkInFile(sys::Path("lib/vm.bc"), native);
 
   // Get the object type which is defined in vm.bc
   ObjectTy = PointerType::get(module->getTypeByName("class.proty::Object"), 0);
@@ -55,6 +55,6 @@ Module* Compiler::compile(Node* root) {
 
 void Compiler::loadModule(std::string name) {
   bool native = false;
-  sys::Path path = sys::Path("build/lib/" + name + ".bc");
+  sys::Path path = sys::Path("lib/" + name + ".bc");
   linker->LinkInFile(path, native);
 }
