@@ -11,12 +11,12 @@ namespace proty {
   class List;
 }
 
-#include "object.hh"
-#include "integer.hh"
-#include "string.hh"
-#include "bool.hh"
-#include "function.hh"
-#include "hash.hh"
-#include "list.hh"
+#include "objects/object.hh"
+#include "objects/integer.hh"
+#include "objects/string.hh"
+#include "objects/bool.hh"
+#include "objects/function.hh"
+#include "objects/hash.hh"
+#include "objects/list.hh"
 
 #endif

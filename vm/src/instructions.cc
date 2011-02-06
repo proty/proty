@@ -48,12 +48,12 @@ namespace proty {
     return *a <= b;
   }
 
-  Object* getprop(Object* obj, Object* key) {
-    return obj->getProperty(key);
+  Object* getslot(Object* obj, const char* key) {
+    return obj->getSlot(key);
   }
 
-  Object* setprop(Object* obj, Object* key, Object* value) {
-    return obj->setProperty(key, value);
+  void setslot(Object* obj, const char* key, Object* value) {
+    obj->setSlot(key, value);
   }
 
   Object* newint(int value) {

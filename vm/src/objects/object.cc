@@ -1,15 +1,19 @@
 #include "objects.hh"
+#include "phash.hh"
 #include <cstdio>
 
 namespace proty {
 
-  Object* Object::getProperty(Object* key) {
-    return properties->get(key);
+  Object::Object() {
+    slots = new PHash();
   }
 
-  Object* Object::setProperty(Object* key, Object* value) {
-    properties->set(key, value);
-    return value;
+  Object* Object::getSlot(const char* key) {
+    return slots->get(key);
+  }
+
+  void Object::setSlot(const char* key, Object* value) {
+    slots->set(key, value);
   }
 
   Object* Object::operator+(Object*) { /* throw error */ return 0; }

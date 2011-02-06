@@ -3,13 +3,17 @@
 
 namespace proty {
 
+  class PHash;
+
   class Object {
   private:
-    Hash* properties;
+    PHash* slots;
 
   public:
-    virtual Object* getProperty(Object*);
-    virtual Object* setProperty(Object*, Object*);
+    Object();
+
+    Object* getSlot(const char*);
+    void setSlot(const char*, Object*);
 
     virtual Object* operator+(Object*);
     virtual Object* operator-(Object*);
