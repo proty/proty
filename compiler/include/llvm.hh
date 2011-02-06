@@ -16,5 +16,7 @@
 #include <llvm/Support/IRBuilder.h>
 #include <llvm/System/Path.h>
 #include <llvm/ValueSymbolTable.h>
+#include <llvm/Support/raw_ostream.h>
+#include <llvm/Bitcode/ReaderWriter.h>
 
 #endif
