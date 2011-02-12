@@ -11,7 +11,7 @@ add_executable(lib/vm.bc
   src/objects/hash.cc
   src/objects/list.cc
   src/objects/function.cc
-  src/phash.cc
+  src/hashmap.cc
   src/instructions.cc
 )
 

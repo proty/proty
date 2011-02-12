@@ -1,19 +1,19 @@
-#ifndef PROTY_VM_PHASH_HH
-#define PROTY_VM_PHASH_HH
+#ifndef PROTY_VM_HASHMAP_HH
+#define PROTY_VM_HASHMAP_HH
 
 namespace proty {
 
   class Object;
-  struct PHashBucket;
+  struct HashMapBucket;
 
-  class PHash {
+  class HashMap {
   private:
-    PHashBucket** content;
+    HashMapBucket* content;
     unsigned int size;
     unsigned int bounds;
 
   public:
-    PHash();
+    HashMap();
 
     Object* get(const char*);
     Object* set(const char*, Object*);
