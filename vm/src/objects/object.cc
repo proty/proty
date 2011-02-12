@@ -1,11 +1,11 @@
 #include "objects.hh"
-#include "phash.hh"
+#include "hashmap.hh"
 #include <cstdio>
 
 namespace proty {
 
   Object::Object() {
-    slots = new PHash();
+    slots = new HashMap();
   }
 
   Object* Object::getSlot(const char* key) {

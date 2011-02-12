@@ -3,11 +3,11 @@
 
 namespace proty {
 
-  class PHash;
+  class HashMap;
 
   class Object {
   private:
-    PHash* slots;
+    HashMap* slots;
 
   public:
     Object();
