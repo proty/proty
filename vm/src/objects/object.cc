@@ -20,7 +20,7 @@ namespace proty {
     return new Object(this);
   }
 
-  static Object* createProto() {
+  Object* Object::createProto() {
     return new Object(0);
   }
 
