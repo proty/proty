@@ -35,7 +35,7 @@ namespace proty {
   Object* HashMap::get(const char* key) {
     unsigned int h = hash(key) % bounds;
     while (content[h].key != 0) {
-      if (strcmp(content[h].key, key)) {
+      if (!strcmp(content[h].key, key)) {
 	return content[h].value;
       }
       h = ((h+1) % bounds);
@@ -51,7 +51,7 @@ namespace proty {
       for (int i = 0; i < bounds; i++) {
         if (content[i].key != 0) {
           unsigned int h = hash(content[i].key) % bounds * 2;
-          while (content[h].key != 0 && !strcmp(content[h].key, key)) {
+          while (content[h].key != 0 && strcmp(content[h].key, key)) {
 	    h = ((h+1) % bounds);
 	  }
           tmp[h] = content[i];
