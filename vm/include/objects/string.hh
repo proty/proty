@@ -5,10 +5,14 @@ namespace proty {
 
   class String : public Object {
   private:
+    static Object* proto;
     const char* value;
 
   public:
-    String(const char* value) : value(value) {}
+    String(const char* value) : Object(proto),
+				value(value) {}
+
+    static Object* createProto();
 
     Integer* length();
 

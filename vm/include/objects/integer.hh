@@ -5,10 +5,14 @@ namespace proty {
 
   class Integer : public Object {
   private:
+    static Object* proto;
     int value;
 
   public:
-    Integer(int value) : value(value) {};
+    Integer(int value) : Object(proto),
+			 value(value) {}
+
+    static Object* createProto();
 
     Object* operator+(Object*);
     Object* operator-(Object*);

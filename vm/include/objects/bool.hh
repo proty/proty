@@ -5,10 +5,14 @@ namespace proty {
 
   class Bool : public Object {
   private:
+    static Object* proto;
     bool value;
 
   public:
-    Bool(bool value) : value(value) {};
+    Bool(bool value) : Object(proto), value(value) {};
+
+    static Object* createProto();
+
     static Bool* get(bool value);
 
     static Bool* True;

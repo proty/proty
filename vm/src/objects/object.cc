@@ -4,8 +4,28 @@
 
 namespace proty {
 
+  Object* Object::root = Object::createProto();
+
   Object::Object() {
     slots = new HashMap();
+    this->proto = Object::root;
+  }
+
+  Object::Object(Object* proto) {
+    slots = new HashMap();
+    this->proto = proto;
+  }
+
+  Object* Object::createNew() {
+    return new Object(this);
+  }
+
+  static Object* createProto() {
+    return new Object(0);
+  }
+
+  Object* Object::getProto() {
+    return proto;
   }
 
   Object* Object::getSlot(const char* key) {

@@ -8,9 +8,17 @@ namespace proty {
   class Object {
   private:
     HashMap* slots;
+    Object* proto;
+    static Object* root;
 
   public:
     Object();
+    Object(Object*);
+
+    Object* createNew();
+    static Object* createProto();
+
+    Object* getProto();
 
     Object* getSlot(const char*);
     void setSlot(const char*, Object*);

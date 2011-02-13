@@ -4,6 +4,12 @@
 
 namespace proty {
 
+  Object* String::proto = createProto();
+
+  Object* String::createProto() {
+    return new Object();
+  }
+
   Integer* String::length() {
     return new Integer(strlen(value));
   }
