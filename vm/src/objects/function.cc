@@ -3,6 +3,12 @@
 
 namespace proty {
 
+  Object* Function::proto = Function::createProto();
+
+  Object* Function::createProto() {
+    return new Object();
+  }
+
   Object* Function::operator()(int argc, Object* argv[]) {
     // @todo: find a better method to pass the arguments
     Object* ret;

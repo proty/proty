@@ -7,11 +7,15 @@ namespace proty {
 
   class Function : public Object {
   private:
+    static Object* proto;
     FunctionPtr* ref;
     unsigned int argc;
 
   public:
-    Function(FunctionPtr* ref, unsigned int argc) : ref(ref), argc(argc) {};
+    Function(FunctionPtr* ref, unsigned int argc)
+      : Object(proto), ref(ref), argc(argc) {};
+
+    static Object* createProto();
 
     Object* operator()(int, Object*[]);
   };

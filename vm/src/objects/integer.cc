@@ -3,6 +3,12 @@
 
 namespace proty {
 
+  Object* Integer::proto = Integer::createProto();
+
+  Object* Integer::createProto() {
+    return new Object();
+  }
+
   Object* Integer::operator+(Object* b) {
     return new Integer(this->value + (int)*b);
   }

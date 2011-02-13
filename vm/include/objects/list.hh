@@ -5,10 +5,13 @@ namespace proty {
 
   class List : public Object {
   private:
+    static Object* proto;
     Object** content;
 
   public:
-    List() {};
+    List() : Object(createProto()) {};
+
+    static Object* createProto();
 
     Object* operator[](int);
   };

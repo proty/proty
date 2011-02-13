@@ -3,16 +3,14 @@
 
 namespace proty {
 
-  struct HashBucket;
-
   class Hash : public Object {
   private:
-    HashBucket** content;
-    unsigned int size;
-    unsigned int bounds;
+    static Object* proto;
 
   public:
-    Hash();
+    Hash() : Object(proto) {}
+
+    static Object* createProto();
 
     Object* get(Object*);
     Object* set(Object*, Object*);
