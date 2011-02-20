@@ -12,16 +12,16 @@ set(CMAKE_EXE_LINKER_FLAGS ${LLVM_LDFLAGS})
 set(CMAKE_CXX_FLAGS ${LLVM_CXXFLAGS})
 
 include_directories(include)
-configure_file("${CMAKE_CURRENT_SOURCE_DIR}/include/config.hh.in"
-               "${CMAKE_CURRENT_SOURCE_DIR}/include/config.hh")
+configure_file("${CMAKE_CURRENT_SOURCE_DIR}/config.hh.in"
+               "${CMAKE_CURRENT_SOURCE_DIR}/config.hh")
 
 add_executable(proty
-  src/lexer.cc
-  src/parser.cc
-  src/compiler.cc
-  src/symtab.cc
-  src/codegen.cc
-  src/main.cc
+  lexer.cc
+  parser.cc
+  compiler.cc
+  symtab.cc
+  codegen.cc
+  main.cc
 )
 
 target_link_libraries(proty ${LLVM_LIBS})
