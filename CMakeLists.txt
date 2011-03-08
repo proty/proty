@@ -9,8 +9,7 @@ set(EXECUTABLE_OUTPUT_PATH "${CMAKE_SOURCE_DIR}/build")
 set(LIBRARY_OUTPUT_PATH "${CMAKE_SOURCE_DIR}/lib")
 
 add_subdirectory(compiler)
-add_subdirectory(runtime)
-# add_subdirectory(lib)
+add_subdirectory(lib)
 
 # install library files
 # file(GLOB files "${CMAKE_SOURCE_DIR}/lib/*")
