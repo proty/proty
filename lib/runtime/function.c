@@ -5,13 +5,12 @@
 Object* Function_createProto() {
   Object* proto = Object_new(Object_proto);
 
-  Object_setSlot(proto, Symbol_get("()"), Function_new((FuncPtr)Function_call));
-
   return proto;
 }
 
-Object* Function_new((FuncPtr)func, int argc) {
-
+Object* Function_new(FuncPtr func) {
+  Object* new = Object_new(Object_proto);
+  return new;
 }
 
 Object* Function_call(Object* self, int argc, ...) {

@@ -4,6 +4,6 @@
 extern Object* Symbol_proto;
 Object* Symbol_createProto();
 
-Symbol* Symbol_get(const char*);
+Object* Symbol_get(const char*);
 
 #endif
