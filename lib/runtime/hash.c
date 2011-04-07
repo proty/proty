@@ -8,3 +8,15 @@ Object* Hash_createProto() {
 
   return proto;
 }
+
+Object* Hash_init(Object* self) {
+
+}
+
+Object* Hash_set(Object* self, Object* key, Object* value) {
+
+}
+
+Object* Hash_get(Object* self, Object* key) {
+
+}

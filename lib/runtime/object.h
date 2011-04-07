@@ -9,7 +9,7 @@ struct Object {
   } data;
 
   Object* proto;
-  Hash* slots;
+  Object* slots;
 };
 
 extern Object* Object_proto;
@@ -17,7 +17,7 @@ Object* Object_createProto();
 
 Object* Object_new(Object*);
 
-Object* Object_setSlot(Object*, Symbol*, Object*);
-Object* Object_getSlot(Object*, Symbol*);
+Object* Object_setSlot(Object*, Object*, Object*);
+Object* Object_getSlot(Object*, Object*);
 
 #endif

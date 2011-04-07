@@ -12,12 +12,12 @@ Object* Object_new(Object* proto) {
   return new;
 }
 
-Object* Object_setSlot(Object* self, Symbol* key, Object* value) {
+Object* Object_setSlot(Object* self, Object* key, Object* value) {
   Hash_set(self->slots, key, value);
   return 0;
 }
 
-Object* Object_getSlot(Object* self, Symbol* key) {
+Object* Object_getSlot(Object* self, Object* key) {
   Hash_get(self->slots, key);
   return 0;
 }
