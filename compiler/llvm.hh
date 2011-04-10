@@ -14,7 +14,7 @@
 #include <llvm/Target/TargetSelect.h>
 #include <llvm/Transforms/Scalar.h>
 #include <llvm/Support/IRBuilder.h>
-#include <llvm/System/Path.h>
+#include <llvm/Support/Path.h>
 #include <llvm/ValueSymbolTable.h>
 #include <llvm/Support/raw_ostream.h>
 #include <llvm/Bitcode/ReaderWriter.h>
