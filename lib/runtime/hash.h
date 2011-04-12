@@ -4,7 +4,7 @@
 struct Hash {
   int size;
   int bounds;
-  Symbol** keys;
+  Object** keys;
   Object** values;
 };
 
