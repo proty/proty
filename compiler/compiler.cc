@@ -28,10 +28,10 @@ Compiler::Compiler(std::string name) {
 
   // Link in the VM
   bool native = false;
-  linker->LinkInFile(sys::Path("lib/vm.bc"), native);
+  linker->LinkInFile(sys::Path("lib/runtime.bc"), native);
 
-  // Get the object type which is defined in vm.bc
-  ObjectTy = PointerType::get(module->getTypeByName("class.proty::Object"), 0);
+  // Get the object type which is defined in runtime.bc
+  ObjectTy = PointerType::get(module->getTypeByName("struct.Object"), 0);
 }
 
 Module* Compiler::compile(Node* root) {
