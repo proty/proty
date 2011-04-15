@@ -11,6 +11,8 @@ struct Hash {
 extern Object* Hash_proto;
 Object* Hash_createProto();
 
+Object* Hash_init(Object*);
+
 Object* Hash_set(Object*, Object*, Object*);
 Object* Hash_get(Object*, Object*);
 

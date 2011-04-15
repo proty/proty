@@ -66,14 +66,14 @@ Value* NameNode::codegen(Compiler* c) {
 }
 
 Value* SlotNode::codegen(Compiler* c) {
-  Function* getslot = c->module->getFunction("getslot");
+  Function* getslot = c->module->getFunction("Object_getSlot");
   Value* object = obj->codegen(c);
   Value* slot = c->builder->CreateGlobalStringPtr(name.c_str(), ".str");
   return c->builder->CreateCall2(getslot, object, slot, name + "_tmp");
 }
 
 Value* IntegerNode::codegen(Compiler* c) {
-  Function* F = c->module->getFunction("newint");
+  Function* F = c->module->getFunction("Integer_new");
   Value* intValue = ConstantInt::get(Type::getInt32Ty(getGlobalContext()), value);
   return c->builder->CreateCall(F, intValue, "inttmp");
 }
@@ -87,7 +87,7 @@ Value* StringNode::codegen(Compiler* c) {
 
   Value* string = c->builder->CreateGlobalStringPtr(value.c_str(), ".str");
 
-  Function* func = c->module->getFunction("newstring");
+  Function* func = c->module->getFunction("String_new");
   std::vector<Value*> args;
   args.push_back(string);
   return c->builder->CreateCall(func, args.begin(), args.end(), "stringtmp");
@@ -105,7 +105,7 @@ Value* CallNode::codegen(Compiler* c) {
   }
   else {
     int argc = args.size();
-    Function* callFunc = c->module->getFunction("call");
+    Function* callFunc = c->module->getFunction("Object_call");
 
     std::vector<Value*> argValues;
     argValues.push_back(callee->codegen(c));
@@ -158,7 +158,7 @@ Value* FunctionNode::codegen(Compiler* c) {
   const Type* FunctionPtr = PointerType::get(funcPtrTy, 0);
   Value* funcPtr = c->builder->CreateBitCast(func, FunctionPtr);
 
-  Function* newFunc = c->module->getFunction("newfunc");
+  Function* newFunc = c->module->getFunction("Function_new");
   Value* argcValue= ConstantInt::get(Type::getInt32Ty(getGlobalContext()), argc);
   return c->builder->CreateCall2(newFunc, funcPtr, argcValue, "functmp");
 }
