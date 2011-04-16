@@ -11,6 +11,7 @@ add_executable(lib/runtime.bc
   runtime/symbol.c
   runtime/hash.c
   runtime/integer.c
+  runtime/string.c
   runtime/runtime.c
 )
 
