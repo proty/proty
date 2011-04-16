@@ -12,5 +12,6 @@ typedef Object* (*FuncPtr)(Object*, ...);
 #include "hash.h"
 #include "function.h"
 #include "integer.h"
+#include "string.h"
 
 #endif
