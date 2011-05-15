@@ -36,7 +36,7 @@ int main(int argc, char** argv) {
       else if (argv[count] == std::string("--version"))   { version(); return 0; }
       else if (argv[count] == std::string("--"))          { break; }
       else {
-        std::cerr << "pyrite: invalid option " << argv[count] << std::endl;
+        std::cerr << "proty: invalid option " << argv[count] << std::endl;
         return 1;
       }
     }

@@ -13,17 +13,8 @@ Object* Function_new(FuncPtr func) {
   return new;
 }
 
-Object* Function_call(Object* self, int argc, ...) {
+Object* Function_call(Object* self, int argc, Object* argv[]) {
   FuncPtr func = (FuncPtr)self->data.ptr;
-  va_list varargs;
-
-  Object** argv = malloc(sizeof(Object*)*argc);
-
-  va_start(varargs, argc);
-  for (int i = 0; i < argc; i++) {
-    argv[i] = va_arg(varargs, Object*);
-  }
-  va_end(varargs);
 
   Object* ret;
   switch (argc) {
@@ -36,8 +27,5 @@ Object* Function_call(Object* self, int argc, ...) {
     case 6: ret = func(argv[0], argv[1], argv[2], argv[3], argv[4], argv[5]); break;
     case 7: ret = func(argv[0], argv[1], argv[2], argv[3], argv[4], argv[5], argv[6]); break;
   }
-
-  free(argv);
-
   return ret;
 }

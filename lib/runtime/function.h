@@ -6,4 +6,6 @@ Object* Function_createProto();
 
 Object* Function_new(FuncPtr);
 
+Object* Function_call(Object*, int argc, Object*[]);
+
 #endif

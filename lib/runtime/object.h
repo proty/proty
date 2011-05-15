@@ -20,4 +20,8 @@ Object* Object_new(Object*);
 Object* Object_setSlot(Object*, Object*, Object*);
 Object* Object_getSlot(Object*, Object*);
 
+Object* Object_call(Object*, int, ...);
+
+unsigned int Object_hash(Object*);
+
 #endif
