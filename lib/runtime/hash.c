@@ -5,10 +5,10 @@
 Object* Hash_createProto() {
   Object* proto = Object_new(Object_proto);
 
-  Object_setSlot(proto, Symbol_get("init"), Function_new((FuncPtr)Hash_init));
+  Object_setSlot(proto, String_new("init"), Function_new((FuncPtr)Hash_init));
 
-  Object_setSlot(proto, Symbol_get("set"), Function_new((FuncPtr)Hash_set));
-  Object_setSlot(proto, Symbol_get("get"), Function_new((FuncPtr)Hash_get));
+  Object_setSlot(proto, String_new("set"), Function_new((FuncPtr)Hash_set));
+  Object_setSlot(proto, String_new("get"), Function_new((FuncPtr)Hash_get));
 
   return proto;
 }
@@ -39,10 +39,10 @@ Object* Hash_set(Object* self, Object* key, Object* value) {
 
     for (int i = 0; i < hash->bounds; i++) {
       if (hash->keys[i]) {
-        unsigned int pos = (unsigned int)hash->keys[i] % hash->bounds*2;
+        unsigned int pos = Object_hash(hash->keys[i]) % hash->bounds*2;
         while (tmpKeys[pos] && (hash->keys[i] != tmpKeys[pos])) pos = (pos+1) % hash->bounds;
-	tmpKeys[pos] = hash->keys[i];
-	tmpValues[pos] = hash->values[i];
+        tmpKeys[pos] = hash->keys[i];
+        tmpValues[pos] = hash->values[i];
       }
     }
 
@@ -55,7 +55,7 @@ Object* Hash_set(Object* self, Object* key, Object* value) {
     hash->bounds *= 2;
   }
 
-  unsigned int pos = (unsigned int)key % hash->bounds;
+  unsigned int pos = Object_hash(key) % hash->bounds;
 
   while (hash->keys[pos] && (hash->keys[pos] != key)) pos = (pos+1) % hash->bounds;
 
@@ -68,7 +68,7 @@ Object* Hash_set(Object* self, Object* key, Object* value) {
 
 Object* Hash_get(Object* self, Object* key) {
   Hash* hash = (Hash*)self->data.ptr;
-  unsigned int pos = (unsigned int)key % hash->bounds;
+  unsigned int pos = Object_hash(key) % hash->bounds;
   while (!hash->keys[pos] || hash->keys[pos] != key) pos = (pos+1) % hash->bounds;
   return hash->values[pos];
 }
