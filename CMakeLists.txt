@@ -9,7 +9,7 @@ set(EXECUTABLE_OUTPUT_PATH "${CMAKE_SOURCE_DIR}/build")
 set(LIBRARY_OUTPUT_PATH "${CMAKE_SOURCE_DIR}/lib")
 
 # detect version
-exec_program(git ARGS describe --all --tags --long OUTPUT_VARIABLE GIT_VERSION)
+exec_program(git ARGS describe OUTPUT_VARIABLE GIT_VERSION)
 
 add_subdirectory(compiler)
 add_subdirectory(lib)
