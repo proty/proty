@@ -1,4 +1,5 @@
 #include "runtime.h"
+#include <stdio.h>
 
 Object* Object_proto;
 Object* Function_proto;

@@ -4,11 +4,13 @@
 
 using namespace llvm;
 
-Compiler::Compiler(std::string name) {
+Compiler::Compiler(std::string name, bool debug) {
   symtab = new SymbolTable();
   builder = new IRBuilder<>(getGlobalContext());
   module = new Module(name, getGlobalContext());
   linker = new Linker(name, module);
+
+  this->debug = debug;
 
   // Setup the ExecutionEngine
   InitializeNativeTarget();
@@ -35,12 +37,19 @@ Compiler::Compiler(std::string name) {
 }
 
 Module* Compiler::compile(Node* root) {
+  // Create the main function
   std::vector<const Type*> argTypes;
   FunctionType *funcTy = FunctionType::get(Type::getVoidTy(getGlobalContext()), argTypes, false);
   Function *func = Function::Create(funcTy, Function::ExternalLinkage, "main", module);
 
+
   BasicBlock *BB = BasicBlock::Create(getGlobalContext(), "entry", func);
   builder->SetInsertPoint(BB);
+
+  // Init the runtime
+  Function* runtime_init = module->getFunction("runtime_init");
+  builder->CreateCall(runtime_init);
+
 
   symtab->enterScope();
   root->codegen(this);

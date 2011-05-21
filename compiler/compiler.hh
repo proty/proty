@@ -15,8 +15,10 @@ public:
   const llvm::Type* ObjectTy;
   SymbolTable* symtab;
 
+  bool debug;
+
 public:
-  Compiler(std::string);
+  Compiler(std::string, bool=false);
 
   llvm::Module* compile(Node*);
   void loadModule(std::string);

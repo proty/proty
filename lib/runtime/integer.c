@@ -3,10 +3,10 @@
 Object* Integer_createProto() {
   Object* proto = Object_new(Object_proto);
 
-  Object_setSlot(proto, String_new("+"), Function_new((FuncPtr)Integer_add));
-  Object_setSlot(proto, String_new("-"), Function_new((FuncPtr)Integer_sub));
-  Object_setSlot(proto, String_new("*"), Function_new((FuncPtr)Integer_mul));
-  Object_setSlot(proto, String_new("/"), Function_new((FuncPtr)Integer_div));
+  Object_setSlot(proto, "+", Function_new((FuncPtr)Integer_add));
+  Object_setSlot(proto, "-", Function_new((FuncPtr)Integer_sub));
+  Object_setSlot(proto, "*", Function_new((FuncPtr)Integer_mul));
+  Object_setSlot(proto, "/", Function_new((FuncPtr)Integer_div));
 
   return proto;
 }

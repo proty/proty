@@ -13,22 +13,7 @@ Value* BlockNode::codegen(Compiler* c) {
 }
 
 Value* BinaryOpNode::codegen(Compiler* c) {
-  std::string instname = "";
-
-  if (op == "+")        instname = "add";
-  else if (op == "-")   instname = "sub";
-  else if (op == "*")   instname = "mul";
-  else if (op == "/")   instname = "div";
-  else if (op == "%")   instname = "mod";
-  else if (op == "==")  instname = "eq";
-  else if (op == "!=")  instname = "ne";
-  else if (op == ">")   instname = "gt";
-  else if (op == ">=")  instname = "ge";
-  else if (op == "<")   instname = "lt";
-  else if (op == "<=")  instname = "le";
-  else if (op == "or")  instname = "and";
-  else if (op == "and") instname = "or";
-  else if (op == "=") {
+  if (op == "=") {
     std::string name = ((NameNode*)lhs)->getValue();
     Value* v = rhs->codegen(c);
     AllocaInst* alloca = (AllocaInst*)c->symtab->lookup(name);
@@ -42,18 +27,14 @@ Value* BinaryOpNode::codegen(Compiler* c) {
     }
     return alloca;
   }
-  else return 0;
+  else {
+    SlotNode* sn = new SlotNode(lhs, op);
 
-  Function* F = c->module->getFunction(instname);
+    CallNode* cn = new CallNode(sn);
+    cn->addArg(rhs);
 
-  Value* l = lhs->codegen(c);
-  Value* r = rhs->codegen(c);
-
-  std::vector<Value*> args;
-  args.push_back(l);
-  args.push_back(r);
-
-  return c->builder->CreateCall(F, args.begin(), args.end(), instname + "tmp");
+    return cn->codegen(c);
+  }
 }
 
 Value* NameNode::codegen(Compiler* c) {
