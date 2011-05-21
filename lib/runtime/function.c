@@ -9,7 +9,8 @@ Object* Function_createProto() {
 }
 
 Object* Function_new(FuncPtr func) {
-  Object* new = Object_new(Object_proto);
+  Object* new = Object_new(Function_proto);
+  new->data.ptr = func;
   return new;
 }
 

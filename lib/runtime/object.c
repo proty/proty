@@ -10,16 +10,33 @@ Object* Object_createProto() {
 Object* Object_new(Object* proto) {
   Object* new = malloc(sizeof(Object));
   new->proto = proto;
+  new->slots = 0;
+
+  // call init
+  Object* init = Object_getSlot(new, "init");
+  if (init) Object_call(init, 1, new);
+
   return new;
 }
 
-Object* Object_setSlot(Object* self, Object* key, Object* value) {
+Object* Object_setSlot(Object* self, const char* key, Object* value) {
+  if (!self->slots) self->slots = Object_new(Hash_proto);
   Hash_set(self->slots, key, value);
-  return 0;
+  return value;
 }
 
-Object* Object_getSlot(Object* self, Object* key) {
-  Hash_get(self->slots, key);
+Object* Object_getSlot(Object* self, const char* key) {
+  Object* proto = self;
+
+  while (1) {
+    if (proto->slots) {
+      Object* value = Hash_get(proto->slots, key);
+      if (value) return value;
+    }
+
+    if (proto->proto) proto = proto->proto;
+    else break;
+  }
   return 0;
 }
 
@@ -38,16 +55,4 @@ Object* Object_call(Object* self, int argc, ...) {
   free(argv);
 
   return ret;
-}
-
-unsigned int Object_hash(Object* self) {
-  unsigned int hash = 5381;
-  int c;
-
-  const char* str = self->data.ptr;
-
-  while ((c = *str++))
-    hash = ((hash << 5) + hash) + c;
-
-  return hash;
 }

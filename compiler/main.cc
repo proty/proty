@@ -16,9 +16,10 @@ void version() {
 void help() {
   std::cerr <<
   "Usage: proty [options ...] [file] [arguments]\n"
-  "-d           Dump code\n"
+  "-d           Dump LLVM code\n"
+  "-g           Enable debug symbols\n"
   "--help, -h   Shows this message\n"
-  "-b [file]    Write LLVM Bitcode to file\n"
+  "-c [file]    Write LLVM Bitcode to file\n"
   "--version    Version and copyright info\n"
   "--           Stop reading options\n";
 }
@@ -26,17 +27,21 @@ void help() {
 int main(int argc, char** argv) {
   std::string file = "<stdin>";
   std::string output;
+
   bool dump = false;
+  bool debug = false;
 
   for (int count = 1; count < argc; count++) {
     if (argv[count][0] == '-') {
       if      (argv[count] == std::string("-d"))          { dump = true; }
+      else if (argv[count] == std::string("-g"))          { debug = true; }
       else if (argv[count] == std::string("-h"))          { help(); return 0; }
       else if (argv[count] == std::string("--help"))      { help(); return 0; }
-      else if (argv[count] == std::string("-b"))          { output = argv[++count]; }
+      else if (argv[count] == std::string("-c"))          { output = argv[++count]; }
       else if (argv[count] == std::string("--version"))   { version(); return 0; }
       else if (argv[count] == std::string("--"))          { break; }
       else {
+        help();
         std::cerr << "proty: invalid option " << argv[count] << std::endl;
         return 1;
       }
@@ -48,7 +53,7 @@ int main(int argc, char** argv) {
   Parser* parser = new Parser(lexer);
   Node* root = parser->parse();
 
-  Compiler* compiler = new Compiler(file);
+  Compiler* compiler = new Compiler(file, debug);
   llvm::Module* module = compiler->compile(root);
 
   if (dump) module->dump();

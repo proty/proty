@@ -4,7 +4,7 @@
 struct Hash {
   int size;
   int bounds;
-  Object** keys;
+  const char** keys;
   Object** values;
 };
 
@@ -13,7 +13,7 @@ Object* Hash_createProto();
 
 Object* Hash_init(Object*);
 
-Object* Hash_set(Object*, Object*, Object*);
-Object* Hash_get(Object*, Object*);
+Object* Hash_set(Object*, const char*, Object*);
+Object* Hash_get(Object*, const char*);
 
 #endif

@@ -8,6 +8,11 @@ set(CMAKE_CXX_COMPILER "clang++")
 set(EXECUTABLE_OUTPUT_PATH "${CMAKE_SOURCE_DIR}/build")
 set(LIBRARY_OUTPUT_PATH "${CMAKE_SOURCE_DIR}/lib")
 
+# default build type
+if(NOT CMAKE_BUILD_TYPE)
+   set(CMAKE_BUILD_TYPE Debug)
+endif(NOT CMAKE_BUILD_TYPE)
+
 # detect version
 exec_program(git ARGS describe OUTPUT_VARIABLE GIT_VERSION)
 
