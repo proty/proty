@@ -1,7 +1,7 @@
 set(CMAKE_C_LINK_EXECUTABLE "llvm-link <OBJECTS> -o <TARGET>")
-set(CMAKE_C_FLAGS "-emit-llvm")
+set(CMAKE_C_FLAGS "-emit-llvm ${CMAKE_C_FLAGS}")
 set(CMAKE_CXX_LINK_EXECUTABLE "llvm-link <OBJECTS> -o <TARGET>")
-set(CMAKE_CXX_FLAGS "-emit-llvm")
+set(CMAKE_CXX_FLAGS "-emit-llvm ${CMAKE_CXX_FLAGS}")
 
 include_directories(.)
 

@@ -12,15 +12,11 @@ Object* Object_new(Object* proto) {
   new->proto = proto;
   new->slots = 0;
 
-  // call init
-  Object* init = Object_getSlot(new, "init");
-  if (init) Object_call(init, 1, new);
-
   return new;
 }
 
 Object* Object_setSlot(Object* self, const char* key, Object* value) {
-  if (!self->slots) self->slots = Object_new(Hash_proto);
+  if (!self->slots) self->slots = Hash_new();
   Hash_set(self->slots, key, value);
   return value;
 }

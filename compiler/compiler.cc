@@ -43,7 +43,7 @@ Module* Compiler::compile(Node* root) {
   argTypes.push_back(PointerType::get(Type::getInt8PtrTy(getGlobalContext()), 0));
   FunctionType *funcTy = FunctionType::get(Type::getInt32Ty(getGlobalContext()), argTypes, false);
   Function *func = Function::Create(funcTy, Function::ExternalLinkage, "main", module);
-
+  
   BasicBlock *BB = BasicBlock::Create(getGlobalContext(), "entry", func);
   builder->SetInsertPoint(BB);
 

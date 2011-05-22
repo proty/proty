@@ -16,7 +16,6 @@ Object* Hash_createProto() {
   Object* proto = Object_new(Object_proto);
 
   // bootstrap hash prototype
-  Hash_init(proto);
   proto->slots = Object_new(proto);
   Hash_init(proto->slots);
 
@@ -25,6 +24,12 @@ Object* Hash_createProto() {
   Object_setSlot(proto, "get", Function_new((FuncPtr)Hash_get));
 
   return proto;
+}
+
+Object* Hash_new() {
+  Object* new = Object_new(Hash_proto);
+  Hash_init(new);
+  return new;
 }
 
 Object* Hash_init(Object* self) {
@@ -82,6 +87,7 @@ Object* Hash_set(Object* self, const char* key, Object* value) {
 
 Object* Hash_get(Object* self, const char* key) {
   Hash* hash = (Hash*)self->data.ptr;
+  if (!hash) return 0;
   unsigned int pos = hash_str(key) % hash->bounds;
   while (hash->keys[pos] && strcmp(hash->keys[pos], key)) pos = (pos+1) % hash->bounds;
   return hash->values[pos];
