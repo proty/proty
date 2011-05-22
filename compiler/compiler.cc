@@ -37,25 +37,28 @@ Compiler::Compiler(std::string name, bool debug) {
 }
 
 Module* Compiler::compile(Node* root) {
-  // Create the main function
+  // create the main function
   std::vector<const Type*> argTypes;
-  FunctionType *funcTy = FunctionType::get(Type::getVoidTy(getGlobalContext()), argTypes, false);
+  argTypes.push_back(Type::getInt32Ty(getGlobalContext()));
+  argTypes.push_back(PointerType::get(Type::getInt8PtrTy(getGlobalContext()), 0));
+  FunctionType *funcTy = FunctionType::get(Type::getInt32Ty(getGlobalContext()), argTypes, false);
   Function *func = Function::Create(funcTy, Function::ExternalLinkage, "main", module);
-
 
   BasicBlock *BB = BasicBlock::Create(getGlobalContext(), "entry", func);
   builder->SetInsertPoint(BB);
 
-  // Init the runtime
+  // init the runtime
   Function* runtime_init = module->getFunction("runtime_init");
   builder->CreateCall(runtime_init);
-
 
   symtab->enterScope();
   root->codegen(this);
   symtab->leaveScope();
 
-  builder->CreateRetVoid();
+  // return a status code
+  Value* status = ConstantInt::get(Type::getInt32Ty(getGlobalContext()), 0);
+  builder->CreateRet(status);
+
   verifyFunction(*func);
   fpm->run(*func);
 
