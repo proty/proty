@@ -31,6 +31,7 @@ Value* BinaryOpNode::codegen(Compiler* c) {
     SlotNode* sn = new SlotNode(lhs, op);
 
     CallNode* cn = new CallNode(sn);
+    cn->addArg(lhs);
     cn->addArg(rhs);
 
     return cn->codegen(c);
