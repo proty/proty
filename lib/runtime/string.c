@@ -19,5 +19,6 @@ Object* String_new(const char* value) {
 }
 
 Object* String_add(Object* self, Object* other) {
-  return self;
+  char* new = strcat(self->data.ptr, other->data.ptr);
+  return String_new(new);
 }
