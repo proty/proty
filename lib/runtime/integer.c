@@ -1,4 +1,5 @@
 #include "runtime.h"
+#include <stdio.h>
 
 Object* Integer_createProto() {
   Object* proto = Object_new(Object_proto);
@@ -8,6 +9,8 @@ Object* Integer_createProto() {
   Object_setSlot(proto, "*", Function_new((FuncPtr)Integer_mul));
   Object_setSlot(proto, "/", Function_new((FuncPtr)Integer_div));
 
+  Object_setSlot(proto, "str", Function_new((FuncPtr)Integer_str));
+
   return proto;
 }
 
@@ -15,6 +18,12 @@ Object* Integer_new(int value) {
   Object* new = Object_new(Integer_proto);
   new->data.i = value;
   return new;
+}
+
+Object* Integer_str(Object* self) {
+  char buffer[20];
+  sprintf(buffer, "%d", self->data.i);
+  return String_new(buffer);
 }
 
 Object* Integer_add(Object* self, Object* other) {

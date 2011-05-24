@@ -2,7 +2,19 @@
 #include "runtime/runtime.h"
 
 Object* io_print(Object* obj) {
-  printf("%p\n", obj);
+  if (obj->proto == String_proto) {
+    printf("%s\n", obj->data.ptr);
+  }
+  else {
+    Object* get_str = Object_getSlot(obj, "str");
+    if (get_str) {
+      Object* string = Object_call(get_str, 1, obj);
+      printf("%s\n", string->data.ptr);
+    }
+    else {
+      printf("<%p>\n", obj);
+    }
+  }
   return 0;
 }
 

@@ -6,6 +6,8 @@ Object* Integer_createProto();
 
 Object* Integer_new(int);
 
+Object* Integer_str(Object*);
+
 Object* Integer_add(Object*, Object*);
 Object* Integer_sub(Object*, Object*);
 Object* Integer_mul(Object*, Object*);
