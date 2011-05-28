@@ -22,4 +22,6 @@ Object* Object_getSlot(Object*, const char*);
 
 Object* Object_call(Object*, int, ...);
 
+Object* Object_bool(Object*);
+
 #endif

@@ -155,3 +155,33 @@ Value* FunctionNode::codegen(Compiler* c) {
   Value* argcValue= ConstantInt::get(Type::getInt32Ty(getGlobalContext()), argc);
   return c->builder->CreateCall2(newFunc, funcPtr, argcValue, "functmp");
 }
+
+Value* IfNode::codegen(Compiler* c) {
+    Function* func = c->builder->GetInsertBlock()->getParent();
+    BasicBlock* ThenBB = BasicBlock::Create(getGlobalContext(), "then", func);
+    BasicBlock* ElseBB = BasicBlock::Create(getGlobalContext(), "else");
+    BasicBlock* MergeBB = BasicBlock::Create(getGlobalContext(), "ifcont");
+
+    SlotNode* sn = new SlotNode(cond, "bool");
+    CallNode* cn = new CallNode(sn);
+    Value* Qtrue = (new BoolNode(true))->codegen(c);
+
+    Value* EndCond = c->builder->CreateICmpEQ(cn->codegen(c), Qtrue);
+    c->builder->CreateCondBr(EndCond, ThenBB, ElseBB);
+
+    c->builder->SetInsertPoint(ThenBB);
+    thenNode->codegen(c);
+    if (!ThenBB->getTerminator()) c->builder->CreateBr(MergeBB);
+
+    func->getBasicBlockList().push_back(ElseBB);
+    c->builder->SetInsertPoint(ElseBB);
+    if (elseNode) {
+        elseNode->codegen(c);
+    }
+    if (!ElseBB->getTerminator()) c->builder->CreateBr(MergeBB);
+
+    func->getBasicBlockList().push_back(MergeBB);
+    c->builder->SetInsertPoint(MergeBB);
+
+    return 0;
+}
