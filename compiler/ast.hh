@@ -30,6 +30,24 @@ public:
   llvm::Value* codegen(Compiler*);
 };
 
+class BoolNode : public Node {
+private:
+  bool value;
+
+public:
+  BoolNode(bool value) : value(value) {}
+
+  llvm::Value* codegen(Compiler*);
+};
+
+class NilNode : public Node {
+public:
+  NilNode() {}
+
+  llvm::Value* codegen(Compiler*);
+};
+
+
 class StringNode : public Node {
 private:
   std::string value;

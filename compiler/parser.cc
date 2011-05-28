@@ -67,6 +67,13 @@ Node* Parser::parsePrimary() {
     ss >> v;
     prim = new IntegerNode(v);
   }
+  else if (lexer->isNext(Token::boolean)) {
+    bool value = lexer->next().getValue() == "true";
+    prim = new BoolNode(value);
+  }
+  else if (lexer->isNext(Token::nil)) {
+    prim = new NilNode();
+  }
   else if (lexer->isNext(Token::string)) {
     std::string value = lexer->next().getValue();
     prim = new StringNode(value);
