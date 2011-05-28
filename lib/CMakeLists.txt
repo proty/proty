@@ -11,6 +11,8 @@ add_executable(lib/runtime.bc
   runtime/hash.c
   runtime/integer.c
   runtime/string.c
+  runtime/nil.c
+  runtime/bool.c
   runtime/runtime.c
 )
 
