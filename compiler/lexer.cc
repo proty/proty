@@ -72,6 +72,9 @@ void Lexer::tokenize() {
       else if (value == "else") add(Token(Token::elseKw, value));
       else if (value == "while") add(Token(Token::whileKw, value));
       else if (value == "end") add(Token(Token::endKw, value));
+      else if (value == "true") add(Token(Token::boolean, value));
+      else if (value == "false") add(Token(Token::boolean, value));
+      else if (value == "nil") add(Token(Token::nil, value));
       else add(Token(Token::name, value));
     }
 

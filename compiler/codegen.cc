@@ -60,6 +60,17 @@ Value* IntegerNode::codegen(Compiler* c) {
   return c->builder->CreateCall(F, intValue, "inttmp");
 }
 
+Value* BoolNode::codegen(Compiler* c) {
+  Value* b = value ? c->module->getNamedValue("Qtrue")
+                   : c->module->getNamedValue("Qfalse");
+  return c->builder->CreateLoad(b);
+}
+
+Value* NilNode::codegen(Compiler* c) {
+  Value* n = c->module->getNamedValue("Qnil");
+  return c->builder->CreateLoad(n);
+}
+
 Value* StringNode::codegen(Compiler* c) {
   size_t pos = 0;
   while((pos = value.find("\\n", pos)) != std::string::npos) {
