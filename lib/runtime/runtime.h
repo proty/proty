@@ -11,5 +11,7 @@ typedef Object* (*FuncPtr)(Object*, ...);
 #include "function.h"
 #include "integer.h"
 #include "string.h"
+#include "nil.h"
+#include "bool.h"
 
 #endif
