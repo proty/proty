@@ -86,7 +86,7 @@ public:
 
 class FunctionNode : public Node {
 private:
- Node* block;
+  Node* block;
   std::vector<std::string> args;
 
 public:
@@ -97,6 +97,18 @@ public:
   llvm::Value* codegen(Compiler*);
 };
 
+class IfNode : public Node {
+private:
+  Node* cond;
+  Node* thenNode;
+  Node* elseNode;
+
+public:
+  IfNode(Node* cond, Node* thenNode, Node* elseNode)
+    : cond(cond), thenNode(thenNode), elseNode(elseNode) {}
+
+  llvm::Value* codegen(Compiler*);
+};
 
 class NameNode : public Node {
 private:

@@ -21,6 +21,14 @@ Node* Parser::parseBlock() {
       case Token::eof:
         return block;
 
+      case Token::ifKw:
+        lexer->next();
+        block->add(parseIf());
+        break;
+
+      case Token::elseKw:
+        return block;
+
       default:
         block->add(parseExpression());
     }
@@ -129,4 +137,17 @@ Node* Parser::parseCall(Node* callee) {
   }
 
   return call;
+}
+
+Node* Parser::parseIf() {
+  Node* cond = parseExpression();
+  Node* thenNode = parseBlock();
+
+  Node* elseNode = 0;
+  if (lexer->isNext(Token::elseKw)) {
+    lexer->next();
+    elseNode = parseBlock();
+  }
+
+  return new IfNode(cond, thenNode, elseNode);
 }

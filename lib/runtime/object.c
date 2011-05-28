@@ -4,6 +4,9 @@
 
 Object* Object_createProto() {
   Object* proto = malloc(sizeof(Object));
+
+  Object_setSlot(proto, "bool", Function_new((FuncPtr)Object_bool));
+
   return proto;
 }
 
@@ -51,4 +54,8 @@ Object* Object_call(Object* self, int argc, ...) {
   free(argv);
 
   return ret;
+}
+
+Object* Object_bool(Object* self) {
+  return Qtrue;
 }

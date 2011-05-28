@@ -17,6 +17,7 @@ public:
   Node* parseOperation(Node*, int);
   Node* parsePrimary();
   Node* parseCall(Node*);
+  Node* parseIf();
 };
 
 #endif
