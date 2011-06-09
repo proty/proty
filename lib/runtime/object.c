@@ -3,7 +3,7 @@
 #include "runtime.h"
 
 Object* Object_createProto() {
-  Object* proto = malloc(sizeof(Object));
+  Object* proto = Object_new(0);
 
   Object_setSlot(proto, "bool", Function_new((FuncPtr)Object_bool));
 

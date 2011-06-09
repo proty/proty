@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <string.h>
+#include <stdio.h>
 #include "runtime.h"
 
 unsigned int hash_str(const char* str) {
@@ -50,7 +51,7 @@ Object* Hash_init(Object* self) {
 Object* Hash_set(Object* self, const char* key, Object* value) {
   Hash* hash = self->data.ptr;
 
-  if ((float)hash->size/hash->bounds > 0.75) {
+  if ((hash->size*100)/hash->bounds > 75) {
     const char** tmpKeys = malloc(sizeof(Object*)*hash->bounds*2);
     Object** tmpValues = malloc(sizeof(Object*)*hash->bounds*2);
 
@@ -82,13 +83,20 @@ Object* Hash_set(Object* self, const char* key, Object* value) {
   hash->values[pos] = value;
   hash->size++;
 
-  return 0;
+  return value;
 }
 
 Object* Hash_get(Object* self, const char* key) {
   Hash* hash = (Hash*)self->data.ptr;
-  if (!hash) return 0;
+  if (!hash) return Qnil;
   unsigned int pos = hash_str(key) % hash->bounds;
-  while (hash->keys[pos] && strcmp(hash->keys[pos], key)) pos = (pos+1) % hash->bounds;
-  return hash->values[pos];
+  while (hash->keys[pos]) {
+    if (strcmp(hash->keys[pos], key)) {
+      pos = (pos+1) % hash->bounds;
+    }
+    else {
+      return hash->values[pos];
+    }
+  }
+  return Qnil;
 }
