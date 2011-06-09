@@ -1,5 +1,5 @@
-1. License
-==========
+License
+=======
 
 Copyright (c) Thomas Gatzweiler.
 
@@ -17,30 +17,30 @@ You should have received a copy of the GNU General Public License
 along with Proty (see LICENSE). If not, see
 <http://www.gnu.org/licenses/>.
 
-2. What is Proty?
-==================
+What is Proty?
+==============
 
 Proty is a prototype based, object oriented and dynamic programming
 language.
 
-3. Status
-=========
+Status
+======
 
 The current status of Proty is **NOT STABLE**, please don't use it for
 productive projects.
 
-4. Documentation
-================
+Documentation
+=============
 
 The raw documentation of Proty is placed in *doc/*.
 
-5. Report Issues
-================
+Report Issues
+=============
 
 See http://github.com/proty/proty/issues.
 
-6. Build instructions
-=====================
+Build instructions
+==================
 
 To build Proty type:
 
@@ -49,8 +49,8 @@ To build Proty type:
     $ cmake ..
     $ make
 
-7. Authors
-==========
+Authors
+=======
 
   - Thomas Gatzweiler
   - to be continued
