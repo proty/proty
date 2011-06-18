@@ -28,13 +28,13 @@ Value* BinaryOpNode::codegen(Compiler* c) {
     return alloca;
   }
   else {
-    SlotNode* sn = new SlotNode(lhs, op);
+    GetSlotNode* getslot = new GetSlotNode(lhs, op);
 
-    CallNode* cn = new CallNode(sn);
-    cn->addArg(lhs);
-    cn->addArg(rhs);
+    CallNode* call = new CallNode(getslot);
+    call->addArg(lhs);
+    call->addArg(rhs);
 
-    return cn->codegen(c);
+    return call->codegen(c);
   }
 }
 
@@ -47,7 +47,7 @@ Value* NameNode::codegen(Compiler* c) {
   return c->builder->CreateLoad(v, value.c_str());
 }
 
-Value* SlotNode::codegen(Compiler* c) {
+Value* GetSlotNode::codegen(Compiler* c) {
   Function* getslot = c->module->getFunction("Object_getSlot");
   Value* object = obj->codegen(c);
   Value* slot = c->builder->CreateGlobalStringPtr(name.c_str(), ".str");
@@ -162,11 +162,11 @@ Value* IfNode::codegen(Compiler* c) {
     BasicBlock* ElseBB = BasicBlock::Create(getGlobalContext(), "else");
     BasicBlock* MergeBB = BasicBlock::Create(getGlobalContext(), "ifcont");
 
-    SlotNode* sn = new SlotNode(cond, "bool");
-    CallNode* cn = new CallNode(sn);
+    GetSlotNode* getslot = new GetSlotNode(cond, "bool");
+    CallNode* call = new CallNode(getslot);
     Value* Qtrue = (new BoolNode(true))->codegen(c);
 
-    Value* EndCond = c->builder->CreateICmpEQ(cn->codegen(c), Qtrue);
+    Value* EndCond = c->builder->CreateICmpEQ(call->codegen(c), Qtrue);
     c->builder->CreateCondBr(EndCond, ThenBB, ElseBB);
 
     c->builder->SetInsertPoint(ThenBB);

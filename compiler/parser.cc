@@ -110,7 +110,7 @@ Node* Parser::parsePrimary() {
     else if (lexer->isNext(Token::dot)) {
       lexer->next();
       std::string n = lexer->match(Token::name, "slot name").getValue();
-      prim = new SlotNode(prim, n);
+      prim = new GetSlotNode(prim, n);
     }
   }
   return prim;

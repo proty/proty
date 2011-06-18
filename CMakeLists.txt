@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.6)
+cmake_minimum_required(VERSION 2.8)
 
 project(proty)
 set(VERSION 0.1)
@@ -19,6 +19,16 @@ exec_program(git ARGS describe OUTPUT_VARIABLE GIT_VERSION)
 
 add_subdirectory(compiler)
 add_subdirectory(lib)
+
+# documentation
+file(COPY ${CMAKE_SOURCE_DIR}/doc DESTINATION ${CMAKE_BINARY_DIR}/doc)
+
+# doxygen
+find_package(Doxygen)
+configure_file(${CMAKE_SOURCE_DIR}/doc/Doxyfile.in ${CMAKE_BINARY_DIR}/Doxyfile)
+add_custom_target(doxygen ${DOXYGEN_EXECUTABLE} ${CMAKE_BINARY_DIR}/Doxyfile)
+add_custom_target(doc)
+add_dependencies(doc doxygen)
 
 # install library files
 # file(GLOB files "${CMAKE_SOURCE_DIR}/lib/*")

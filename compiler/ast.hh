@@ -11,6 +11,11 @@ public:
   virtual llvm::Value* codegen(Compiler*) = 0;
 };
 
+/**
+ * A code block.
+ * $nodes end | { $nodes }
+ */
+
 class BlockNode : public Node {
 private:
   std::vector<Node*> nodes;
@@ -19,6 +24,11 @@ public:
   void add(Node* n) { nodes.push_back(n); }
   llvm::Value* codegen(Compiler*);
 };
+
+
+/**
+ * An integer object.
+ */
 
 class IntegerNode : public Node {
 private:
@@ -30,6 +40,12 @@ public:
   llvm::Value* codegen(Compiler*);
 };
 
+
+/**
+ * Reference to bool object.
+ * true|false
+ */
+
 class BoolNode : public Node {
 private:
   bool value;
@@ -40,6 +56,11 @@ public:
   llvm::Value* codegen(Compiler*);
 };
 
+
+/**
+ * Reference to nil object.
+ */
+
 class NilNode : public Node {
 public:
   NilNode() {}
@@ -47,6 +68,11 @@ public:
   llvm::Value* codegen(Compiler*);
 };
 
+
+/**
+ * A string object.
+ * "$value"
+ */
 
 class StringNode : public Node {
 private:
@@ -58,6 +84,12 @@ public:
   std::string getValue() { return value; }
   llvm::Value* codegen(Compiler*);
 };
+
+
+/**
+ * A binary operation.
+ * $lhs $op $rhs
+ */
 
 class BinaryOpNode : public Node {
 private:
@@ -72,6 +104,12 @@ public:
   llvm::Value* codegen(Compiler*);
 };
 
+
+/**
+ * A function call.
+ * $callee($args)
+ */
+
 class CallNode : public Node {
 private:
   Node* callee;
@@ -83,6 +121,12 @@ public:
   void addArg(Node* n) { args.push_back(n); }
   llvm::Value* codegen(Compiler*);
 };
+
+
+/**
+ * A function object.
+ * do ($args) $block
+ */
 
 class FunctionNode : public Node {
 private:
@@ -97,6 +141,17 @@ public:
   llvm::Value* codegen(Compiler*);
 };
 
+
+/**
+ * An if statement.
+ *
+ * if $cond
+ *   $thenNode
+ * else
+ *   $elseNode
+ * end
+ */
+
 class IfNode : public Node {
 private:
   Node* cond;
@@ -110,6 +165,12 @@ public:
   llvm::Value* codegen(Compiler*);
 };
 
+
+/**
+ * A variable.
+ * $value
+ */
+
 class NameNode : public Node {
 private:
   std::string value;
@@ -121,16 +182,61 @@ public:
   llvm::Value* codegen(Compiler*);
 };
 
-class SlotNode : public Node {
+
+/**
+ * Get a slot of an object.
+ * $obj.$name
+ */
+
+class GetSlotNode : public Node {
 private:
   Node* obj;
   std::string name;
 
 public:
-  SlotNode(Node* obj, std::string name) : obj(obj), name(name) {}
+  GetSlotNode(Node* obj, std::string name)
+    : obj(obj), name(name) {}
 
   llvm::Value* codegen(Compiler*);
 };
 
+
+/**
+ * Set the slot of an object.
+ * $obj.$name = $value
+ */
+
+class SetSlotNode : public Node {
+private:
+  Node* obj;
+  std::string name;
+  Node* value;
+
+public:
+  SetSlotNode(Node* obj, std::string name, Node* value)
+    : obj(obj), name(name), value(value) {}
+
+  llvm::Value* codegen(Compiler*);
+};
+
+
+/**
+ * Call a slot of an object.
+ * $obj.$name($args)
+ */
+
+class CallSlotNode : public Node {
+private:
+  Node* obj;
+  std::string name;
+  std::vector<Node*> args;
+
+public:
+  CallSlotNode(Node* obj, std::string name)
+    : obj(obj), name(name) {}
+
+  void addArg(Node* n) { args.push_back(n); }
+  llvm::Value* codegen(Compiler*);
+};
 
 #endif
