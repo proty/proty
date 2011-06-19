@@ -4,10 +4,11 @@ project(proty)
 set(VERSION 0.1)
 
 set(CMAKE_C_COMPILER "clang")
-set(CMAKE_C_FLAGS "--std=c99")
+set(CMAKE_C_FLAGS "--std=c99 -Wall")
 set(CMAKE_CXX_COMPILER "clang++")
-set(EXECUTABLE_OUTPUT_PATH "${CMAKE_SOURCE_DIR}/build")
-set(LIBRARY_OUTPUT_PATH "${CMAKE_SOURCE_DIR}/lib")
+set(CMAKE_CXX_FLAGS "-Wall")
+set(EXECUTABLE_OUTPUT_PATH "${CMAKE_BINARY_DIR}")
+set(LIBRARY_OUTPUT_PATH "${CMAKE_BINARY_DIR}/lib")
 
 # default build type
 if(NOT CMAKE_BUILD_TYPE)
@@ -31,5 +32,5 @@ add_custom_target(doc)
 add_dependencies(doc doxygen)
 
 # install library files
-# file(GLOB files "${CMAKE_SOURCE_DIR}/lib/*")
+# file(GLOB files "${CMAKE_BINARY_DIR}/lib/*")
 # install(FILES ${files} DESTINATION lib/proty)

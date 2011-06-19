@@ -1,5 +1,7 @@
 #include "compiler.hh"
 #include "ast.hh"
+#include "symtab.hh"
+#include "program.hh"
 #include "llvm.hh"
 
 using namespace llvm;
@@ -36,7 +38,7 @@ Compiler::Compiler(std::string name, bool debug) {
   ObjectTy = PointerType::get(module->getTypeByName("struct.Object"), 0);
 }
 
-Module* Compiler::compile(Node* root) {
+Program* Compiler::compile(Node* root) {
   // create the main function
   std::vector<const Type*> argTypes;
   argTypes.push_back(Type::getInt32Ty(getGlobalContext()));
@@ -62,7 +64,7 @@ Module* Compiler::compile(Node* root) {
   verifyFunction(*func);
   fpm->run(*func);
 
-  return module;
+  return new Program(module);
 }
 
 void Compiler::loadModule(std::string name) {

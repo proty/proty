@@ -2,8 +2,9 @@
 #define PROTY_AST_HH
 
 #include <iostream>
-#include "llvm.hh"
+#include <vector>
 
+namespace llvm { class Value; }
 class Compiler;
 
 class Node {
