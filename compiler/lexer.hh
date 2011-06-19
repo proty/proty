@@ -16,6 +16,7 @@ private:
 
 public:
   Lexer(std::string);
+  ~Lexer();
 
   Token next();
   Token peek(int=0);

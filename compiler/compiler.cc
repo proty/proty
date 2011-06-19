@@ -38,6 +38,14 @@ Compiler::Compiler(std::string name, bool debug) {
   ObjectTy = PointerType::get(module->getTypeByName("struct.Object"), 0);
 }
 
+Compiler::~Compiler() {
+  delete symtab;
+  delete builder;
+  executionEngine->removeModule(module);
+  delete executionEngine;
+  delete linker;
+}
+
 Program* Compiler::compile(Node* root) {
   // create the main function
   std::vector<const Type*> argTypes;
@@ -64,7 +72,7 @@ Program* Compiler::compile(Node* root) {
   verifyFunction(*func);
   fpm->run(*func);
 
-  return new Program(module);
+  return new Program(CloneModule(module));
 }
 
 void Compiler::loadModule(std::string name) {

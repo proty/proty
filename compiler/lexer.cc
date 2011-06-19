@@ -15,6 +15,11 @@ Lexer::Lexer(std::string filename) {
   pos = 0;
 }
 
+Lexer::~Lexer() {
+  delete tokens;
+  delete stream;
+}
+
 void Lexer::add(Token token) {
   tokens->push_back(token);
 }

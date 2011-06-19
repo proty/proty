@@ -9,6 +9,7 @@ class Compiler;
 
 class Node {
 public:
+  virtual ~Node() {}
   virtual llvm::Value* codegen(Compiler*) = 0;
 };
 
@@ -22,6 +23,11 @@ private:
   std::vector<Node*> nodes;
 
 public:
+  ~BlockNode() {
+    for (int i = 0; i < nodes.size(); i++)
+      delete nodes[i];
+  }
+
   void add(Node* n) { nodes.push_back(n); }
   llvm::Value* codegen(Compiler*);
 };
@@ -101,6 +107,7 @@ private:
 public:
   BinaryOpNode(std::string op, Node* lhs, Node* rhs)
     : op(op), lhs(lhs), rhs(rhs) {}
+  ~BinaryOpNode() { delete lhs; delete rhs; }
 
   llvm::Value* codegen(Compiler*);
 };
@@ -118,6 +125,7 @@ private:
 
 public:
   CallNode(Node* callee) : callee(callee) {}
+  ~CallNode() { delete callee; }
 
   void addArg(Node* n) { args.push_back(n); }
   llvm::Value* codegen(Compiler*);
@@ -136,6 +144,7 @@ private:
 
 public:
   FunctionNode(Node* block=0) : block(block) {}
+  ~FunctionNode() { delete block; }
 
   void addArg(std::string arg) { args.push_back(arg); }
   void setBlock(Node* block) { this->block = block; }
@@ -162,6 +171,7 @@ private:
 public:
   IfNode(Node* cond, Node* thenNode, Node* elseNode)
     : cond(cond), thenNode(thenNode), elseNode(elseNode) {}
+  ~IfNode() { delete cond; delete thenNode; delete elseNode; }
 
   llvm::Value* codegen(Compiler*);
 };
@@ -197,6 +207,7 @@ private:
 public:
   GetSlotNode(Node* obj, std::string name)
     : obj(obj), name(name) {}
+  ~GetSlotNode() { delete obj; }
 
   llvm::Value* codegen(Compiler*);
 };
@@ -216,6 +227,7 @@ private:
 public:
   SetSlotNode(Node* obj, std::string name, Node* value)
     : obj(obj), name(name), value(value) {}
+  ~SetSlotNode() { delete obj; delete value; }
 
   llvm::Value* codegen(Compiler*);
 };
@@ -235,6 +247,7 @@ private:
 public:
   CallSlotNode(Node* obj, std::string name)
     : obj(obj), name(name) {}
+  ~CallSlotNode() { delete obj; }
 
   void addArg(Node* n) { args.push_back(n); }
   llvm::Value* codegen(Compiler*);
