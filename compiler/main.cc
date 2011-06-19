@@ -57,6 +57,11 @@ int main(int argc, char** argv) {
   Compiler* compiler = new Compiler(file, debug);
   Program* program = compiler->compile(root);
 
+  delete lexer;
+  delete parser;
+  delete root;
+  delete compiler;
+
   if (dump) program->dump();
 
   if (!output.empty()) {

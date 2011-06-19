@@ -36,6 +36,7 @@ public:
 
 public:
   Compiler(std::string, bool=false);
+  ~Compiler();
 
   Program* compile(Node*);
   void loadModule(std::string);
