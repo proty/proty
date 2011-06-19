@@ -1,5 +1,6 @@
 #include "parser.hh"
 #include <sstream>
+#include <cstdlib>
 
 Parser::Parser(Lexer* lexer) {
   this->lexer = lexer;

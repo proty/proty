@@ -2,6 +2,7 @@
 #include "lexer.hh"
 #include "parser.hh"
 #include "compiler.hh"
+#include "program.hh"
 #include "config.hh"
 
 void version() {
@@ -54,20 +55,15 @@ int main(int argc, char** argv) {
   Node* root = parser->parse();
 
   Compiler* compiler = new Compiler(file, debug);
-  llvm::Module* module = compiler->compile(root);
+  Program* program = compiler->compile(root);
 
-  if (dump) module->dump();
+  if (dump) program->dump();
 
   if (!output.empty()) {
-    std::string error;
-    llvm::raw_fd_ostream out(output.c_str(), error);
-    llvm::WriteBitcodeToFile(module, out);
+    program->writeToFile(output);
   }
   else {
-    std::vector<llvm::GenericValue> args;
-    llvm::Function* main = compiler->executionEngine->FindFunctionNamed("main");
-    compiler->executionEngine->runStaticConstructorsDestructors(false);
-    compiler->executionEngine->runFunction(main, args);
+    program->run();
   }
 
   return 0;

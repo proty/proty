@@ -1,5 +1,7 @@
 #include "ast.hh"
 #include "compiler.hh"
+#include "symtab.hh"
+#include "llvm.hh"
 
 using namespace llvm;
 
@@ -104,7 +106,7 @@ Value* CallNode::codegen(Compiler* c) {
     argValues.push_back(callee->codegen(c));
     argValues.push_back(ConstantInt::get(Type::getInt32Ty(getGlobalContext()), argc));
 
-    for (unsigned int i = 0; i < argc; i++) {
+    for (int i = 0; i < argc; i++) {
       argValues.push_back(args.at(i)->codegen(c));
     }
 
@@ -116,7 +118,7 @@ Value* FunctionNode::codegen(Compiler* c) {
   int argc = args.size();
 
   std::vector<const Type*> argTypes;
-  for(unsigned int i = 0; i < argc; i++) {
+  for(int i = 0; i < argc; i++) {
     argTypes.push_back(c->ObjectTy);
   }
 
@@ -130,7 +132,7 @@ Value* FunctionNode::codegen(Compiler* c) {
 
   // allocate all args
   Function::arg_iterator AI = func->arg_begin();
-  for (unsigned int i = 0; i < argc; i++, AI++) {
+  for (int i = 0; i < argc; i++, AI++) {
       AI->setName(args.at(i));
       AllocaInst* alloca = c->builder->CreateAlloca(c->ObjectTy, 0, args.at(i));
       c->builder->CreateStore(AI, alloca);

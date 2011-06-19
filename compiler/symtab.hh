@@ -1,9 +1,15 @@
 #ifndef PROTY_SYMTAB_HH
 #define PROTY_SYMTAB_HH
 
-#include "llvm.hh"
+#include <iostream>
 #include <vector>
 #include <map>
+
+namespace llvm { class Value; }
+
+/**
+ * Maps variables to their values;
+ */
 
 class Scope {
 private:
@@ -13,6 +19,10 @@ public:
   void set(std::string, llvm::Value*);
   llvm::Value* get(std::string);
 };
+
+/**
+ * Manages scopes and stores symbols.
+ */
 
 class SymbolTable {
 private:
