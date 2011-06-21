@@ -26,7 +26,9 @@ file(COPY ${CMAKE_SOURCE_DIR}/doc DESTINATION ${CMAKE_BINARY_DIR}/doc)
 
 # doxygen
 find_package(Doxygen)
-configure_file(${CMAKE_SOURCE_DIR}/doc/Doxyfile.in ${CMAKE_BINARY_DIR}/Doxyfile)
-add_custom_target(doxygen ${DOXYGEN_EXECUTABLE} ${CMAKE_BINARY_DIR}/Doxyfile)
-add_custom_target(doc)
-add_dependencies(doc doxygen)
+if(DOXYGEN_FOUND)
+    configure_file(${CMAKE_SOURCE_DIR}/doc/Doxyfile.in ${CMAKE_BINARY_DIR}/Doxyfile)
+    add_custom_target(doxygen ${DOXYGEN_EXECUTABLE} ${CMAKE_BINARY_DIR}/Doxyfile)
+    add_custom_target(doc)
+    add_dependencies(doc doxygen)
+endif(DOXYGEN_FOUND)
