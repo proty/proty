@@ -30,7 +30,3 @@ configure_file(${CMAKE_SOURCE_DIR}/doc/Doxyfile.in ${CMAKE_BINARY_DIR}/Doxyfile)
 add_custom_target(doxygen ${DOXYGEN_EXECUTABLE} ${CMAKE_BINARY_DIR}/Doxyfile)
 add_custom_target(doc)
 add_dependencies(doc doxygen)
-
-# install library files
-# file(GLOB files "${CMAKE_BINARY_DIR}/lib/*")
-# install(FILES ${files} DESTINATION lib/proty)

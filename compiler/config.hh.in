@@ -4,5 +4,6 @@
 #define VERSION "@VERSION@"
 #define GIT_VERSION "@GIT_VERSION@"
 #define BUILD_TYPE "@CMAKE_BUILD_TYPE@"
+#define PREFIX "@CMAKE_INSTALL_PREFIX@"
 
 #endif

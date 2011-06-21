@@ -34,3 +34,4 @@ add_executable(proty
 target_link_libraries(proty libproty)
 
 install(TARGETS proty RUNTIME DESTINATION bin)
+install(TARGETS libproty LIBRARY DESTINATION lib)
