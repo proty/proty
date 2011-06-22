@@ -15,14 +15,14 @@ Compiler::Compiler(std::string name, bool debug) {
 
   this->debug = debug;
 
-  // Setup the ExecutionEngine
+  // setup the ExecutionEngine
   InitializeNativeTarget();
   EngineBuilder engineBuilder(module);
   engineBuilder.setEngineKind(EngineKind::JIT);
   engineBuilder.setOptLevel(CodeGenOpt::Aggressive);
   executionEngine = engineBuilder.create();
 
-  // Setup the FunctionPassManager
+  // setup the FunctionPassManager
   fpm = new FunctionPassManager(module);
   fpm->add(new TargetData(*executionEngine->getTargetData()));
   fpm->add(createPromoteMemoryToRegisterPass());
@@ -31,9 +31,8 @@ Compiler::Compiler(std::string name, bool debug) {
   fpm->add(createGVNPass());
   fpm->add(createCFGSimplificationPass());
 
-  // Link in the VM
-  bool native = false;
-  linker->LinkInFile(sys::Path("lib/runtime.bc"), native);
+  // link in the runtime
+  loadModule("runtime");
 
   // Get the object type which is defined in runtime.bc
   ObjectTy = PointerType::get(module->getTypeByName("struct.Object"), 0);
