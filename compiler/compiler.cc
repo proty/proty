@@ -3,6 +3,7 @@
 #include "symtab.hh"
 #include "program.hh"
 #include "llvm.hh"
+#include "config.hh"
 
 using namespace llvm;
 
@@ -77,6 +78,24 @@ Program* Compiler::compile(Node* root) {
 
 void Compiler::loadModule(std::string name) {
   bool native = false;
-  sys::Path path = sys::Path("lib/" + name + ".bc");
+  sys::Path path;
+
+  // check local files
+  path = sys::Path(name + ".bc");
+
+  if (!path.isBitcodeFile()) {
+    path = sys::Path("lib/" + name + ".bc");
+  }
+
+  // check installation directory
+  if (!path.isBitcodeFile()) {
+    path = sys::Path(PREFIX "/" + name + ".bc");
+  }
+
+  if (!path.isBitcodeFile()) {
+    std::cerr << "could not find module " << name << std::endl;
+    return;
+  }
+
   linker->LinkInFile(path, native);
 }
