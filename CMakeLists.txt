@@ -24,8 +24,13 @@ if(NOT CMAKE_BUILD_TYPE)
    set(CMAKE_BUILD_TYPE Debug)
 endif(NOT CMAKE_BUILD_TYPE)
 
-# detect version
-exec_program(git ARGS describe OUTPUT_VARIABLE GIT_VERSION)
+# detect git version
+exec_program(git ARGS describe OUTPUT_VARIABLE GIT_VERSION
+                 RESULT_VARIABLE GIT_RETURN_VALUE)
+if(NOT GIT_RETURN_VALUE EQUAL 0)
+  set(GIT_VERSION "0")
+endif(NOT GIT_RETURN_VALUE EQUAL 0)
+
 
 add_subdirectory(compiler)
 add_subdirectory(lib)
