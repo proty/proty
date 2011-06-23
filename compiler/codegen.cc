@@ -56,6 +56,24 @@ Value* GetSlotNode::codegen(Compiler* c) {
   return c->builder->CreateCall2(getslot, object, slot, name + "_tmp");
 }
 
+Value* SetSlotNode::codegen(Compiler* c) {
+  return 0;
+}
+
+Value* CallSlotNode::codegen(Compiler* c) {
+  GetSlotNode* slot = new GetSlotNode(obj, name);
+  ValueNode* slotv = new ValueNode(slot->codegen(c));
+
+  CallNode* call = new CallNode(slotv);
+
+  call->addArg(slotv);
+  for (int i = 0; i < args.size(); i++) {
+    call->addArg(args.at(i));
+  }
+
+  return call->codegen(c);
+}
+
 Value* IntegerNode::codegen(Compiler* c) {
   Function* F = c->module->getFunction("Integer_new");
   Value* intValue = ConstantInt::get(Type::getInt32Ty(getGlobalContext()), value);

@@ -111,7 +111,28 @@ Node* Parser::parsePrimary() {
     else if (lexer->isNext(Token::dot)) {
       lexer->next();
       std::string n = lexer->match(Token::name, "slot name").getValue();
-      prim = new GetSlotNode(prim, n);
+
+      if (lexer->isNext(Token::lpar)) {
+        lexer->next();
+        prim = new CallSlotNode(prim, n);
+        while (true) {
+          if (lexer->isNext(Token::rpar)) {
+            lexer->next();
+            break;
+          }
+          else {
+            ((CallSlotNode*)prim)->addArg(parseExpression());
+            if (lexer->isNext(Token::rpar)) {
+              lexer->next();
+              break;
+            }
+            else lexer->match(Token::comma, ",");
+          }
+        }
+      }
+      else {
+        prim = new GetSlotNode(prim, n);
+      }
     }
   }
   return prim;
