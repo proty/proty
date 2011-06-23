@@ -88,7 +88,7 @@ void Compiler::loadModule(std::string name) {
 
   // check installation directory
   if (!path.isBitcodeFile()) {
-    path = sys::Path(PREFIX "/" + name + ".bc");
+    path = sys::Path(PREFIX "/lib/proty/" + name + ".bc");
   }
 
   if (!path.isBitcodeFile()) {
