@@ -17,6 +17,7 @@ add_executable(lib/runtime.bc
 )
 
 add_executable(lib/io.bc io/io.c)
+add_executable(lib/os.bc os/os.c)
 
 file(GLOB libs "${CMAKE_BINARY_DIR}/lib/*.bc")
 install(FILES ${libs} DESTINATION lib/proty)
