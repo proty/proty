@@ -92,9 +92,9 @@ void Compiler::loadModule(std::string name) {
   }
 
   if (!path.isBitcodeFile()) {
-    std::cerr << "could not find module " << name << std::endl;
-    return;
+    std::cerr << "error: could not find module " << name << std::endl;
   }
-
-  linker->LinkInFile(path, native);
+  else {
+    linker->LinkInFile(path, native);
+  }
 }

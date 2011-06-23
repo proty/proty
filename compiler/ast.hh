@@ -253,4 +253,19 @@ public:
   llvm::Value* codegen(Compiler*);
 };
 
+/**
+ * Holds a llvm::Value.
+ */
+
+class ValueNode : public Node {
+private:
+  llvm::Value* value;
+
+public:
+  ValueNode(llvm::Value* value) : value(value) {}
+
+  llvm::Value* codegen(Compiler*) { return value; }
+};
+
+
 #endif
