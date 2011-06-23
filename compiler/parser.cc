@@ -81,6 +81,7 @@ Node* Parser::parsePrimary() {
     prim = new BoolNode(value);
   }
   else if (lexer->isNext(Token::nil)) {
+    lexer->next();
     prim = new NilNode();
   }
   else if (lexer->isNext(Token::string)) {
