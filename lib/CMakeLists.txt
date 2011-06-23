@@ -16,7 +16,11 @@ add_executable(lib/runtime.bc
   runtime/runtime.c
 )
 
-add_executable(lib/io.bc io/io.c)
+add_executable(lib/io.bc
+  io/io.c
+  io/file.c
+)
+
 add_executable(lib/os.bc os/os.c)
 
 file(GLOB libs "${CMAKE_BINARY_DIR}/lib/*.bc")
