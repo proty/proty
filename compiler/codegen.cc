@@ -61,12 +61,13 @@ Value* SetSlotNode::codegen(Compiler* c) {
 }
 
 Value* CallSlotNode::codegen(Compiler* c) {
-  GetSlotNode* slot = new GetSlotNode(obj, name);
+  ValueNode* objv = new ValueNode(obj->codegen(c));
+  GetSlotNode* slot = new GetSlotNode(objv, name);
   ValueNode* slotv = new ValueNode(slot->codegen(c));
 
   CallNode* call = new CallNode(slotv);
 
-  call->addArg(slotv);
+  call->addArg(objv);
   for (int i = 0; i < args.size(); i++) {
     call->addArg(args.at(i));
   }
