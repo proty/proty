@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include "runtime/runtime.h"
+#include "file.h"
 
 Object* io_print(Object* self, Object* obj) {
   if (obj->proto == String_proto) {
@@ -18,10 +19,23 @@ Object* io_print(Object* self, Object* obj) {
   return Qnil;
 }
 
+Object* io_open(Object* self, Object* file, Object* mode) {
+  if (file->proto == String_proto && mode->proto == String_proto) {
+    Object* new = File_new(file->data.ptr, mode->data.ptr);
+    return new;
+  }
+  else {
+    return Qnil;
+  }
+}
+
 Object* io_init() {
+  File_proto = File_createProto();
+
   Object* io = Object_new(Object_proto);
 
   Object_setSlot(io, "print", Function_new((FuncPtr)io_print));
+  Object_setSlot(io, "open", Function_new((FuncPtr)io_open));
 
   return io;
 }
