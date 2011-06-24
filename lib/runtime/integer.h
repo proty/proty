@@ -7,6 +7,7 @@ Object* Integer_createProto();
 Object* Integer_new(int);
 
 Object* Integer_str(Object*);
+Object* Integer_bool(Object*);
 
 Object* Integer_add(Object*, Object*);
 Object* Integer_sub(Object*, Object*);

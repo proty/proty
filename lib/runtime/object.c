@@ -14,7 +14,6 @@ Object* Object_new(Object* proto) {
   Object* new = malloc(sizeof(Object));
   new->proto = proto;
   new->slots = 0;
-
   return new;
 }
 
@@ -30,13 +29,13 @@ Object* Object_getSlot(Object* self, const char* key) {
   while (1) {
     if (proto->slots) {
       Object* value = Hash_get(proto->slots, key);
-      if (value) return value;
+      if (value != Qnil) return value;
     }
 
     if (proto->proto) proto = proto->proto;
     else break;
   }
-  return 0;
+  return Qnil;
 }
 
 Object* Object_call(Object* self, int argc, ...) {
@@ -57,5 +56,5 @@ Object* Object_call(Object* self, int argc, ...) {
 }
 
 Object* Object_bool(Object* self) {
-  return Qtrue;
+  return (self == Qtrue) ? Qtrue : Qfalse;
 }
