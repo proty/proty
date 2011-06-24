@@ -27,6 +27,11 @@ Node* Parser::parseBlock() {
         block->add(parseIf());
         break;
 
+      case Token::whileKw:
+        lexer->next();
+        block->add(parseWhile());
+        break;
+
       case Token::elseKw:
         return block;
 
@@ -173,4 +178,10 @@ Node* Parser::parseIf() {
   }
 
   return new IfNode(cond, thenNode, elseNode);
+}
+
+Node* Parser::parseWhile() {
+  Node* cond = parseExpression();
+  Node* block = parseBlock();
+  return new WhileNode(cond, block);
 }

@@ -18,6 +18,7 @@ public:
   Node* parsePrimary();
   Node* parseCall(Node*);
   Node* parseIf();
+  Node* parseWhile();
 };
 
 #endif

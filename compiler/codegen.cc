@@ -178,30 +178,53 @@ Value* FunctionNode::codegen(Compiler* c) {
 }
 
 Value* IfNode::codegen(Compiler* c) {
-    Function* func = c->builder->GetInsertBlock()->getParent();
-    BasicBlock* ThenBB = BasicBlock::Create(getGlobalContext(), "then", func);
-    BasicBlock* ElseBB = BasicBlock::Create(getGlobalContext(), "else");
-    BasicBlock* MergeBB = BasicBlock::Create(getGlobalContext(), "ifcont");
+  Function* func = c->builder->GetInsertBlock()->getParent();
+  BasicBlock* ThenBB = BasicBlock::Create(getGlobalContext(), "then", func);
+  BasicBlock* ElseBB = BasicBlock::Create(getGlobalContext(), "else");
+  BasicBlock* MergeBB = BasicBlock::Create(getGlobalContext(), "ifcont");
 
-    CallSlotNode* boolean = new CallSlotNode(cond, "bool");
-    Value* Qtrue = (new BoolNode(true))->codegen(c);
+  CallSlotNode* boolean = new CallSlotNode(cond, "bool");
+  Value* Qtrue = (new BoolNode(true))->codegen(c);
 
-    Value* EndCond = c->builder->CreateICmpEQ(boolean->codegen(c), Qtrue);
-    c->builder->CreateCondBr(EndCond, ThenBB, ElseBB);
+  Value* EndCond = c->builder->CreateICmpEQ(boolean->codegen(c), Qtrue);
+  c->builder->CreateCondBr(EndCond, ThenBB, ElseBB);
 
-    c->builder->SetInsertPoint(ThenBB);
-    thenNode->codegen(c);
-    if (!ThenBB->getTerminator()) c->builder->CreateBr(MergeBB);
+  c->builder->SetInsertPoint(ThenBB);
+  thenNode->codegen(c);
+  if (!ThenBB->getTerminator()) c->builder->CreateBr(MergeBB);
 
-    func->getBasicBlockList().push_back(ElseBB);
-    c->builder->SetInsertPoint(ElseBB);
-    if (elseNode) {
-        elseNode->codegen(c);
-    }
-    if (!ElseBB->getTerminator()) c->builder->CreateBr(MergeBB);
+  func->getBasicBlockList().push_back(ElseBB);
+  c->builder->SetInsertPoint(ElseBB);
+  if (elseNode) {
+    elseNode->codegen(c);
+  }
+  if (!ElseBB->getTerminator()) c->builder->CreateBr(MergeBB);
 
-    func->getBasicBlockList().push_back(MergeBB);
-    c->builder->SetInsertPoint(MergeBB);
+  func->getBasicBlockList().push_back(MergeBB);
+  c->builder->SetInsertPoint(MergeBB);
 
-    return 0;
+  return 0;
+}
+
+Value* WhileNode::codegen(Compiler* c) {
+  Function* func = c->builder->GetInsertBlock()->getParent();
+  BasicBlock* CondBB = BasicBlock::Create(getGlobalContext(), "cond", func);
+  BasicBlock* LoopBB = BasicBlock::Create(getGlobalContext(), "loop", func);
+  BasicBlock* AfterBB = BasicBlock::Create(getGlobalContext(), "afterloop", func);
+
+  c->builder->CreateBr(CondBB);
+  c->builder->SetInsertPoint(CondBB);
+
+  CallSlotNode* boolean = new CallSlotNode(cond, "bool");
+  Value* Qtrue = (new BoolNode(true))->codegen(c);
+
+  Value* EndCond = c->builder->CreateICmpEQ(boolean->codegen(c), Qtrue);
+  c->builder->CreateCondBr(EndCond, LoopBB, AfterBB);
+
+  c->builder->SetInsertPoint(LoopBB);
+  block->codegen(c);
+  c->builder->CreateBr(CondBB);
+
+  c->builder->SetInsertPoint(AfterBB);
+  return 0;
 }
