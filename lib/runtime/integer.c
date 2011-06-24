@@ -4,12 +4,13 @@
 Object* Integer_createProto() {
   Object* proto = Object_new(Object_proto);
 
+  Object_setSlot(proto, "str", Function_new((FuncPtr)Integer_str));
+  Object_setSlot(proto, "bool", Function_new((FuncPtr)Integer_bool));
+
   Object_setSlot(proto, "+", Function_new((FuncPtr)Integer_add));
   Object_setSlot(proto, "-", Function_new((FuncPtr)Integer_sub));
   Object_setSlot(proto, "*", Function_new((FuncPtr)Integer_mul));
   Object_setSlot(proto, "/", Function_new((FuncPtr)Integer_div));
-
-  Object_setSlot(proto, "str", Function_new((FuncPtr)Integer_str));
 
   return proto;
 }
@@ -24,6 +25,10 @@ Object* Integer_str(Object* self) {
   char buffer[20];
   sprintf(buffer, "%d", self->data.i);
   return String_new(buffer);
+}
+
+Object* Integer_bool(Object* self) {
+  return self->data.i ? Qtrue : Qfalse;
 }
 
 Object* Integer_add(Object* self, Object* other) {

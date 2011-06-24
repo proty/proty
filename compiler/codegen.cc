@@ -183,11 +183,10 @@ Value* IfNode::codegen(Compiler* c) {
     BasicBlock* ElseBB = BasicBlock::Create(getGlobalContext(), "else");
     BasicBlock* MergeBB = BasicBlock::Create(getGlobalContext(), "ifcont");
 
-    GetSlotNode* getslot = new GetSlotNode(cond, "bool");
-    CallNode* call = new CallNode(getslot);
+    CallSlotNode* boolean = new CallSlotNode(cond, "bool");
     Value* Qtrue = (new BoolNode(true))->codegen(c);
 
-    Value* EndCond = c->builder->CreateICmpEQ(call->codegen(c), Qtrue);
+    Value* EndCond = c->builder->CreateICmpEQ(boolean->codegen(c), Qtrue);
     c->builder->CreateCondBr(EndCond, ThenBB, ElseBB);
 
     c->builder->SetInsertPoint(ThenBB);
