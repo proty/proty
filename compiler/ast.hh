@@ -176,6 +176,25 @@ public:
   llvm::Value* codegen(Compiler*);
 };
 
+/**
+ * A while statement.
+ * while $cond
+ *   $block
+ * end
+ */
+
+class WhileNode : public Node {
+private:
+  Node* cond;
+  Node* block;
+
+public:
+  WhileNode(Node* cond, Node* block)
+    : cond(cond), block(block) {}
+  ~WhileNode() { delete cond; delete block; }
+
+  llvm::Value* codegen(Compiler*);
+};
 
 /**
  * A variable.
