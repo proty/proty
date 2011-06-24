@@ -12,6 +12,13 @@ Object* Integer_createProto() {
   Object_setSlot(proto, "*", Function_new((FuncPtr)Integer_mul));
   Object_setSlot(proto, "/", Function_new((FuncPtr)Integer_div));
 
+  Object_setSlot(proto, "==", Function_new((FuncPtr)Integer_eq));
+  Object_setSlot(proto, "!=", Function_new((FuncPtr)Integer_ne));
+  Object_setSlot(proto, "<", Function_new((FuncPtr)Integer_lt));
+  Object_setSlot(proto, ">", Function_new((FuncPtr)Integer_gt));
+  Object_setSlot(proto, "<=", Function_new((FuncPtr)Integer_le));
+  Object_setSlot(proto, ">=", Function_new((FuncPtr)Integer_ge));
+
   return proto;
 }
 
@@ -45,4 +52,28 @@ Object* Integer_mul(Object* self, Object* other) {
 
 Object* Integer_div(Object* self, Object* other) {
   return Integer_new(self->data.i / other->data.i);
+}
+
+Object* Integer_eq(Object* self, Object* other) {
+  return self->data.i == other->data.i ? Qtrue : Qfalse;
+}
+
+Object* Integer_ne(Object* self, Object* other) {
+  return self->data.i != other->data.i ? Qtrue : Qfalse;
+}
+
+Object* Integer_lt(Object* self, Object* other) {
+  return self->data.i < other->data.i ? Qtrue : Qfalse;
+}
+
+Object* Integer_gt(Object* self, Object* other) {
+  return self->data.i > other->data.i ? Qtrue : Qfalse;
+}
+
+Object* Integer_le(Object* self, Object* other) {
+  return self->data.i <= other->data.i ? Qtrue : Qfalse;
+}
+
+Object* Integer_ge(Object* self, Object* other) {
+  return self->data.i >= other->data.i ? Qtrue : Qfalse;
 }
