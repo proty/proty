@@ -162,8 +162,4 @@ void Lexer::tokenize() {
       add(Token(Token::unknown, "" + currch));
     }
   }
-
-  for (int i = 0; i < tokens->size(); i++) {
-    std::cout << tokens->at(i).getType() << "(" << tokens->at(i).getValue()  << ")" << std::endl;
-  }
 }
