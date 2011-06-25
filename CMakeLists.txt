@@ -31,12 +31,8 @@ if(NOT GIT_RETURN_VALUE EQUAL 0)
   set(GIT_VERSION "0")
 endif(NOT GIT_RETURN_VALUE EQUAL 0)
 
-
 add_subdirectory(compiler)
 add_subdirectory(lib)
-
-# documentation
-file(COPY ${CMAKE_SOURCE_DIR}/doc DESTINATION ${CMAKE_BINARY_DIR})
 
 # doxygen
 find_package(Doxygen)
@@ -46,3 +42,6 @@ if(DOXYGEN_FOUND)
     add_custom_target(doc)
     add_dependencies(doc doxygen)
 endif(DOXYGEN_FOUND)
+
+# manpage
+install(FILES ${CMAKE_SOURCE_DIR}/doc/man/proty.1 DESTINATION share/man/man1/)
