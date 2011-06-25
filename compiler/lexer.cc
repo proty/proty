@@ -47,6 +47,11 @@ Token Lexer::match(Token::Type expected, std::string name) {
 
 void Lexer::tokenize() {
   while (true) {
+    if (stream->eof()) {
+      add(Token(Token::eof, "<eof>"));
+      break;
+    }
+
     char currch = stream->get();
     char nextch = stream->peek();
 
@@ -156,10 +161,9 @@ void Lexer::tokenize() {
     else {
       add(Token(Token::unknown, "" + currch));
     }
+  }
 
-    if (stream->eof()) {
-      add(Token(Token::eof, "<eof>"));
-      break;
-    }
+  for (int i = 0; i < tokens->size(); i++) {
+    std::cout << tokens->at(i).getType() << "(" << tokens->at(i).getValue()  << ")" << std::endl;
   }
 }
