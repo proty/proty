@@ -17,7 +17,9 @@ Lexer::Lexer(std::string filename) {
 
 Lexer::~Lexer() {
   delete tokens;
-  delete stream;
+  if (stream != &std::cin) {
+    delete stream;
+  }
 }
 
 void Lexer::add(Token token) {
