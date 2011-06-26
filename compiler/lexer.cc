@@ -49,13 +49,13 @@ Token Lexer::match(Token::Type expected, std::string name) {
 
 void Lexer::tokenize() {
   while (true) {
+    char currch = stream->get();
+    char nextch = stream->peek();
+
     if (stream->eof()) {
       add(Token(Token::eof, "<eof>"));
       break;
     }
-
-    char currch = stream->get();
-    char nextch = stream->peek();
 
     // whitespace
     if (isspace(currch)) continue;
