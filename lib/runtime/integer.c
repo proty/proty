@@ -4,20 +4,20 @@
 Object* Integer_createProto() {
   Object* proto = Object_new(Object_proto);
 
-  Object_setSlot(proto, "str", Function_new((FuncPtr)Integer_str));
-  Object_setSlot(proto, "bool", Function_new((FuncPtr)Integer_bool));
+  Object_setSlot(proto, "str", Function_new((FuncPtr)Integer_str, 1));
+  Object_setSlot(proto, "bool", Function_new((FuncPtr)Integer_bool, 1));
 
-  Object_setSlot(proto, "+", Function_new((FuncPtr)Integer_add));
-  Object_setSlot(proto, "-", Function_new((FuncPtr)Integer_sub));
-  Object_setSlot(proto, "*", Function_new((FuncPtr)Integer_mul));
-  Object_setSlot(proto, "/", Function_new((FuncPtr)Integer_div));
+  Object_setSlot(proto, "+", Function_new((FuncPtr)Integer_add, 2));
+  Object_setSlot(proto, "-", Function_new((FuncPtr)Integer_sub, 2));
+  Object_setSlot(proto, "*", Function_new((FuncPtr)Integer_mul, 2));
+  Object_setSlot(proto, "/", Function_new((FuncPtr)Integer_div, 2));
 
-  Object_setSlot(proto, "==", Function_new((FuncPtr)Integer_eq));
-  Object_setSlot(proto, "!=", Function_new((FuncPtr)Integer_ne));
-  Object_setSlot(proto, "<", Function_new((FuncPtr)Integer_lt));
-  Object_setSlot(proto, ">", Function_new((FuncPtr)Integer_gt));
-  Object_setSlot(proto, "<=", Function_new((FuncPtr)Integer_le));
-  Object_setSlot(proto, ">=", Function_new((FuncPtr)Integer_ge));
+  Object_setSlot(proto, "==", Function_new((FuncPtr)Integer_eq, 2));
+  Object_setSlot(proto, "!=", Function_new((FuncPtr)Integer_ne, 2));
+  Object_setSlot(proto, "<", Function_new((FuncPtr)Integer_lt, 2));
+  Object_setSlot(proto, ">", Function_new((FuncPtr)Integer_gt, 2));
+  Object_setSlot(proto, "<=", Function_new((FuncPtr)Integer_le, 2));
+  Object_setSlot(proto, ">=", Function_new((FuncPtr)Integer_ge, 2));
 
   return proto;
 }

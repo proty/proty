@@ -1,6 +1,12 @@
 #include <stdlib.h>
 #include <stdarg.h>
+#include <stdio.h>
 #include "runtime.h"
+
+typedef struct {
+  FuncPtr func;
+  int argc;
+} Function;
 
 Object* Function_createProto() {
   Object* proto = Object_new(Object_proto);
@@ -8,15 +14,27 @@ Object* Function_createProto() {
   return proto;
 }
 
-Object* Function_new(FuncPtr func) {
+Object* Function_new(FuncPtr func, int argc) {
   Object* new = Object_new(Function_proto);
-  new->data.ptr = func;
+  Function* f = malloc(sizeof(Function));
+
+  f->func = func;
+  f->argc = argc;
+
+  new->data.ptr = f;
   return new;
 }
 
 Object* Function_call(Object* self, int argc, Object* argv[]) {
-  FuncPtr func = (FuncPtr)self->data.ptr;
+  Function* function = (Function*)self->data.ptr;
 
+  /// @todo: throw exception
+  if (argc != function->argc) {
+    printf("wrong argument count, expected %i, got %i", function->argc, argc);
+    exit(0);
+  }
+
+  FuncPtr func = function->func;
   Object* ret;
   switch (argc) {
     case 0: ret = func(0); break;

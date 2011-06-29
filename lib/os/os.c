@@ -43,10 +43,10 @@ Object* os_exit(Object* self, Object* status) {
 Object* os_init() {
   Object* os = Object_new(Object_proto);
 
-  Object_setSlot(os, "system", Function_new((FuncPtr)os_system));
-  Object_setSlot(os, "getenv", Function_new((FuncPtr)os_getenv));
-  Object_setSlot(os, "setenv", Function_new((FuncPtr)os_setenv));
-  Object_setSlot(os, "exit", Function_new((FuncPtr)os_exit));
+  Object_setSlot(os, "system", Function_new((FuncPtr)os_system, 2));
+  Object_setSlot(os, "getenv", Function_new((FuncPtr)os_getenv, 2));
+  Object_setSlot(os, "setenv", Function_new((FuncPtr)os_setenv, 3));
+  Object_setSlot(os, "exit", Function_new((FuncPtr)os_exit, 2));
 
   return os;
 }

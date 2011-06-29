@@ -3,7 +3,7 @@
 Object* Bool_create() {
   Object* boolean = Object_new(Object_proto);
 
-  Object_setSlot(boolean, "str", Function_new((FuncPtr)Bool_str));
+  Object_setSlot(boolean, "str", Function_new((FuncPtr)Bool_str, 1));
 
   return boolean;
 }
