@@ -25,8 +25,8 @@ Object* File_write(Object* self, Object* str) {
 Object* File_createProto() {
   Object* file = Object_new(Object_proto);
 
-  Object_setSlot(file, "close", Function_new((FuncPtr)File_close));
-  Object_setSlot(file, "write", Function_new((FuncPtr)File_write));
+  Object_setSlot(file, "close", Function_new((FuncPtr)File_close, 1));
+  Object_setSlot(file, "write", Function_new((FuncPtr)File_write, 2));
 
   return file;
 }

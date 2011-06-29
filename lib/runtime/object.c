@@ -5,7 +5,7 @@
 Object* Object_createProto() {
   Object* proto = Object_new(0);
 
-  Object_setSlot(proto, "bool", Function_new((FuncPtr)Object_bool));
+  Object_setSlot(proto, "bool", Function_new((FuncPtr)Object_bool, 1));
 
   return proto;
 }

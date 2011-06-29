@@ -20,7 +20,7 @@ Object* Hash_createProto() {
   proto->slots = Object_new(proto);
   Hash_init(proto->slots);
 
-  Object_setSlot(proto, "init", Function_new((FuncPtr)Hash_init));
+  Object_setSlot(proto, "init", Function_new((FuncPtr)Hash_init, 1));
 
   return proto;
 }
