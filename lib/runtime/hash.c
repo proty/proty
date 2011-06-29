@@ -21,8 +21,6 @@ Object* Hash_createProto() {
   Hash_init(proto->slots);
 
   Object_setSlot(proto, "init", Function_new((FuncPtr)Hash_init));
-  Object_setSlot(proto, "set", Function_new((FuncPtr)Hash_set));
-  Object_setSlot(proto, "get", Function_new((FuncPtr)Hash_get));
 
   return proto;
 }
@@ -59,8 +57,8 @@ Object* Hash_set(Object* self, const char* key, Object* value) {
 
     for (int i = 0; i < hash->bounds; i++) {
       if (hash->keys[i]) {
-        unsigned int pos = hash_str(hash->keys[i]) % hash->bounds*2;
-        while (tmpKeys[pos] && !strcmp(hash->keys[i], tmpKeys[pos])) pos = (pos+1) % hash->bounds;
+        unsigned int pos = hash_str(hash->keys[i]) % (hash->bounds*2);
+        while (tmpKeys[pos] && strcmp(hash->keys[i], tmpKeys[pos])) pos = (pos+1) % hash->bounds;
         tmpKeys[pos] = hash->keys[i];
         tmpValues[pos] = hash->values[i];
       }
@@ -88,7 +86,6 @@ Object* Hash_set(Object* self, const char* key, Object* value) {
 
 Object* Hash_get(Object* self, const char* key) {
   Hash* hash = (Hash*)self->data.ptr;
-  if (!hash) return Qnil;
   unsigned int pos = hash_str(key) % hash->bounds;
   while (hash->keys[pos]) {
     if (strcmp(hash->keys[pos], key)) {
