@@ -4,7 +4,7 @@
 extern Object* Function_proto;
 Object* Function_createProto();
 
-Object* Function_new(FuncPtr);
+Object* Function_new(FuncPtr, int);
 
 Object* Function_call(Object*, int argc, Object*[]);
 

@@ -5,7 +5,7 @@
 Object* String_createProto() {
   Object* proto = Object_new(Object_proto);
 
-  Object_setSlot(proto, "+", Function_new((FuncPtr)String_add));
+  Object_setSlot(proto, "+", Function_new((FuncPtr)String_add, 2));
 
   return proto;
 }
