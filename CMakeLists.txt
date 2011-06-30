@@ -45,3 +45,12 @@ endif(DOXYGEN_FOUND)
 
 # manpage
 install(FILES ${CMAKE_SOURCE_DIR}/doc/man/proty.1 DESTINATION share/man/man1/)
+
+# dist
+set(ARCHIVE_NAME proty-${VERSION})
+add_custom_target(dist
+    COMMAND git archive --prefix=${ARCHIVE_NAME}/ HEAD
+        | gzip > ${CMAKE_BINARY_DIR}/${ARCHIVE_NAME}.tar.gz
+        && gpg --armor --sign --detach-sign -o ${CMAKE_BINARY_DIR}/${ARCHIVE_NAME}.tar.gz.sig
+           ${CMAKE_BINARY_DIR}/${ARCHIVE_NAME}.tar.gz
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
