@@ -22,6 +22,7 @@ public:
   Token peek(int=0);
   bool  isNext(Token::Type);
   Token match(Token::Type, std::string="");
+  void unexpected(Token, std::string);
 
   void  tokenize();
 };
