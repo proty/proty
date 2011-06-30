@@ -168,6 +168,7 @@ Value* FunctionNode::codegen(Compiler* c) {
 
   // get a pointer to the generated function
   std::vector<const Type*> funcPtrArgTypes;
+  funcPtrArgTypes.push_back(c->ObjectTy);
   FunctionType* funcPtrTy = FunctionType::get(c->ObjectTy, funcPtrArgTypes, true);
   const Type* FunctionPtr = PointerType::get(funcPtrTy, 0);
   Value* funcPtr = c->builder->CreateBitCast(func, FunctionPtr);
