@@ -13,9 +13,29 @@ Node* Parser::parse() {
 
 Node* Parser::parseBlock() {
   BlockNode* block = new BlockNode;
+
+  bool braced;
+  if (lexer->isNext(Token::lbrace)) {
+    braced = true;
+    lexer->next();
+  }
+  else {
+    braced = false;
+  }
+
   while (true) {
     switch (lexer->peek().getType()) {
       case Token::endKw:
+        if (braced) {
+          lexer->unexpected(lexer->next(), "}");
+        }
+        lexer->next();
+        return block;
+
+      case Token::rbrace:
+        if (!braced) {
+          lexer->unexpected(lexer->next(), "end");
+        }
         lexer->next();
         return block;
 
