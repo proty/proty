@@ -38,11 +38,15 @@ bool Lexer::isNext(Token::Type type) {
   return tokens->at(pos).getType() == type;
 }
 
-Token Lexer::match(Token::Type expected, std::string name) {
+void Lexer::unexpected(Token found, std::string expected) {
+   std::cerr << "expected " + expected + ", found " + found.getValue() << std::endl;
+   exit(1);
+}
+
+Token Lexer::match(Token::Type to_match, std::string expected) {
   Token t = next();
-  if (t.getType() != expected) {
-    std::cerr << "expected " + name + ", found " + t.getValue() << std::endl;
-    exit(1);
+  if (t.getType() != to_match) {
+    unexpected(t, expected);
   }
   return t;
 }
