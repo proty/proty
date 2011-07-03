@@ -24,9 +24,12 @@ add_executable(lib/io.bc
 
 add_executable(lib/os.bc os/os.c)
 
+add_executable(lib/math.bc math/math.c)
+
 install(TARGETS
     lib/runtime.bc
     lib/io.bc
     lib/os.bc
+    lib/math.bc
 DESTINATION lib/proty)
 
