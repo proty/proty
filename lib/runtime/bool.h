@@ -6,6 +6,4 @@ extern Object* Qfalse;
 
 Object* Bool_create();
 
-Object* Bool_str();
-
 #endif

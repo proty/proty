@@ -6,6 +6,4 @@ Object* String_createProto();
 
 Object* String_new(const char*);
 
-Object* String_add(Object*, Object*);
-
 #endif

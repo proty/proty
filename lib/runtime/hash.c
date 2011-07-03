@@ -13,24 +13,6 @@ unsigned int hash_str(const char* str) {
   return hash;
 }
 
-Object* Hash_createProto() {
-  Object* proto = Object_new(Object_proto);
-
-  // bootstrap hash prototype
-  proto->slots = Object_new(proto);
-  Hash_init(proto->slots);
-
-  Object_setSlot(proto, "init", Function_new((FuncPtr)Hash_init, 1));
-
-  return proto;
-}
-
-Object* Hash_new() {
-  Object* new = Object_new(Hash_proto);
-  Hash_init(new);
-  return new;
-}
-
 Object* Hash_init(Object* self) {
   Hash* hash = malloc(sizeof(Hash));
 
@@ -44,6 +26,12 @@ Object* Hash_init(Object* self) {
 
   self->data.ptr = hash;
   return self;
+}
+
+Object* Hash_new() {
+  Object* new = Object_new(Hash_proto);
+  Hash_init(new);
+  return new;
 }
 
 Object* Hash_set(Object* self, const char* key, Object* value) {
@@ -96,4 +84,16 @@ Object* Hash_get(Object* self, const char* key) {
     }
   }
   return Qnil;
+}
+
+Object* Hash_createProto() {
+  Object* proto = Object_new(Object_proto);
+
+  // bootstrap hash prototype
+  proto->slots = Object_new(proto);
+  Hash_init(proto->slots);
+
+  Object_setSlot(proto, "init", Function_new((FuncPtr)Hash_init, 1));
+
+  return proto;
 }

@@ -2,14 +2,6 @@
 #include <stdarg.h>
 #include "runtime.h"
 
-Object* Object_createProto() {
-  Object* proto = Object_new(0);
-
-  Object_setSlot(proto, "bool", Function_new((FuncPtr)Object_bool, 1));
-
-  return proto;
-}
-
 Object* Object_new(Object* proto) {
   Object* new = malloc(sizeof(Object));
   new->proto = proto;
@@ -57,4 +49,12 @@ Object* Object_call(Object* self, int argc, ...) {
 
 Object* Object_bool(Object* self) {
   return (self == Qtrue) ? Qtrue : Qfalse;
+}
+
+Object* Object_createProto() {
+  Object* proto = Object_new(0);
+
+  Object_setSlot(proto, "bool", Function_new((FuncPtr)Object_bool, 1));
+
+  return proto;
 }
