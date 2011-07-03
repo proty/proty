@@ -5,6 +5,7 @@ Object* Object_proto;
 Object* Function_proto;
 Object* Hash_proto;
 Object* Integer_proto;
+Object* Float_proto;
 Object* String_proto;
 
 Object* Qnil;
@@ -16,6 +17,7 @@ void runtime_init() {
   Function_proto = Function_createProto();
   Hash_proto = Hash_createProto();
   Integer_proto = Integer_createProto();
+  Float_proto = Float_createProto();
   String_proto = String_createProto();
 
   Qnil = Nil_create();

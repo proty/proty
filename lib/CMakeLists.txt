@@ -10,6 +10,7 @@ add_executable(lib/runtime.bc
   runtime/function.c
   runtime/hash.c
   runtime/integer.c
+  runtime/float.c
   runtime/string.c
   runtime/nil.c
   runtime/bool.c

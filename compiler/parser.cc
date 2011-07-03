@@ -101,6 +101,13 @@ Node* Parser::parsePrimary() {
     ss >> v;
     prim = new IntegerNode(v);
   }
+  else if (lexer->isNext(Token::decimal)) {
+    std::string value = lexer->next().getValue();
+    std::stringstream ss(value);
+    double v;
+    ss >> v;
+    prim = new FloatNode(v);
+  }
   else if (lexer->isNext(Token::boolean)) {
     bool value = lexer->next().getValue() == "true";
     prim = new BoolNode(value);
