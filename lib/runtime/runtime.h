@@ -10,6 +10,7 @@ typedef Object* (*FuncPtr)(Object*, ...);
 #include "hash.h"
 #include "function.h"
 #include "integer.h"
+#include "float.h"
 #include "string.h"
 #include "nil.h"
 #include "bool.h"

@@ -81,6 +81,12 @@ Value* IntegerNode::codegen(Compiler* c) {
   return c->builder->CreateCall(F, intValue, "inttmp");
 }
 
+Value* FloatNode::codegen(Compiler* c) {
+  Function* F = c->module->getFunction("Float_new");
+  Value* doubleValue = ConstantFP::get(getGlobalContext(), APFloat(value));
+  return c->builder->CreateCall(F, doubleValue, "floattmp");
+}
+
 Value* BoolNode::codegen(Compiler* c) {
   Value* b = value ? c->module->getNamedValue("Qtrue")
                    : c->module->getNamedValue("Qfalse");

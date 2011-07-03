@@ -64,14 +64,24 @@ void Lexer::tokenize() {
     // whitespace
     if (isspace(currch)) continue;
 
-    // integer
+    // integer and decimal
     else if (isdigit(currch)) {
       std::stringstream buf;
       buf << currch;
       while(isdigit(stream->peek())) {
         buf << (char)stream->get();
       }
-      add(Token(Token::integer, buf.str()));
+      // decimal
+      if (stream->peek() == '.') {
+        buf << (char)stream->get();
+        while(isdigit(stream->peek())) {
+          buf << (char)stream->get();
+        }
+        add(Token(Token::decimal, buf.str()));
+      }
+      else {
+        add(Token(Token::integer, buf.str()));
+      }
     }
 
     // name and keywords

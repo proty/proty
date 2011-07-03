@@ -49,6 +49,21 @@ public:
 
 
 /**
+ * A float object.
+ */
+
+class FloatNode : public Node {
+private:
+  double value;
+
+public:
+  FloatNode(double value) : value(value) {}
+
+  llvm::Value* codegen(Compiler*);
+};
+
+
+/**
  * Reference to bool object.
  * true|false
  */
