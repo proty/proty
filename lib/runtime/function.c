@@ -8,12 +8,6 @@ typedef struct {
   int argc;
 } Function;
 
-Object* Function_createProto() {
-  Object* proto = Object_new(Object_proto);
-
-  return proto;
-}
-
 Object* Function_new(FuncPtr func, int argc) {
   Object* new = Object_new(Function_proto);
   Function* f = malloc(sizeof(Function));
@@ -47,4 +41,10 @@ Object* Function_call(Object* self, int argc, Object* argv[]) {
     case 7: ret = func(argv[0], argv[1], argv[2], argv[3], argv[4], argv[5], argv[6]); break;
   }
   return ret;
+}
+
+Object* Function_createProto() {
+  Object* proto = Object_new(Object_proto);
+
+  return proto;
 }
