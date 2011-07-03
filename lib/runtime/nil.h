@@ -4,7 +4,4 @@
 extern Object* Qnil;
 Object* Nil_create();
 
-Object* Nil_str();
-
-
 #endif
