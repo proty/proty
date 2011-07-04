@@ -32,9 +32,9 @@ Object* File_read(Object* self, Object* len) {
 Object* File_createProto() {
   Object* file = Object_new(Object_proto);
 
-  Object_setSlot(file, "close", Function_new((FuncPtr)File_close, 1));
-  Object_setSlot(file, "write", Function_new((FuncPtr)File_write, 2));
-  Object_setSlot(file, "read", Function_new((FuncPtr)File_read, 2));
+  Object_setSlot(file, "close", FUNC(File_close, 1));
+  Object_setSlot(file, "write", FUNC(File_write, 2));
+  Object_setSlot(file, "read", FUNC(File_read, 2));
 
   return file;
 }
