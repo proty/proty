@@ -4,15 +4,19 @@
 
 Object* String_new(const char* value) {
   Object* new = Object_new(String_proto);
-  char* v = malloc(sizeof(char)*strlen(value));
-  strcpy(v, value);
-  new->data.ptr = v;
+  new->data.ptr = malloc(strlen(value));
+  strcpy(new->data.ptr, value);
   return new;
 }
 
 Object* String_add(Object* self, Object* other) {
-  char* new = strcat(self->data.ptr, other->data.ptr);
-  return String_new(new);
+  int size = strlen(self->data.ptr)+strlen(other->data.ptr);
+  char* buffer = malloc(size);
+  strcpy(buffer, self->data.ptr);
+  strcat(buffer, other->data.ptr);
+  Object* str = String_new(buffer);
+  free(buffer);
+  return str;
 }
 
 Object* String_eq(Object* self, Object* other) {

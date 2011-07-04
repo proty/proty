@@ -60,7 +60,10 @@ Object* Socket_recv(Object* self, Object* length) {
   }
   buffer[received] = '\0';
 
-  return String_new(buffer);
+  Object* str = String_new(buffer);
+  free(buffer);
+
+  return str;
 }
 
 Object* Socket_close(Object* self) {
