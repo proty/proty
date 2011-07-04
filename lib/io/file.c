@@ -26,7 +26,9 @@ Object* File_write(Object* self, Object* str) {
 Object* File_read(Object* self, Object* len) {
   char* in = malloc(len->data.i);
   fread(in, 1, len->data.i, self->data.ptr);
-  return String_new(in);
+  Object* str = String_new(in);
+  free(in);
+  return str;
 }
 
 Object* File_createProto() {
