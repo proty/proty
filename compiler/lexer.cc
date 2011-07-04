@@ -108,7 +108,36 @@ void Lexer::tokenize() {
     else if (currch == '"') {
       std::stringstream buf;
       while (stream->peek() != '"') {
-        buf << (char)stream->get();
+        if (stream->peek() == '\\') {
+          stream->get();
+          switch (stream->get()) {
+          case 'a':
+            buf << '\a';
+            break;
+          case 'b':
+            buf << '\b';
+            break;
+          case 'n':
+            buf << '\n';
+            break;
+          case 'r':
+            buf << '\r';
+            break;
+          case 't':
+            buf << '\t';
+            break;
+          case '\\':
+            buf << '\\';
+            break;
+          default:
+            buf << '\\';
+            buf << stream->unget();
+            buf << stream->get();
+          }
+        }
+        else {
+          buf << (char)stream->get();
+        }
       }
       stream->get();
       add(Token(Token::string, buf.str()));
