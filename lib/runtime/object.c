@@ -54,7 +54,7 @@ Object* Object_bool(Object* self) {
 Object* Object_createProto() {
   Object* proto = Object_new(0);
 
-  Object_setSlot(proto, "bool", Function_new((FuncPtr)Object_bool, 1));
+  Object_setSlot(proto, "bool", FUNC(Object_bool, 1));
 
   return proto;
 }

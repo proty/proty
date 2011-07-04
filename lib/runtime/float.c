@@ -60,20 +60,20 @@ Object* Float_ge(Object* self, Object* other) {
 Object* Float_createProto() {
   Object* proto = Object_new(Object_proto);
 
-  Object_setSlot(proto, "str", Function_new((FuncPtr)Float_str, 1));
-  Object_setSlot(proto, "bool", Function_new((FuncPtr)Float_bool, 1));
+  Object_setSlot(proto, "str", FUNC(Float_str, 1));
+  Object_setSlot(proto, "bool", FUNC(Float_bool, 1));
 
-  Object_setSlot(proto, "+", Function_new((FuncPtr)Float_add, 2));
-  Object_setSlot(proto, "-", Function_new((FuncPtr)Float_sub, 2));
-  Object_setSlot(proto, "*", Function_new((FuncPtr)Float_mul, 2));
-  Object_setSlot(proto, "/", Function_new((FuncPtr)Float_div, 2));
+  Object_setSlot(proto, "+", FUNC(Float_add, 2));
+  Object_setSlot(proto, "-", FUNC(Float_sub, 2));
+  Object_setSlot(proto, "*", FUNC(Float_mul, 2));
+  Object_setSlot(proto, "/", FUNC(Float_div, 2));
 
-  Object_setSlot(proto, "==", Function_new((FuncPtr)Float_eq, 2));
-  Object_setSlot(proto, "!=", Function_new((FuncPtr)Float_ne, 2));
-  Object_setSlot(proto, "<", Function_new((FuncPtr)Float_lt, 2));
-  Object_setSlot(proto, ">", Function_new((FuncPtr)Float_gt, 2));
-  Object_setSlot(proto, "<=", Function_new((FuncPtr)Float_le, 2));
-  Object_setSlot(proto, ">=", Function_new((FuncPtr)Float_ge, 2));
+  Object_setSlot(proto, "==", FUNC(Float_eq, 2));
+  Object_setSlot(proto, "!=", FUNC(Float_ne, 2));
+  Object_setSlot(proto, "<", FUNC(Float_lt, 2));
+  Object_setSlot(proto, ">", FUNC(Float_gt, 2));
+  Object_setSlot(proto, "<=", FUNC(Float_le, 2));
+  Object_setSlot(proto, ">=", FUNC(Float_ge, 2));
 
   return proto;
 }
