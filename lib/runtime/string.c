@@ -30,12 +30,12 @@ Object* String_bool(Object* self) {
 Object* String_createProto() {
   Object* proto = Object_new(Object_proto);
 
-  Object_setSlot(proto, "+", Function_new((FuncPtr)String_add, 2));
+  Object_setSlot(proto, "+", FUNC(String_add, 2));
 
-  Object_setSlot(proto, "==", Function_new((FuncPtr)String_eq, 2));
-  Object_setSlot(proto, "!=", Function_new((FuncPtr)String_ne, 2));
+  Object_setSlot(proto, "==", FUNC(String_eq, 2));
+  Object_setSlot(proto, "!=", FUNC(String_ne, 2));
 
-  Object_setSlot(proto, "bool", Function_new((FuncPtr)String_bool, 1));
+  Object_setSlot(proto, "bool", FUNC(String_bool, 1));
 
   return proto;
 }
