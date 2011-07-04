@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 #include "runtime/runtime.h"
 
 Object* File_proto;
@@ -22,11 +23,18 @@ Object* File_write(Object* self, Object* str) {
   return Qnil;
 }
 
+Object* File_read(Object* self, Object* len) {
+  char* in = malloc(len->data.i);
+  fread(in, 1, len->data.i, self->data.ptr);
+  return String_new(in);
+}
+
 Object* File_createProto() {
   Object* file = Object_new(Object_proto);
 
   Object_setSlot(file, "close", Function_new((FuncPtr)File_close, 1));
   Object_setSlot(file, "write", Function_new((FuncPtr)File_write, 2));
+  Object_setSlot(file, "read", Function_new((FuncPtr)File_read, 2));
 
   return file;
 }
