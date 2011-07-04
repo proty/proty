@@ -40,17 +40,17 @@ Object* math_sqrt(Object* self, Object* num) {
 Object* math_init() {
   Object* math = Object_new(Object_proto);
 
-  Object_setSlot(math, "sin", Function_new((FuncPtr)math_sin, 2));
-  Object_setSlot(math, "cos", Function_new((FuncPtr)math_cos, 2));
-  Object_setSlot(math, "tan", Function_new((FuncPtr)math_cos, 2));
-  Object_setSlot(math, "asin", Function_new((FuncPtr)math_asin, 2));
-  Object_setSlot(math, "acos", Function_new((FuncPtr)math_acos, 2));
-  Object_setSlot(math, "atan", Function_new((FuncPtr)math_atan, 2));
+  Object_setSlot(math, "sin", FUNC(math_sin, 2));
+  Object_setSlot(math, "cos", FUNC(math_cos, 2));
+  Object_setSlot(math, "tan", FUNC(math_cos, 2));
+  Object_setSlot(math, "asin", FUNC(math_asin, 2));
+  Object_setSlot(math, "acos", FUNC(math_acos, 2));
+  Object_setSlot(math, "atan", FUNC(math_atan, 2));
 
-  Object_setSlot(math, "log", Function_new((FuncPtr)math_log, 2));
+  Object_setSlot(math, "log", FUNC(math_log, 2));
 
-  Object_setSlot(math, "pow", Function_new((FuncPtr)math_pow, 3));
-  Object_setSlot(math, "sqrt", Function_new((FuncPtr)math_sqrt, 2));
+  Object_setSlot(math, "pow", FUNC(math_pow, 3));
+  Object_setSlot(math, "sqrt", FUNC(math_sqrt, 2));
 
   Object_setSlot(math, "pi", Float_new(3.141592));
   Object_setSlot(math, "e", Float_new(2.718281));

@@ -7,7 +7,7 @@ Object* Nil_str(Object* self) {
 Object* Nil_create() {
   Object* nil = Object_new(Object_proto);
 
-  Object_setSlot(nil, "str", Function_new((FuncPtr)Nil_str, 1));
+  Object_setSlot(nil, "str", FUNC(Nil_str, 1));
 
   return nil;
 }
