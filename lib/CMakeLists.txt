@@ -34,6 +34,7 @@ add_executable(lib/math.bc math/math.c)
 install(TARGETS
     lib/runtime.bc
     lib/io.bc
+    lib/net.bc
     lib/os.bc
     lib/math.bc
 DESTINATION lib/proty)
