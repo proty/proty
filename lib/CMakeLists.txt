@@ -22,6 +22,11 @@ add_executable(lib/io.bc
   io/file.c
 )
 
+add_executable(lib/net.bc
+  net/net.c
+  net/socket.c
+)
+
 add_executable(lib/os.bc os/os.c)
 
 add_executable(lib/math.bc math/math.c)
