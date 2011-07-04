@@ -34,17 +34,28 @@ endif(NOT GIT_RETURN_VALUE EQUAL 0)
 add_subdirectory(compiler)
 add_subdirectory(lib)
 
+# documentation
+add_custom_target(doc)
+
 # doxygen
 find_package(Doxygen)
 if(DOXYGEN_FOUND)
-    configure_file(${CMAKE_SOURCE_DIR}/doc/Doxyfile.in ${CMAKE_BINARY_DIR}/Doxyfile)
+    configure_file(${CMAKE_SOURCE_DIR}/etc/Doxyfile.in ${CMAKE_BINARY_DIR}/Doxyfile)
     add_custom_target(doxygen ${DOXYGEN_EXECUTABLE} ${CMAKE_BINARY_DIR}/Doxyfile)
-    add_custom_target(doc)
     add_dependencies(doc doxygen)
 endif(DOXYGEN_FOUND)
 
+# sphinx
+configure_file(${CMAKE_SOURCE_DIR}/doc/conf.py.in
+               ${CMAKE_BINARY_DIR}/conf.py)
+find_program(SPHINX_EXECUTABLE NAMES sphinx-build)
+add_custom_target(sphinx ${SPHINX_EXECUTABLE} -c ${CMAKE_BINARY_DIR}
+                         ${CMAKE_SOURCE_DIR}/doc/
+                         ${CMAKE_BINARY_DIR}/doc/)
+add_dependencies(doc sphinx)
+
 # manpage
-install(FILES ${CMAKE_SOURCE_DIR}/doc/man/proty.1 DESTINATION share/man/man1/)
+install(FILES ${CMAKE_SOURCE_DIR}/etc/man/proty.1 DESTINATION share/man/man1/)
 
 # dist
 set(ARCHIVE_NAME proty-${VERSION})
