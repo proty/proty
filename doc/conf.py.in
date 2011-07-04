@@ -1,0 +1,71 @@
+# -*- coding: utf-8 -*-
+
+import sys, os
+
+extensions = []
+templates_path = []
+source_suffix = '.rst'
+source_encoding = 'utf-8-sig'
+master_doc = 'index'
+
+project = u'proty'
+copyright = u'2011, Thomas Gatzweiler'
+
+version = '@VERSION@'
+release = '@VERSION@'
+
+#language = None
+
+today_fmt = '%B %d, %Y'
+
+exclude_patterns = []
+add_module_names = True
+show_authors = False
+
+pygments_style = 'sphinx'
+modindex_common_prefix = []
+
+html_theme = 'default'
+html_theme_options = {}
+html_theme_path = []
+
+html_title = "proty v@VERSION@ documentation"
+html_short_title = "proty v@VERSION@ documentation"
+html_logo = None
+html_favicon = None
+html_static_path = []
+html_last_updated_fmt = '%b %d, %Y'
+html_use_smartypants = True
+html_sidebars = {}
+html_additional_pages = {}
+html_domain_indices = True
+html_use_index = True
+html_split_index = False
+html_show_sourcelink = True
+html_show_sphinx = True
+html_show_copyright = True
+html_use_opensearch = ''
+html_file_suffix = '.html'
+htmlhelp_basename = 'protydoc'
+
+latex_paper_size = 'a4'
+latex_font_size = '10pt'
+
+latex_documents = [
+  ('index', 'proty.tex', u'proty Documentation',
+   u'Thomas Gatzweiler', 'manual'),
+]
+
+latex_logo = None
+latex_use_parts = False
+latex_show_pagerefs = False
+latex_show_urls = False
+latex_preamble = ''
+latex_appendices = []
+latex_domain_indices = True
+
+
+man_pages = [
+    ('index', 'proty', u'proty Documentation',
+     [u'Thomas Gatzweiler'], 1)
+]
