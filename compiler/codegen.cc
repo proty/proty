@@ -99,12 +99,6 @@ Value* NilNode::codegen(Compiler* c) {
 }
 
 Value* StringNode::codegen(Compiler* c) {
-  size_t pos = 0;
-  while((pos = value.find("\\n", pos)) != std::string::npos) {
-    value.replace(pos, 2, "\n");
-    pos += 1;
-  }
-
   Value* string = c->builder->CreateGlobalStringPtr(value.c_str(), ".str");
 
   Function* func = c->module->getFunction("String_new");
