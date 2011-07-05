@@ -52,7 +52,21 @@ Node* Parser::parseBlock() {
         block->add(parseWhile());
         break;
 
+      case Token::tryKw:
+        lexer->next();
+        block->add(parseTry());
+        break;
+
+      case Token::catchKw:
+        if (braced) {
+          lexer->unexpected(lexer->next(), "}");
+        }
+        return block;
+
       case Token::elseKw:
+        if (braced) {
+          lexer->unexpected(lexer->next(), "}");
+        }
         return block;
 
       default:
@@ -211,4 +225,20 @@ Node* Parser::parseWhile() {
   Node* cond = parseExpression();
   Node* block = parseBlock();
   return new WhileNode(cond, block);
+}
+
+Node* Parser::parseTry() {
+  Node* tryBlock = parseBlock();
+  lexer->match(Token::catchKw, "catch");
+
+  std::string ename = lexer->match(Token::name, "exception name").getValue();
+
+  Node* catchBlock = parseBlock();
+
+  Node* elseBlock = 0;
+  if (lexer->isNext(Token::elseKw)) {
+    elseBlock = parseBlock();
+  }
+
+  return new TryNode(tryBlock, ename, catchBlock, elseBlock);
 }

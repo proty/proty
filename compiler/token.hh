@@ -22,6 +22,8 @@ public:
     elseKw,
     whileKw,
     endKw,
+    tryKw,
+    catchKw,
 
     // braces
     lpar,

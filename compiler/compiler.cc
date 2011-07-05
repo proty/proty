@@ -34,6 +34,10 @@ Compiler::Compiler(std::string name, bool debug) {
   // link in the runtime
   loadModule("runtime");
 
+  getDeclaration(module, llvm::Intrinsic::eh_selector);
+  getDeclaration(module, llvm::Intrinsic::eh_exception);
+  getDeclaration(module, llvm::Intrinsic::eh_typeid_for);
+
   // Get the object type which is defined in runtime.bc
   ObjectTy = PointerType::get(module->getTypeByName("struct.Object"), 0);
 }

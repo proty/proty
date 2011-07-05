@@ -18,5 +18,6 @@
 #include <llvm/Bitcode/ReaderWriter.h>
 #include <llvm/Transforms/Utils/Cloning.h>
 #include <llvm/Transforms/Scalar.h>
+#include <llvm/Intrinsics.h>
 
 #endif

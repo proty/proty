@@ -2,6 +2,7 @@
 #define PROTY_COMPILER_HH
 
 #include <iostream>
+#include <stack>
 
 class Node;
 class SymbolTable;
@@ -11,6 +12,7 @@ namespace llvm {
   class ConstantFolder;
   template <bool> class IRBuilderDefaultInserter;
   template <bool, typename, typename> class IRBuilder;
+  class BasicBlock;
   class Module;
   class ExecutionEngine;
   class FunctionPassManager;
@@ -29,6 +31,7 @@ public:
   llvm::ExecutionEngine *executionEngine;
   llvm::FunctionPassManager* fpm;
   llvm::Linker* linker;
+  std::stack<llvm::BasicBlock*> unwind;
   const llvm::Type* ObjectTy;
   SymbolTable* symtab;
 
