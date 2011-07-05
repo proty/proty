@@ -39,3 +39,6 @@ install(TARGETS
     lib/math.bc
 DESTINATION lib/proty)
 
+# install runtime headers
+file(GLOB files "${CMAKE_SOURCE_DIR}/lib/runtime/*.h")
+install(FILES ${files} DESTINATION include/proty/)

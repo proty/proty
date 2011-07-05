@@ -46,7 +46,7 @@ Trigonometric functions
    Returns the arc tangent of ``x``, in radians.
 
 Constants
-_________
+---------
 
 .. data:: pi
 
