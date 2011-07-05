@@ -8,7 +8,7 @@ source_suffix = '.rst'
 source_encoding = 'utf-8-sig'
 master_doc = 'index'
 
-project = u'proty'
+project = u'Proty'
 copyright = u'2011, Thomas Gatzweiler'
 
 version = '@VERSION@'
@@ -29,8 +29,8 @@ html_theme = 'default'
 html_theme_options = {}
 html_theme_path = []
 
-html_title = "proty v@VERSION@ documentation"
-html_short_title = "proty v@VERSION@ documentation"
+html_title = "Proty v@VERSION@ documentation"
+html_short_title = html_title
 html_logo = None
 html_favicon = None
 html_static_path = []
@@ -52,7 +52,7 @@ latex_paper_size = 'a4'
 latex_font_size = '10pt'
 
 latex_documents = [
-  ('index', 'proty.tex', u'proty Documentation',
+  ('index', 'proty.tex', u'Proty Documentation',
    u'Thomas Gatzweiler', 'manual'),
 ]
 
@@ -66,6 +66,6 @@ latex_domain_indices = True
 
 
 man_pages = [
-    ('index', 'proty', u'proty Documentation',
+    ('index', 'proty', u'Proty Documentation',
      [u'Thomas Gatzweiler'], 1)
 ]
