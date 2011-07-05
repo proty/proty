@@ -101,6 +101,8 @@ void Lexer::tokenize() {
       else if (value == "true") add(Token(Token::boolean, value));
       else if (value == "false") add(Token(Token::boolean, value));
       else if (value == "nil") add(Token(Token::nil, value));
+      else if (value == "try") add(Token(Token::tryKw, value));
+      else if (value == "catch") add(Token(Token::catchKw, value));
       else add(Token(Token::name, value));
     }
 

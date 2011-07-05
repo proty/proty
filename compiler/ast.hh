@@ -287,6 +287,33 @@ public:
   llvm::Value* codegen(Compiler*);
 };
 
+
+/**
+ * A try statement.
+ * try
+ *   $tryBlock
+ * catch $eName
+ *   $catchBlock
+ * else
+ *   $elseBlock
+ * end
+ */
+
+class TryNode : public Node {
+private:
+  Node* tryBlock;
+  std::string ename;
+  Node* catchBlock;
+  Node* elseBlock;
+
+public:
+  TryNode(Node* tryBlock, std::string ename, Node* catchBlock, Node* elseBlock)
+    : tryBlock(tryBlock), ename(ename), catchBlock(catchBlock), elseBlock(elseBlock) {}
+
+  llvm::Value* codegen(Compiler*);
+};
+
+
 /**
  * Holds a llvm::Value.
  */
@@ -300,6 +327,5 @@ public:
 
   llvm::Value* codegen(Compiler*) { return value; }
 };
-
 
 #endif

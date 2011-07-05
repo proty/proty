@@ -19,6 +19,7 @@ public:
   Node* parseCall(Node*);
   Node* parseIf();
   Node* parseWhile();
+  Node* parseTry();
 };
 
 #endif

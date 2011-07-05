@@ -117,6 +117,11 @@ Value* CallNode::codegen(Compiler* c) {
     Function* initFunc = c->module->getFunction(ln + "_init");
     return c->builder->CreateCall(initFunc, ln);
   }
+  else if (name && name->getValue() == "throw") {
+    Value* exception = args.at(0)->codegen(c);
+
+    return 0;
+  }
   else {
     int argc = args.size();
     Function* callFunc = c->module->getFunction("Object_call");
@@ -129,7 +134,22 @@ Value* CallNode::codegen(Compiler* c) {
       argValues.push_back(args.at(i)->codegen(c));
     }
 
-    return c->builder->CreateCall(callFunc, argValues.begin(), argValues.end(), "calltmp");
+    // are we in a try block?
+    if (!c->unwind.empty()) {
+      Function* func = c->builder->GetInsertBlock()->getParent();
+      BasicBlock* invcontBB = BasicBlock::Create(getGlobalContext(), "invcont",
+                                                 func, c->unwind.top());
+
+      Value* call = c->builder->CreateInvoke(callFunc, invcontBB, c->unwind.top(),
+                                             argValues.begin(), argValues.end(), "invtmp");
+
+      c->builder->SetInsertPoint(invcontBB);
+
+      return call;
+    }
+    else {
+      return c->builder->CreateCall(callFunc, argValues.begin(), argValues.end(), "calltmp");
+    }
   }
 }
 
@@ -227,5 +247,52 @@ Value* WhileNode::codegen(Compiler* c) {
   c->builder->CreateBr(CondBB);
 
   c->builder->SetInsertPoint(AfterBB);
+  return 0;
+}
+
+Value* TryNode::codegen(Compiler* c) {
+  Function* func = c->builder->GetInsertBlock()->getParent();
+  BasicBlock* tryBB = BasicBlock::Create(getGlobalContext(), "try", func);
+  BasicBlock* catchBB = BasicBlock::Create(getGlobalContext(), "catch", func);
+  BasicBlock* elseBB = BasicBlock::Create(getGlobalContext(), "else", func);
+  BasicBlock* finallyBB = BasicBlock::Create(getGlobalContext(), "finally", func);
+
+  c->builder->CreateBr(tryBB);
+
+  // try
+  c->builder->SetInsertPoint(tryBB);
+  c->symtab->enterScope();
+
+  c->unwind.push(catchBB);
+  tryBlock->codegen(c);
+  c->unwind.pop();
+
+  c->symtab->leaveScope();
+  c->builder->CreateBr(elseBB);
+
+  // catch
+  c->builder->SetInsertPoint(catchBB);
+  Function* thrownException = c->module->getFunction("llvm.eh.exception");
+  Value* exception = c->builder->CreateCall(thrownException);
+  c->symtab->enterScope();
+  catchBlock->codegen(c);
+  c->symtab->leaveScope();
+
+  c->builder->CreateBr(finallyBB);
+
+  // else
+  c->builder->SetInsertPoint(elseBB);
+
+  if (elseBlock) {
+    c->symtab->enterScope();
+    elseBlock->codegen(c);
+    c->symtab->leaveScope();
+  }
+
+  c->builder->CreateBr(finallyBB);
+
+  // finally
+  c->builder->SetInsertPoint(finallyBB);
+
   return 0;
 }
