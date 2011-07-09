@@ -35,6 +35,7 @@ add_subdirectory(compiler)
 add_subdirectory(lib)
 
 # documentation
+file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/doc)
 add_custom_target(doc)
 
 # doxygen
