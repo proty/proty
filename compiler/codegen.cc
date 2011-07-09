@@ -87,17 +87,6 @@ Value* FloatNode::codegen(Compiler* c) {
   return c->builder->CreateCall(F, doubleValue, "floattmp");
 }
 
-Value* BoolNode::codegen(Compiler* c) {
-  Value* b = value ? c->module->getNamedValue("Qtrue")
-                   : c->module->getNamedValue("Qfalse");
-  return c->builder->CreateLoad(b);
-}
-
-Value* NilNode::codegen(Compiler* c) {
-  Value* n = c->module->getNamedValue("Qnil");
-  return c->builder->CreateLoad(n);
-}
-
 Value* StringNode::codegen(Compiler* c) {
   Value* string = c->builder->CreateGlobalStringPtr(value.c_str(), ".str");
 
@@ -116,11 +105,6 @@ Value* CallNode::codegen(Compiler* c) {
 
     Function* initFunc = c->module->getFunction(ln + "_init");
     return c->builder->CreateCall(initFunc, ln);
-  }
-  else if (name && name->getValue() == "throw") {
-    Value* exception = args.at(0)->codegen(c);
-
-    return 0;
   }
   else {
     int argc = args.size();
@@ -180,11 +164,23 @@ Value* FunctionNode::codegen(Compiler* c) {
 
   c->symtab->enterScope();
   Value* returnValue = block->codegen(c);
-  c->builder->CreateRet(returnValue);
+  BasicBlock* currBB = c->builder->GetInsertBlock();
+  if (!currBB->getTerminator()) {
+    if (!returnValue) {
+      c->builder->CreateRet(returnValue);
+    }
+    else {
+      Value* Qnil = c->builder->CreateLoad(c->Qnil);
+      c->builder->CreateRet(Qnil);
+    }
+  }
   c->symtab->leaveScope();
 
   // restore old block
   c->builder->SetInsertPoint(oldBB);
+
+  verifyFunction(*func);
+  c->fpm->run(*func);
 
   // get a pointer to the generated function
   std::vector<const Type*> funcPtrArgTypes;
@@ -205,8 +201,8 @@ Value* IfNode::codegen(Compiler* c) {
   BasicBlock* MergeBB = BasicBlock::Create(getGlobalContext(), "ifcont");
 
   CallSlotNode* boolean = new CallSlotNode(cond, "bool");
-  Value* Qtrue = (new BoolNode(true))->codegen(c);
 
+  Value* Qtrue = c->builder->CreateLoad(c->Qtrue);
   Value* EndCond = c->builder->CreateICmpEQ(boolean->codegen(c), Qtrue);
   c->builder->CreateCondBr(EndCond, ThenBB, ElseBB);
 
@@ -237,8 +233,8 @@ Value* WhileNode::codegen(Compiler* c) {
   c->builder->SetInsertPoint(CondBB);
 
   CallSlotNode* boolean = new CallSlotNode(cond, "bool");
-  Value* Qtrue = (new BoolNode(true))->codegen(c);
 
+  Value* Qtrue = c->builder->CreateLoad(c->Qtrue);
   Value* EndCond = c->builder->CreateICmpEQ(boolean->codegen(c), Qtrue);
   c->builder->CreateCondBr(EndCond, LoopBB, AfterBB);
 
@@ -272,9 +268,15 @@ Value* TryNode::codegen(Compiler* c) {
 
   // catch
   c->builder->SetInsertPoint(catchBB);
-  Function* thrownException = c->module->getFunction("llvm.eh.exception");
-  Value* exception = c->builder->CreateCall(thrownException);
+  //  Function* thrownException = c->module->getFunction("llvm.eh.exception");
+  //Value* exception = c->builder->CreateCall(thrownException);
+
   c->symtab->enterScope();
+
+  //  AllocaInst* alloca = c->builder->CreateAlloca(c->ObjectTy, 0, ename);
+  //c->builder->CreateStore(exception, alloca);
+  //c->symtab->store(ename, alloca);
+
   catchBlock->codegen(c);
   c->symtab->leaveScope();
 

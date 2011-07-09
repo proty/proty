@@ -12,6 +12,7 @@ add_executable(lib/runtime.bc
   runtime/string.c
   runtime/nil.c
   runtime/bool.c
+  runtime/exception.c
   runtime/runtime.c
 )
 

@@ -62,35 +62,6 @@ public:
   llvm::Value* codegen(Compiler*);
 };
 
-
-/**
- * Reference to bool object.
- * true|false
- */
-
-class BoolNode : public Node {
-private:
-  bool value;
-
-public:
-  BoolNode(bool value) : value(value) {}
-
-  llvm::Value* codegen(Compiler*);
-};
-
-
-/**
- * Reference to nil object.
- */
-
-class NilNode : public Node {
-public:
-  NilNode() {}
-
-  llvm::Value* codegen(Compiler*);
-};
-
-
 /**
  * A string object.
  * "$value"
