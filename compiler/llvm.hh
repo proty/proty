@@ -19,5 +19,6 @@
 #include <llvm/Transforms/Utils/Cloning.h>
 #include <llvm/Transforms/Scalar.h>
 #include <llvm/Intrinsics.h>
+#include <llvm/Constants.h>
 
 #endif

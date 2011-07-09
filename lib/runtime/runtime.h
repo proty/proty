@@ -14,6 +14,7 @@ typedef Object* (*FuncPtr)(Object*, ...);
 #include "string.h"
 #include "nil.h"
 #include "bool.h"
+#include "exception.h"
 
 #define FUNC(name, argc) Function_new((FuncPtr)name, argc)
 

@@ -18,6 +18,7 @@ namespace llvm {
   class FunctionPassManager;
   class Linker;
   class Type;
+  class Value;
 }
 
 /**
@@ -32,8 +33,12 @@ public:
   llvm::FunctionPassManager* fpm;
   llvm::Linker* linker;
   std::stack<llvm::BasicBlock*> unwind;
-  const llvm::Type* ObjectTy;
   SymbolTable* symtab;
+
+  const llvm::Type* ObjectTy;
+  llvm::Value* Qnil;
+  llvm::Value* Qtrue;
+  llvm::Value* Qfalse;
 
   bool debug;
 

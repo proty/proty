@@ -11,9 +11,7 @@ public:
     // primitive data types
     integer,
     decimal,
-    boolean,
     string,
-    nil,
     name,
 
     // keywords

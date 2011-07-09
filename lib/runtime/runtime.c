@@ -7,6 +7,7 @@ Object* Hash_proto;
 Object* Integer_proto;
 Object* Float_proto;
 Object* String_proto;
+Object* Exception_proto;
 
 Object* Qnil;
 Object* Qtrue;
@@ -19,6 +20,7 @@ void runtime_init() {
   Integer_proto = Integer_createProto();
   Float_proto = Float_createProto();
   String_proto = String_createProto();
+  Exception_proto = Exception_createProto();
 
   Qnil = Nil_create();
   Qtrue = Bool_create();

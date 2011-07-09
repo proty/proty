@@ -34,12 +34,28 @@ Compiler::Compiler(std::string name, bool debug) {
   // link in the runtime
   loadModule("runtime");
 
-  getDeclaration(module, llvm::Intrinsic::eh_selector);
-  getDeclaration(module, llvm::Intrinsic::eh_exception);
-  getDeclaration(module, llvm::Intrinsic::eh_typeid_for);
-
-  // Get the object type which is defined in runtime.bc
+  // get the object type which is defined in runtime.bc
   ObjectTy = PointerType::get(module->getTypeByName("struct.Object"), 0);
+
+  // define proty runtime classes
+  symtab->enterScope();
+  symtab->store("Integer", module->getNamedValue("Integer_proto"));
+  symtab->store("Float", module->getNamedValue("Float_proto"));
+  symtab->store("String", module->getNamedValue("String_proto"));
+  symtab->store("Exception", module->getNamedValue("Exception_proto"));
+  symtab->store("Hash", module->getNamedValue("Hash_proto"));
+
+  Qnil = module->getNamedValue("Qnil");
+  symtab->store("nil", Qnil);
+
+  Qtrue = module->getNamedValue("Qtrue");
+  symtab->store("true", Qtrue);
+
+  Qfalse = module->getNamedValue("Qfalse");
+  symtab->store("false", Qfalse);
+
+  // declare llvm functions
+  getDeclaration(module, llvm::Intrinsic::eh_exception);
 }
 
 Compiler::~Compiler() {
@@ -55,10 +71,10 @@ Program* Compiler::compile(Node* root) {
   std::vector<const Type*> argTypes;
   argTypes.push_back(Type::getInt32Ty(getGlobalContext()));
   argTypes.push_back(PointerType::get(Type::getInt8PtrTy(getGlobalContext()), 0));
-  FunctionType *funcTy = FunctionType::get(Type::getInt32Ty(getGlobalContext()), argTypes, false);
-  Function *func = Function::Create(funcTy, Function::ExternalLinkage, "main", module);
+  FunctionType* funcTy = FunctionType::get(Type::getInt32Ty(getGlobalContext()), argTypes, false);
+  Function* func = Function::Create(funcTy, Function::ExternalLinkage, "main", module);
 
-  BasicBlock *BB = BasicBlock::Create(getGlobalContext(), "entry", func);
+  BasicBlock* BB = BasicBlock::Create(getGlobalContext(), "entry", func);
   builder->SetInsertPoint(BB);
 
   // init the runtime
