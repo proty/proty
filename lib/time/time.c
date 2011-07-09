@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include <unistd.h>
 
 Object* Time_proto;
 
@@ -37,6 +38,13 @@ Object* time_now(Object* self) {
   return time;
 }
 
+Object* time_sleep(Object* self, Object* duration) {
+  if (duration->proto == Integer_proto) {
+    sleep(duration->data.i);
+  }
+  return Qnil;
+}
+
 Object* time_init() {
   Time_proto = Object_new(Object_proto);
 
@@ -47,6 +55,7 @@ Object* time_init() {
 
   Object_setSlot(proto, "Time", Time_proto);
   Object_setSlot(proto, "now", FUNC(time_now, 1));
+  Object_setSlot(proto, "sleep", FUNC(time_sleep, 2));
 
   return proto;
 }
