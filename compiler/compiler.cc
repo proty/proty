@@ -56,6 +56,7 @@ Compiler::Compiler(std::string name, bool debug) {
 
   // declare llvm functions
   getDeclaration(module, llvm::Intrinsic::eh_exception);
+  getDeclaration(module, llvm::Intrinsic::eh_selector);
 }
 
 Compiler::~Compiler() {
