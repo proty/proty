@@ -268,8 +268,14 @@ Value* TryNode::codegen(Compiler* c) {
 
   // catch
   c->builder->SetInsertPoint(catchBB);
-  //  Function* thrownException = c->module->getFunction("llvm.eh.exception");
-  //Value* exception = c->builder->CreateCall(thrownException);
+  Function* eh_exception = c->module->getFunction("llvm.eh.exception");
+  Value* exception_ptr = c->builder->CreateCall(eh_exception);
+
+  Function* proty_personality = c->module->getFunction("proty_personality");
+  Value* personality = c->builder->CreatePointerCast(proty_personality, Type::getInt8PtrTy(getGlobalContext()));
+  Function* eh_selector = c->module->getFunction("llvm.eh.selector");
+  Value* selector = c->builder->CreateCall3(eh_selector, exception_ptr, personality,
+                                            c->builder->CreateLoad(c->Qnil));
 
   c->symtab->enterScope();
 

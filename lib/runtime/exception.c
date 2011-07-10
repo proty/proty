@@ -14,7 +14,14 @@ typedef enum {
   _URC_CONTINUE_UNWIND = 8
 } _Unwind_Reason_Code;
 
+typedef int _Unwind_Action;
+const _Unwind_Action _UA_SEARCH_PHASE = 1;
+const _Unwind_Action _UA_CLEANUP_PHASE = 2;
+const _Unwind_Action _UA_HANDLER_FRAME = 4;
+const _Unwind_Action _UA_FORCE_UNWIND = 8;
+
 struct _Unwind_Exception;
+struct _Unwind_Context;
 
 typedef void (*_Unwind_Exception_Cleanup_Fn) (_Unwind_Reason_Code reason,
                                               struct _Unwind_Exception *exc);
@@ -27,6 +34,16 @@ struct _Unwind_Exception {
 } __attribute__((__aligned__));
 
 extern _Unwind_Reason_Code _Unwind_RaiseException(struct _Unwind_Exception*);
+
+_Unwind_Reason_Code proty_personality(int version, _Unwind_Action actions,
+                                      unsigned long exception_class,
+                                      struct _Unwind_Exception* excpetionObject,
+                                      struct _Unwind_Context* context) {
+  if (version != 1)
+    return _URC_FATAL_PHASE1_ERROR;
+
+  return _URC_CONTINUE_UNWIND;
+}
 
 Object* Exception_raise(Object* self) {
   struct _Unwind_Exception* exp = malloc(sizeof(struct _Unwind_Exception));
