@@ -1,5 +1,5 @@
 #include <iostream>
-#include "lexer.hh"
+#include "ast.hh"
 #include "parser.hh"
 #include "compiler.hh"
 #include "program.hh"
@@ -7,7 +7,9 @@
 
 void version() {
   std::cerr << "Proty " VERSION " " BUILD_TYPE " (" __DATE__ ", " __TIME__ ")" << std::endl;
+  #ifdef GIT_VERSION
   std::cerr << "[" GIT_VERSION "]" << std::endl;
+  #endif
   std::cerr << std::endl;
   std::cerr << "This program comes with ABSOLUTELY NO WARRANTY." << std::endl;
   std::cerr << "This is free software, and you are welcome to redistribute it" << std::endl;
@@ -50,14 +52,13 @@ int main(int argc, char** argv) {
     else { file = std::string(argv[count]); break; }
   }
 
-  Lexer* lexer = new Lexer(file);
-  Parser* parser = new Parser(lexer);
-  Node* root = parser->parse();
+  Parser* parser = new Parser;
+  Node* root = parser->parseFile(file);
 
   Compiler* compiler = new Compiler(file, debug);
-  Program* program = compiler->compile(root);
+  compiler->addNode(root);
+  Program* program = compiler->getProgram();
 
-  delete lexer;
   delete parser;
   delete root;
   delete compiler;

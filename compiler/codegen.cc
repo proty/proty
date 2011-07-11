@@ -279,7 +279,7 @@ Value* TryNode::codegen(Compiler* c) {
 
   c->symtab->enterScope();
 
-  //  AllocaInst* alloca = c->builder->CreateAlloca(c->ObjectTy, 0, ename);
+  //AllocaInst* alloca = c->builder->CreateAlloca(c->ObjectTy, 0, ename);
   //c->builder->CreateStore(exception, alloca);
   //c->symtab->store(ename, alloca);
 

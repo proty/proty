@@ -57,6 +57,20 @@ Compiler::Compiler(std::string name, bool debug) {
   // declare llvm functions
   getDeclaration(module, llvm::Intrinsic::eh_exception);
   getDeclaration(module, llvm::Intrinsic::eh_selector);
+
+  // create the main function
+  std::vector<const Type*> argTypes;
+  argTypes.push_back(Type::getInt32Ty(getGlobalContext()));
+  argTypes.push_back(PointerType::get(Type::getInt8PtrTy(getGlobalContext()), 0));
+  FunctionType* mainTy = FunctionType::get(Type::getInt32Ty(getGlobalContext()), argTypes, false);
+  Function* main = Function::Create(mainTy, Function::ExternalLinkage, "main", module);
+
+  BasicBlock* mainBB = BasicBlock::Create(getGlobalContext(), "entry", main);
+  builder->SetInsertPoint(mainBB);
+
+  // init the runtime
+  Function* runtime_init = module->getFunction("runtime_init");
+  builder->CreateCall(runtime_init);
 }
 
 Compiler::~Compiler() {
@@ -67,31 +81,21 @@ Compiler::~Compiler() {
   delete linker;
 }
 
-Program* Compiler::compile(Node* root) {
-  // create the main function
-  std::vector<const Type*> argTypes;
-  argTypes.push_back(Type::getInt32Ty(getGlobalContext()));
-  argTypes.push_back(PointerType::get(Type::getInt8PtrTy(getGlobalContext()), 0));
-  FunctionType* funcTy = FunctionType::get(Type::getInt32Ty(getGlobalContext()), argTypes, false);
-  Function* func = Function::Create(funcTy, Function::ExternalLinkage, "main", module);
-
-  BasicBlock* BB = BasicBlock::Create(getGlobalContext(), "entry", func);
-  builder->SetInsertPoint(BB);
-
-  // init the runtime
-  Function* runtime_init = module->getFunction("runtime_init");
-  builder->CreateCall(runtime_init);
-
-  symtab->enterScope();
+void Compiler::addNode(Node* root) {
   root->codegen(this);
-  symtab->leaveScope();
+}
 
-  // return a status code
-  Value* status = ConstantInt::get(Type::getInt32Ty(getGlobalContext()), 0);
-  builder->CreateRet(status);
+Program* Compiler::getProgram() {
+  BasicBlock* currBB = builder->GetInsertBlock();
+  if (!currBB->getTerminator()) {
+    Value* status = ConstantInt::get(Type::getInt32Ty(getGlobalContext()), 0);
+    builder->CreateRet(status);
+  }
 
-  verifyFunction(*func);
-  fpm->run(*func);
+  // verify and optimize proty_main
+  Function* main = module->getFunction("main");
+  verifyFunction(*main);
+  fpm->run(*main);
 
   return new Program(CloneModule(module));
 }

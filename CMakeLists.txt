@@ -25,10 +25,15 @@ if(NOT CMAKE_BUILD_TYPE)
 endif(NOT CMAKE_BUILD_TYPE)
 
 # detect git version
-exec_program(git ARGS describe OUTPUT_VARIABLE GIT_VERSION
-                 RESULT_VARIABLE GIT_RETURN_VALUE)
+execute_process(COMMAND git describe
+                WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+                OUTPUT_VARIABLE GIT_VERSION
+                RESULT_VARIABLE GIT_RETURN_VALUE
+                OUTPUT_STRIP_TRAILING_WHITESPACE
+                ERROR_QUIET
+                OUTPUT_QUIET)
 if(NOT GIT_RETURN_VALUE EQUAL 0)
-  set(GIT_VERSION "0")
+  unset(GIT_VERSION)
 endif(NOT GIT_RETURN_VALUE EQUAL 0)
 
 add_subdirectory(compiler)

@@ -15,16 +15,16 @@ private:
   void add(Token);
 
 public:
-  Lexer(std::string);
+  Lexer(std::istream*);
   ~Lexer();
 
   Token next();
   Token peek(int=0);
-  bool  isNext(Token::Type);
+  bool isNext(Token::Type);
   Token match(Token::Type, std::string="");
   void unexpected(Token, std::string);
 
-  void  tokenize();
+  void tokenize();
 };
 
 #endif

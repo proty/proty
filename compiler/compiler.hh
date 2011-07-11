@@ -46,7 +46,8 @@ public:
   Compiler(std::string, bool=false);
   ~Compiler();
 
-  Program* compile(Node*);
+  void addNode(Node*);
+  Program* getProgram();
   void loadModule(std::string);
 };
 
