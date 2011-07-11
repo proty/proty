@@ -3,13 +3,8 @@
 #include <sstream>
 #include <cstdlib>
 
-Lexer::Lexer(std::string filename) {
-  if (filename == "<stdin>") stream = &std::cin;
-  else stream = new std::ifstream(filename.c_str(), std::ifstream::in);
-  if (!*stream) {
-    std::cerr << "cannot open file " + filename << std::endl;
-    exit(1);
-  }
+Lexer::Lexer(std::istream* stream) {
+  this->stream = stream;
 
   tokens = new std::vector<Token>;
   pos = 0;
@@ -17,9 +12,6 @@ Lexer::Lexer(std::string filename) {
 
 Lexer::~Lexer() {
   delete tokens;
-  if (stream != &std::cin) {
-    delete stream;
-  }
 }
 
 void Lexer::add(Token token) {
@@ -52,17 +44,19 @@ Token Lexer::match(Token::Type to_match, std::string expected) {
 }
 
 void Lexer::tokenize() {
+  char currch = stream->get();
+  char nextch = stream->peek();
+
+  if (stream->eof()) {
+    add(Token(Token::eof, "<eof>"));
+    return;
+  }
+
   while (true) {
-    char currch = stream->get();
-    char nextch = stream->peek();
-
-    if (stream->eof()) {
-      add(Token(Token::eof, "<eof>"));
-      break;
-    }
-
     // whitespace
-    if (isspace(currch)) continue;
+    if (isspace(currch)) {
+      // ignore
+    }
 
     // integer and decimal
     else if (isdigit(currch)) {
@@ -205,5 +199,13 @@ void Lexer::tokenize() {
     else {
       add(Token(Token::unknown, "" + currch));
     }
+
+    if (stream->eof()) {
+      add(Token(Token::eof, "<eof>"));
+      break;
+    }
+
+    currch = stream->get();
+    nextch = stream->peek();
   }
 }

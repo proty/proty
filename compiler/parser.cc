@@ -1,10 +1,42 @@
-#include "parser.hh"
 #include <sstream>
+#include <fstream>
 #include <cstdlib>
+#include "parser.hh"
+#include "lexer.hh"
+#include "ast.hh"
 
-Parser::Parser(Lexer* lexer) {
-  this->lexer = lexer;
+Node* Parser::parseFile(std::string file) {
+  std::istream* stream;
+  if (file == "<stdin>") stream = &std::cin;
+  else stream = new std::ifstream(file.c_str(), std::ifstream::in);
+  if (!*stream) {
+    std::cerr << "cannot open file " + file << std::endl;
+    exit (1);
+  }
+
+  lexer = new Lexer(stream);
   lexer->tokenize();
+
+  Node* root = parse();
+
+  delete lexer;
+  if (stream != &std::cin) {
+    delete stream;
+  }
+
+  return root;
+}
+
+Node* Parser::parseStr(char* str) {
+  std::istream* stream = new std::istringstream(str);
+  lexer = new Lexer(stream);
+  lexer->tokenize();
+
+  Node* root = parse();
+
+  delete lexer;
+
+  return root;
 }
 
 Node* Parser::parse() {
