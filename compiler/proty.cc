@@ -55,7 +55,8 @@ int main(int argc, char** argv) {
   Parser* parser = new Parser;
   Node* root = parser->parseFile(file);
 
-  Compiler* compiler = new Compiler(file, debug);
+  Compiler* compiler = new Compiler(file);
+  compiler->debug = debug;
   compiler->addNode(root);
   Program* program = compiler->getProgram();
 

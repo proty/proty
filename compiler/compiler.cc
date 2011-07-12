@@ -7,13 +7,16 @@
 
 using namespace llvm;
 
-Compiler::Compiler(std::string name, bool debug) {
-  symtab = new SymbolTable();
+Compiler::Compiler(std::string name, bool interactive) {
   builder = new IRBuilder<>(getGlobalContext());
   module = new Module(name, getGlobalContext());
   linker = new Linker(name, module);
 
-  this->debug = debug;
+  symtab = new SymbolTable();
+  toplevel = true;
+
+  debug = false;
+  this->interactive = interactive;
 
   // setup the ExecutionEngine
   InitializeNativeTarget();
@@ -58,19 +61,27 @@ Compiler::Compiler(std::string name, bool debug) {
   getDeclaration(module, llvm::Intrinsic::eh_exception);
   getDeclaration(module, llvm::Intrinsic::eh_selector);
 
-  // create the main function
-  std::vector<const Type*> argTypes;
-  argTypes.push_back(Type::getInt32Ty(getGlobalContext()));
-  argTypes.push_back(PointerType::get(Type::getInt8PtrTy(getGlobalContext()), 0));
-  FunctionType* mainTy = FunctionType::get(Type::getInt32Ty(getGlobalContext()), argTypes, false);
-  Function* main = Function::Create(mainTy, Function::ExternalLinkage, "main", module);
+  if (!interactive) {
+    // create the main function
+    std::vector<const Type*> argTypes;
+    argTypes.push_back(Type::getInt32Ty(getGlobalContext()));
+    argTypes.push_back(PointerType::get(Type::getInt8PtrTy(getGlobalContext()), 0));
+    FunctionType* mainTy = FunctionType::get(Type::getInt32Ty(getGlobalContext()), argTypes, false);
+    Function* main = Function::Create(mainTy, Function::ExternalLinkage, "main", module);
 
-  BasicBlock* mainBB = BasicBlock::Create(getGlobalContext(), "entry", main);
-  builder->SetInsertPoint(mainBB);
+    BasicBlock* mainBB = BasicBlock::Create(getGlobalContext(), "entry", main);
+    builder->SetInsertPoint(mainBB);
 
-  // init the runtime
-  Function* runtime_init = module->getFunction("runtime_init");
-  builder->CreateCall(runtime_init);
+    // init the runtime
+    Function* runtime_init = module->getFunction("runtime_init");
+    builder->CreateCall(runtime_init);
+  }
+  else {
+    // init the runtime (now)
+    Function* runtime_init = module->getFunction("runtime_init");
+    void (*init)() = (void (*)())executionEngine->getPointerToFunction(runtime_init);
+    init();
+  }
 }
 
 Compiler::~Compiler() {
@@ -85,6 +96,21 @@ void Compiler::addNode(Node* root) {
   root->codegen(this);
 }
 
+void Compiler::run(Node* root) {
+  if (!interactive) return;
+  FunctionType* funcTy = FunctionType::get(Type::getVoidTy(getGlobalContext()), false);
+  Function* func = Function::Create(funcTy, Function::ExternalLinkage, "interactive", module);
+  BasicBlock* BB= BasicBlock::Create(getGlobalContext(), "entry", func);
+  builder->CreateBr(BB);
+  builder->SetInsertPoint(BB);
+
+  root->codegen(this);
+  builder->CreateRetVoid();
+
+  void (*f)() = (void (*)())executionEngine->getPointerToFunction(func);
+  f();
+}
+
 Program* Compiler::getProgram() {
   BasicBlock* currBB = builder->GetInsertBlock();
   if (!currBB->getTerminator()) {
@@ -92,7 +118,7 @@ Program* Compiler::getProgram() {
     builder->CreateRet(status);
   }
 
-  // verify and optimize proty_main
+  // verify and optimize main
   Function* main = module->getFunction("main");
   verifyFunction(*main);
   fpm->run(*main);

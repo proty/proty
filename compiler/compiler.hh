@@ -32,21 +32,25 @@ public:
   llvm::ExecutionEngine *executionEngine;
   llvm::FunctionPassManager* fpm;
   llvm::Linker* linker;
-  std::stack<llvm::BasicBlock*> unwind;
-  SymbolTable* symtab;
 
   const llvm::Type* ObjectTy;
   llvm::Value* Qnil;
   llvm::Value* Qtrue;
   llvm::Value* Qfalse;
 
+  std::stack<llvm::BasicBlock*> unwind;
+  SymbolTable* symtab;
+  bool toplevel;
+
   bool debug;
+  bool interactive;
 
 public:
   Compiler(std::string, bool=false);
   ~Compiler();
 
   void addNode(Node*);
+  void run(Node*);
   Program* getProgram();
   void loadModule(std::string);
 };

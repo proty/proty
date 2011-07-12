@@ -16,7 +16,7 @@ int main(int argc, char** argv) {
   std::cout << std::endl;
 
   Parser* parser = new Parser;
-  Compiler* compiler = new Compiler("interactive", false);
+  Compiler* compiler = new Compiler("interactive", true);
 
   while (true) {
     char* input = readline(">>> ");
@@ -25,14 +25,11 @@ int main(int argc, char** argv) {
     add_history(input);
 
     Node* root = parser->parseStr(input);
-    compiler->addNode(root);
+    compiler->run(root);
     delete root;
 
     free(input);
   }
-
-  Program* program = compiler->getProgram();
-  program->run();
 
   return 0;
 }
