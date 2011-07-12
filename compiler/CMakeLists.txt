@@ -40,9 +40,9 @@ set_target_properties(libproty PROPERTIES PREFIX ""
 add_executable(proty proty.cc)
 target_link_libraries(proty libproty)
 
-add_executable(iproty iproty.cc)
-target_link_libraries(iproty libproty readline)
+add_executable(ipr ipr.cc)
+target_link_libraries(ipr libproty readline)
 
 install(TARGETS proty RUNTIME DESTINATION bin)
-install(TARGETS iproty RUNTIME DESTINATION bin)
+install(TARGETS ipr RUNTIME DESTINATION bin)
 install(TARGETS libproty LIBRARY DESTINATION lib)
