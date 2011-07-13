@@ -4,13 +4,13 @@
 
 Object* String_new(const char* value) {
   Object* new = Object_new(String_proto);
-  new->data.ptr = malloc(strlen(value));
+  new->data.ptr = malloc(strlen(value)+1);
   strcpy(new->data.ptr, value);
   return new;
 }
 
 Object* String_add(Object* self, Object* other) {
-  int size = strlen(self->data.ptr)+strlen(other->data.ptr);
+  int size = strlen(self->data.ptr)+strlen(other->data.ptr)+1;
   char* buffer = malloc(size);
   strcpy(buffer, self->data.ptr);
   strcat(buffer, other->data.ptr);
