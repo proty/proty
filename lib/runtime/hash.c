@@ -3,6 +3,13 @@
 #include <stdio.h>
 #include "runtime.h"
 
+typedef struct {
+  int size;
+  int bounds;
+  const char** keys;
+  Object** values;
+} Hash;
+
 /*
  * Generates an integer hash of a string value.
  * This function should generate hashes

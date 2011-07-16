@@ -105,6 +105,19 @@ Value* StringNode::codegen(Compiler* c) {
   return c->builder->CreateCall(func, args.begin(), args.end(), "stringtmp");
 }
 
+Value* ListNode::codegen(Compiler* c) {
+  Function* F = c->module->getFunction("List_new");
+  Value* list = c->builder->CreateCall(F, "listtmp");
+
+  Function* append = c->module->getFunction("List_append");
+  for (int i = 0; i < objects.size(); i++) {
+    Value* v = objects.at(i)->codegen(c);
+    c->builder->CreateCall2(append, list, v);
+  }
+
+  return list;
+}
+
 Value* CallNode::codegen(Compiler* c) {
   NameNode* name = reinterpret_cast<NameNode*>(callee);
   if (name && name->getValue() == "load") {

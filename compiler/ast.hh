@@ -80,6 +80,22 @@ public:
 
 
 /**
+ * A list object.
+ * [$objects]
+ */
+
+class ListNode : public Node {
+private:
+  std::vector<Node*> objects;
+
+public:
+  ListNode() {}
+
+  void add(Node* n) { objects.push_back(n); }
+  llvm::Value* codegen(Compiler*);
+};
+
+/**
  * A binary operation.
  * $lhs $op $rhs
  */

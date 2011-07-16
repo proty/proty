@@ -24,6 +24,7 @@ private:
   Node* parseIf();
   Node* parseWhile();
   Node* parseTry();
+  Node* parseList();
 };
 
 #endif

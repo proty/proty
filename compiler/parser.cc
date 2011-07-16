@@ -162,6 +162,9 @@ Node* Parser::parsePrimary() {
     std::string value = lexer->next().getValue();
     prim = new NameNode(value);
   }
+  else if (lexer->isNext(Token::lsqb)) {
+    prim = parseList();
+  }
   else if (lexer->isNext(Token::doKw)) {
     lexer->next();
     FunctionNode* f = new FunctionNode();
@@ -221,11 +224,9 @@ Node* Parser::parseCall(Node* callee) {
     }
     else {
       call->addArg(parseExpression());
-      if (lexer->isNext(Token::rpar)) {
-        lexer->next();
-        break;
+      if (!lexer->isNext(Token::rpar)) {
+        lexer->match(Token::comma, ",");
       }
-      else lexer->match(Token::comma, ",");
     }
   }
 
@@ -265,4 +266,24 @@ Node* Parser::parseTry() {
   }
 
   return new TryNode(tryBlock, ename, catchBlock, elseBlock);
+}
+
+Node* Parser::parseList() {
+  lexer->match(Token::lsqb, "[");
+
+  ListNode* ln = new ListNode();
+
+  while (true) {
+    if (lexer->isNext(Token::rsqb)) {
+      lexer->next();
+      break;
+    }
+    else {
+      ln->add(parseExpression());
+      if (!lexer->isNext(Token::rsqb)) {
+        lexer->match(Token::comma, ",");
+      }
+    }
+  }
+  return ln;
 }
