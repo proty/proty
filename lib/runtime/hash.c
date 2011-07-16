@@ -3,6 +3,12 @@
 #include <stdio.h>
 #include "runtime.h"
 
+/*
+ * Generates an integer hash of a string value.
+ * This function should generate hashes
+ * fast and with a low collision rate.
+ */
+
 unsigned int hash_str(const char* str) {
   unsigned int hash = 5381;
   int c;
@@ -37,6 +43,7 @@ Object* Hash_new() {
 Object* Hash_set(Object* self, const char* key, Object* value) {
   Hash* hash = self->data.ptr;
 
+  // double the hash bounds if the hash is more than 75% full
   if ((hash->size*100)/hash->bounds > 75) {
     const char** tmpKeys = malloc(sizeof(Object*)*hash->bounds*2);
     Object** tmpValues = malloc(sizeof(Object*)*hash->bounds*2);
