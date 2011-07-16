@@ -186,10 +186,16 @@ void Lexer::tokenize() {
     else if (currch == '%') add(Token(Token::binaryop, "%", 15));
     else if (currch == '.') add(Token(Token::dot, "."));
 
-    // division and comment
+    // division and comments
     else if (currch == '/') {
       if (nextch == '/') {
-        while (stream->get() != '\n');
+        while (!stream->eof() && stream->get() != '\n');
+      }
+      else if (nextch == '*') {
+        stream->get();
+        while (!stream->eof() && !(stream->get() == '*'
+                              && stream->peek() == '/'));
+        stream->get();
       }
       else {
         add(Token(Token::binaryop, "/", 15));
@@ -197,7 +203,10 @@ void Lexer::tokenize() {
     }
 
     else {
-      add(Token(Token::unknown, "" + currch));
+      // ignore eof
+      if (!(currch == -1)) {
+        add(Token(Token::unknown, "" + currch));
+      }
     }
 
     if (stream->eof()) {
