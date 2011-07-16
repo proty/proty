@@ -42,6 +42,8 @@ _Unwind_Reason_Code proty_personality(int version, _Unwind_Action actions,
   if (version != 1)
     return _URC_FATAL_PHASE1_ERROR;
 
+  return _URC_HANDLER_FOUND;
+
   return _URC_CONTINUE_UNWIND;
 }
 
