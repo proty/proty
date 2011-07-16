@@ -45,11 +45,17 @@ Object* List_get(Object* self, Object* pos) {
   return list->objects[pos->data.i];
 }
 
+Object* List_size(Object* self) {
+  List* list = self->data.ptr;
+  return Integer_new(list->size);
+}
+
 Object* List_createProto() {
   Object* proto = Object_new(Object_proto);
 
   Object_setSlot(proto, "append", FUNC(List_append, 2));
   Object_setSlot(proto, "get", FUNC(List_get, 2));
+  Object_setSlot(proto, "size", FUNC(List_size, 1));
 
   return proto;
 }
