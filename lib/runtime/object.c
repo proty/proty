@@ -48,7 +48,7 @@ Object* Object_call(Object* self, int argc, ...) {
 }
 
 Object* Object_bool(Object* self) {
-  return (self == Qtrue) ? Qtrue : Qfalse;
+  return (self == Qfalse) ? Qfalse : Qtrue;
 }
 
 Object* Object_createProto() {
