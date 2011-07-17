@@ -214,6 +214,11 @@ Node* Parser::parsePrimary() {
           }
         }
       }
+      else if (lexer->isNext(Token::assign)) {
+        lexer->next();
+        Node* expr = parseExpression();
+        prim = new SetSlotNode(prim, n, expr);
+      }
       else {
         prim = new GetSlotNode(prim, n);
       }

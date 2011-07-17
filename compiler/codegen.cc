@@ -64,7 +64,11 @@ Value* GetSlotNode::codegen(Compiler* c) {
 }
 
 Value* SetSlotNode::codegen(Compiler* c) {
-  return 0;
+  Function* setslot = c->module->getFunction("Object_setSlot");
+  Value* object = obj->codegen(c);
+  Value* slot = c->builder->CreateGlobalStringPtr(name.c_str(), ".str");
+  Value* v = value->codegen(c);
+  return c->builder->CreateCall3(setslot, object, slot, v, "set_" + name + "_tmp");
 }
 
 Value* CallSlotNode::codegen(Compiler* c) {
