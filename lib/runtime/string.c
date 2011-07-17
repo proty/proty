@@ -31,6 +31,10 @@ Object* String_bool(Object* self) {
   return strlen(self->data.ptr) ? Qtrue : Qfalse;
 }
 
+Object* String_length(Object* self) {
+  return Integer_new(strlen(self->data.ptr));
+}
+
 Object* String_createProto() {
   Object* proto = Object_new(Object_proto);
 
@@ -40,6 +44,8 @@ Object* String_createProto() {
   Object_setSlot(proto, "!=", FUNC(String_ne, 2));
 
   Object_setSlot(proto, "bool", FUNC(String_bool, 1));
+
+  Object_setSlot(proto, "length", FUNC(String_length, 1));
 
   return proto;
 }
