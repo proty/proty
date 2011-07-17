@@ -150,7 +150,7 @@ void Lexer::tokenize() {
         stream->get();
         add(Token(Token::binaryop, "==", 20));
       }
-      else add(Token(Token::binaryop, "=", 5));
+      else add(Token(Token::assign, "="));
     }
 
     // > and >=

@@ -119,6 +119,20 @@ Node* Parser::parseExpression() {
     lexer->match(Token::rpar, ")");
     return expr;
   }
+  else if (lexer->isNext(Token::assign)) {
+    lexer->next();
+    NameNode* name = dynamic_cast<NameNode*>(lhs);
+    if (name) {
+      Node* expr = parseExpression();
+      Node* assign = new AssignNode(name->getValue(), expr);
+      return assign;
+    }
+    else {
+      std::cerr << "only names can be used for assignments" << std::endl;
+      exit(1);
+      return 0;
+    }
+  }
   else return lhs;
 }
 
@@ -169,7 +183,7 @@ Node* Parser::parsePrimary() {
     prim = parseFunction();
   }
   else {
-    std::cerr << "unkown token " << lexer->next().getValue() << std::endl;
+    std::cerr << "unexpected token " << lexer->next().getValue() << std::endl;
     exit(1);
     return 0;
   }

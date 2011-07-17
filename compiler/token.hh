@@ -7,6 +7,7 @@ public:
     // operators
     binaryop,
     unaryop,
+    assign,
 
     // primitive data types
     integer,

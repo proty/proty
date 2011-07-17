@@ -15,38 +15,13 @@ Value* BlockNode::codegen(Compiler* c) {
 }
 
 Value* BinaryOpNode::codegen(Compiler* c) {
-  if (op == "=") {
-    std::string name = ((NameNode*)lhs)->getValue();
-    Value* v = rhs->codegen(c);
-    Value* variable = c->symtab->lookup(name);
-    if (!variable) {
-      if (c->interactive && c->toplevel) {
-        variable = new GlobalVariable(*c->module, c->ObjectTy, false,
-                                    GlobalValue::ExternalLinkage,
-                                    UndefValue::get(c->ObjectTy), name);
-        c->builder->CreateStore(v, variable);
-        c->symtab->store(name, variable);
-      }
-      else {
-        variable = c->builder->CreateAlloca(v->getType(), 0, name);
-        c->builder->CreateStore(v, variable);
-        c->symtab->store(name, variable);
-      }
-    }
-    else {
-      c->builder->CreateStore(v, variable);
-    }
-    return variable;
-  }
-  else {
-    GetSlotNode* getslot = new GetSlotNode(lhs, op);
+  GetSlotNode* getslot = new GetSlotNode(lhs, op);
 
-    CallNode* call = new CallNode(getslot);
-    call->addArg(lhs);
-    call->addArg(rhs);
+  CallNode* call = new CallNode(getslot);
+  call->addArg(lhs);
+  call->addArg(rhs);
 
-    return call->codegen(c);
-  }
+  return call->codegen(c);
 }
 
 Value* NameNode::codegen(Compiler* c) {
@@ -56,6 +31,29 @@ Value* NameNode::codegen(Compiler* c) {
     exit(0);
   }
   return c->builder->CreateLoad(v, value.c_str());
+}
+
+Value* AssignNode::codegen(Compiler* c) {
+  Value* v = value->codegen(c);
+  Value* variable = c->symtab->lookup(name);
+  if (!variable) {
+    if (c->interactive && c->toplevel) {
+      variable = new GlobalVariable(*c->module, c->ObjectTy, false,
+                                  GlobalValue::ExternalLinkage,
+                                  UndefValue::get(c->ObjectTy), name);
+      c->builder->CreateStore(v, variable);
+      c->symtab->store(name, variable);
+    }
+    else {
+      variable = c->builder->CreateAlloca(c->ObjectTy, 0, name);
+      c->builder->CreateStore(v, variable);
+      c->symtab->store(name, variable);
+    }
+  }
+  else {
+    c->builder->CreateStore(v, variable);
+  }
+  return variable;
 }
 
 Value* GetSlotNode::codegen(Compiler* c) {
@@ -119,7 +117,7 @@ Value* ListNode::codegen(Compiler* c) {
 }
 
 Value* CallNode::codegen(Compiler* c) {
-  NameNode* name = reinterpret_cast<NameNode*>(callee);
+  NameNode* name = dynamic_cast<NameNode*>(callee);
   if (name && name->getValue() == "load") {
     StringNode* loadName = reinterpret_cast<StringNode*>(args.at(0));
     std::string ln = loadName->getValue();

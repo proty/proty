@@ -13,6 +13,7 @@ public:
   virtual llvm::Value* codegen(Compiler*) = 0;
 };
 
+
 /**
  * A code block.
  * $nodes end | { $nodes }
@@ -61,6 +62,7 @@ public:
 
   llvm::Value* codegen(Compiler*);
 };
+
 
 /**
  * A string object.
@@ -178,6 +180,7 @@ public:
   llvm::Value* codegen(Compiler*);
 };
 
+
 /**
  * A while statement.
  * while $cond
@@ -198,6 +201,7 @@ public:
   llvm::Value* codegen(Compiler*);
 };
 
+
 /**
  * A variable.
  * $value
@@ -211,6 +215,25 @@ public:
   NameNode(std::string value) : value(value) {}
 
   std::string getValue() { return value; }
+  llvm::Value* codegen(Compiler*);
+};
+
+
+/**
+ * A variable assignment.
+ * $name = $value
+ */
+
+class AssignNode : public Node {
+private:
+  std::string name;
+  Node* value;
+
+public:
+  AssignNode(std::string name, Node* value)
+    : name(name), value(value) {}
+  ~AssignNode() { delete value; }
+
   llvm::Value* codegen(Compiler*);
 };
 
