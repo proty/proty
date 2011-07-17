@@ -190,7 +190,7 @@ Value* FunctionNode::codegen(Compiler* c) {
   Value* returnValue = block->codegen(c);
   BasicBlock* currBB = c->builder->GetInsertBlock();
   if (!currBB->getTerminator()) {
-    if (!returnValue) {
+    if (returnValue) {
       c->builder->CreateRet(returnValue);
     }
     else {

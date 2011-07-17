@@ -29,10 +29,10 @@ Object* List_append(Object* self, Object* obj) {
 
   // resize if the list is full
   if (list->size == list->bounds) {
-    list->bounds = (list->bounds*1.15) + 3;
-    list->objects = realloc(list->objects,
-                            list->bounds*sizeof(Object*));
-
+    int new_size = list->bounds + 1;
+    new_size = (new_size >> 3) + (new_size < 9 ? 3 : 6) + new_size;
+    list->objects = realloc(list->objects, new_size*sizeof(Object*));
+    list->bounds = new_size;
   }
 
   list->objects[list->size++] = obj;

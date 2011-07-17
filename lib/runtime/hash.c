@@ -57,6 +57,7 @@ Object* Hash_set(Object* self, const char* key, Object* value) {
 
     memset(tmpKeys, 0, sizeof(Object*)*hash->bounds*2);
 
+    // rehash each key
     for (int i = 0; i < hash->bounds; i++) {
       if (hash->keys[i]) {
         unsigned int pos = hash_str(hash->keys[i]) % (hash->bounds*2);

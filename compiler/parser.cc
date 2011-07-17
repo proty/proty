@@ -166,11 +166,7 @@ Node* Parser::parsePrimary() {
     prim = parseList();
   }
   else if (lexer->isNext(Token::doKw)) {
-    lexer->next();
-    FunctionNode* f = new FunctionNode();
-
-    f->setBlock(parseBlock());
-    prim = f;
+    prim = parseFunction();
   }
   else {
     std::cerr << "unkown token " << lexer->next().getValue() << std::endl;
@@ -212,6 +208,26 @@ Node* Parser::parsePrimary() {
   return prim;
 }
 
+Node* Parser::parseList() {
+  lexer->match(Token::lsqb, "[");
+
+  ListNode* ln = new ListNode();
+
+  while (true) {
+    if (lexer->isNext(Token::rsqb)) {
+      lexer->next();
+      break;
+    }
+    else {
+      ln->add(parseExpression());
+      if (!lexer->isNext(Token::rsqb)) {
+        lexer->match(Token::comma, ",");
+      }
+    }
+  }
+  return ln;
+}
+
 Node* Parser::parseCall(Node* callee) {
   lexer->match(Token::lpar);
 
@@ -231,6 +247,33 @@ Node* Parser::parseCall(Node* callee) {
   }
 
   return call;
+}
+
+Node* Parser::parseFunction() {
+  lexer->match(Token::doKw, "do");
+
+  FunctionNode* f = new FunctionNode();
+
+  if (lexer->isNext(Token::lpar)) {
+    lexer->next();
+    while (true) {
+      if (lexer->isNext(Token::rpar)) {
+        lexer->next();
+        break;
+      }
+      else {
+        std::string arg = lexer->match(Token::name, "argument name").getValue();
+        f->addArg(arg);
+        if (!lexer->isNext(Token::rpar)) {
+          lexer->match(Token::comma, ",");
+        }
+      }
+    }
+  }
+
+  f->setBlock(parseBlock());
+
+  return f;
 }
 
 Node* Parser::parseIf() {
@@ -266,24 +309,4 @@ Node* Parser::parseTry() {
   }
 
   return new TryNode(tryBlock, ename, catchBlock, elseBlock);
-}
-
-Node* Parser::parseList() {
-  lexer->match(Token::lsqb, "[");
-
-  ListNode* ln = new ListNode();
-
-  while (true) {
-    if (lexer->isNext(Token::rsqb)) {
-      lexer->next();
-      break;
-    }
-    else {
-      ln->add(parseExpression());
-      if (!lexer->isNext(Token::rsqb)) {
-        lexer->match(Token::comma, ",");
-      }
-    }
-  }
-  return ln;
 }

@@ -20,11 +20,12 @@ private:
   Node* parseExpression();
   Node* parseOperation(Node*, int);
   Node* parsePrimary();
+  Node* parseList();
   Node* parseCall(Node*);
+  Node* parseFunction();
   Node* parseIf();
   Node* parseWhile();
   Node* parseTry();
-  Node* parseList();
 };
 
 #endif

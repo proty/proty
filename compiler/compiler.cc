@@ -47,6 +47,7 @@ Compiler::Compiler(std::string name, bool interactive) {
   symtab->store("String", module->getNamedValue("String_proto"));
   symtab->store("Exception", module->getNamedValue("Exception_proto"));
   symtab->store("Hash", module->getNamedValue("Hash_proto"));
+  symtab->store("List", module->getNamedValue("List_proto"));
 
   Qnil = module->getNamedValue("Qnil");
   symtab->store("nil", Qnil);
