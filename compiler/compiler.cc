@@ -42,6 +42,7 @@ Compiler::Compiler(std::string name, bool interactive) {
 
   // define proty runtime classes
   symtab->enterScope();
+  symtab->store("Object", module->getNamedValue("Object_proto"));
   symtab->store("Integer", module->getNamedValue("Integer_proto"));
   symtab->store("Float", module->getNamedValue("Float_proto"));
   symtab->store("String", module->getNamedValue("String_proto"));
