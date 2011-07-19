@@ -185,6 +185,7 @@ void Lexer::tokenize() {
     else if (currch == '*') add(Token(Token::binaryop, "*", 15));
     else if (currch == '%') add(Token(Token::binaryop, "%", 15));
     else if (currch == '.') add(Token(Token::dot, "."));
+    else if (currch == ':') add(Token(Token::colon, ":"));
 
     // division and comments
     else if (currch == '/') {

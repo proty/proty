@@ -179,6 +179,9 @@ Node* Parser::parsePrimary() {
   else if (lexer->isNext(Token::lsqb)) {
     prim = parseList();
   }
+  else if (lexer->isNext(Token::lbrace)) {
+    prim = parseHash();
+  }
   else if (lexer->isNext(Token::doKw)) {
     prim = parseFunction();
   }
@@ -245,6 +248,30 @@ Node* Parser::parseList() {
     }
   }
   return ln;
+}
+
+Node* Parser::parseHash() {
+  lexer->match(Token::lbrace, "{");
+
+  HashNode* hn = new HashNode();
+
+  while (true) {
+    if (lexer->isNext(Token::rbrace)) {
+      lexer->next();
+      break;
+    }
+    else {
+      Node* key = parseExpression();
+      lexer->match(Token::colon, ":");
+      Node* value = parseExpression();
+      hn->add(key, value);
+      if (!lexer->isNext(Token::rbrace)) {
+        lexer->match(Token::comma, ",");
+      }
+    }
+  }
+
+  return hn;
 }
 
 Node* Parser::parseCall(Node* callee) {

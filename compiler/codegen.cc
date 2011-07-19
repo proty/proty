@@ -120,6 +120,22 @@ Value* ListNode::codegen(Compiler* c) {
   return list;
 }
 
+Value* HashNode::codegen(Compiler* c) {
+  Function* F = c->module->getFunction("Hash_new");
+  Value* hash = c->builder->CreateCall(F, "hashtmp");
+
+  Function* set = c->module->getFunction("Hash_set");
+
+  std::map<Node*, Node*>::iterator it;
+  for(it = items.begin(); it != items.end(); it++) {
+    Value* k = it->first->codegen(c);
+    Value* v = it->second->codegen(c);
+    c->builder->CreateCall3(set, hash, k, v);
+  }
+
+  return hash;
+}
+
 Value* CallNode::codegen(Compiler* c) {
   NameNode* name = dynamic_cast<NameNode*>(callee);
   if (name && name->getValue() == "load") {

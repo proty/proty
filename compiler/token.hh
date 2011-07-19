@@ -35,6 +35,7 @@ public:
     // other symbols
     comma,
     dot,
+    colon,
 
     eof,
     unknown,

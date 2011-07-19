@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <vector>
+#include <map>
 
 namespace llvm { class Value; }
 class Compiler;
@@ -96,6 +97,24 @@ public:
   void add(Node* n) { objects.push_back(n); }
   llvm::Value* codegen(Compiler*);
 };
+
+
+/**
+ * A hash object.
+ * {($key: $value)*}
+ */
+
+class HashNode : public Node {
+private:
+  std::map<Node*, Node*> items;
+
+public:
+  HashNode() {}
+
+  void add(Node* key, Node* value) { items[key] = value; }
+  llvm::Value* codegen(Compiler*);
+};
+
 
 /**
  * A binary operation.

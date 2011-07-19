@@ -21,6 +21,7 @@ private:
   Node* parseOperation(Node*, int);
   Node* parsePrimary();
   Node* parseList();
+  Node* parseHash();
   Node* parseCall(Node*);
   Node* parseFunction();
   Node* parseIf();
