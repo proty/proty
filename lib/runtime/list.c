@@ -55,13 +55,9 @@ Object* List_bool(Object* self) {
   return list->size > 0 ? Qtrue : Qfalse;
 }
 
-Object* List_createProto() {
-  Object* proto = Object_new(Object_proto);
-
-  Object_setSlot(proto, "append", FUNC(List_append, 2));
-  Object_setSlot(proto, "get", FUNC(List_get, 2));
-  Object_setSlot(proto, "size", FUNC(List_size, 1));
-  Object_setSlot(proto, "bool", FUNC(List_bool, 1));
-
-  return proto;
+void List_initProto() {
+  Object_setSlot(List_proto, "append", FUNC(List_append, 2));
+  Object_setSlot(List_proto, "get", FUNC(List_get, 2));
+  Object_setSlot(List_proto, "size", FUNC(List_size, 1));
+  Object_setSlot(List_proto, "bool", FUNC(List_bool, 1));
 }

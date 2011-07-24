@@ -35,18 +35,14 @@ Object* String_length(Object* self) {
   return Integer_new(strlen(self->data.ptr));
 }
 
-Object* String_createProto() {
-  Object* proto = Object_new(Object_proto);
+void String_initProto() {
+  Object_setSlot(String_proto, "+", FUNC(String_add, 2));
 
-  Object_setSlot(proto, "+", FUNC(String_add, 2));
+  Object_setSlot(String_proto, "==", FUNC(String_eq, 2));
+  Object_setSlot(String_proto, "!=", FUNC(String_ne, 2));
 
-  Object_setSlot(proto, "==", FUNC(String_eq, 2));
-  Object_setSlot(proto, "!=", FUNC(String_ne, 2));
+  Object_setSlot(String_proto, "bool", FUNC(String_bool, 1));
 
-  Object_setSlot(proto, "bool", FUNC(String_bool, 1));
-
-  Object_setSlot(proto, "length", FUNC(String_length, 1));
-
-  return proto;
+  Object_setSlot(String_proto, "length", FUNC(String_length, 1));
 }
 

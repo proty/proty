@@ -121,10 +121,9 @@ Node* Parser::parseExpression() {
   }
   else if (lexer->isNext(Token::assign)) {
     lexer->next();
-    NameNode* name = dynamic_cast<NameNode*>(lhs);
-    if (name) {
+    if (!lhs->getValue().empty()) {
       Node* expr = parseExpression();
-      Node* assign = new AssignNode(name->getValue(), expr);
+      Node* assign = new AssignNode(lhs->getValue(), expr);
       return assign;
     }
     else {
@@ -175,6 +174,11 @@ Node* Parser::parsePrimary() {
   else if (lexer->isNext(Token::name)) {
     std::string value = lexer->next().getValue();
     prim = new NameNode(value);
+  }
+  else if (lexer->isNext(Token::colon)) {
+    lexer->next();
+    std::string name = lexer->match(Token::name, "symbol name").getValue();
+    prim = new SymbolNode(name);
   }
   else if (lexer->isNext(Token::lsqb)) {
     prim = parseList();

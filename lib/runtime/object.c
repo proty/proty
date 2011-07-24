@@ -11,7 +11,7 @@ Object* Object_new(Object* proto) {
 
 Object* Object_setSlot(Object* self, const char* key, Object* value) {
   if (!self->slots) self->slots = Hash_new();
-  Hash_set(self->slots, key, value);
+  Hash_set(self->slots, Symbol_get(key), value);
   return value;
 }
 
@@ -20,7 +20,7 @@ Object* Object_getSlot(Object* self, const char* key) {
 
   while (1) {
     if (proto->slots) {
-      Object* value = Hash_get(proto->slots, key);
+      Object* value = Hash_get(proto->slots, Symbol_get(key));
       if (value != Qnil) return value;
     }
 
@@ -51,11 +51,7 @@ Object* Object_bool(Object* self) {
   return (self == Qfalse) ? Qfalse : Qtrue;
 }
 
-Object* Object_createProto() {
-  Object* proto = Object_new(0);
-
-  Object_setSlot(proto, "new", FUNC(Object_new, 1));
-  Object_setSlot(proto, "bool", FUNC(Object_bool, 1));
-
-  return proto;
+void Object_initProto() {
+  Object_setSlot(Object_proto, "new", FUNC(Object_new, 1));
+  Object_setSlot(Object_proto, "bool", FUNC(Object_bool, 1));
 }

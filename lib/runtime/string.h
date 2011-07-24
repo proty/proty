@@ -2,7 +2,7 @@
 #define STRING_H
 
 extern Object* String_proto;
-Object* String_createProto();
+void String_initProto();
 
 Object* String_new(const char*);
 

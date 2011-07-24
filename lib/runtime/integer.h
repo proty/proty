@@ -2,7 +2,7 @@
 #define INTEGER_H
 
 extern Object* Integer_proto;
-Object* Integer_createProto();
+void Integer_initProto();
 
 Object* Integer_new(int);
 

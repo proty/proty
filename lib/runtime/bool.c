@@ -5,10 +5,10 @@ Object* Bool_str(Object* self) {
   else return String_new("<false>");
 }
 
-Object* Bool_create() {
-  Object* boolean = Object_new(Object_proto);
+Object* Bool_new() {
+  return Object_new(Bool_proto);
+}
 
-  Object_setSlot(boolean, "str", FUNC(Bool_str, 1));
-
-  return boolean;
+void Bool_initProto() {
+  Object_setSlot(Bool_proto, "str", FUNC(Bool_str, 1));
 }

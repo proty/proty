@@ -12,6 +12,7 @@ class Node {
 public:
   virtual ~Node() {}
   virtual llvm::Value* codegen(Compiler*) = 0;
+  virtual std::string getValue() { return ""; }
 };
 
 
@@ -112,6 +113,22 @@ public:
   HashNode() {}
 
   void add(Node* key, Node* value) { items[key] = value; }
+  llvm::Value* codegen(Compiler*);
+};
+
+
+/**
+ * A symbol.
+ * :$name
+ */
+
+class SymbolNode : public Node {
+private:
+  std::string name;
+
+public:
+  SymbolNode(std::string name) : name(name) {}
+
   llvm::Value* codegen(Compiler*);
 };
 

@@ -61,10 +61,6 @@ Object* Exception_raise(Object* self) {
   return Qnil;
 }
 
-Object* Exception_createProto() {
-  Object* proto = Object_new(Object_proto);
-
-  Object_setSlot(proto, "raise", FUNC(Exception_raise, 1));
-
-  return proto;
+void Exception_initProto() {
+  Object_setSlot(Exception_proto, "raise", FUNC(Exception_raise, 1));
 }

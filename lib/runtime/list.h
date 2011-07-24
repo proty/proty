@@ -2,8 +2,8 @@
 #define LIST_H
 
 extern Object* List_proto;
+void List_initProto();
 
-Object* List_createProto();
 Object* List_new();
 
 #endif

@@ -13,7 +13,7 @@ struct Object {
 };
 
 extern Object* Object_proto;
-Object* Object_createProto();
+void Object_initProto();
 
 Object* Object_new(Object*);
 

@@ -1,9 +1,11 @@
 #ifndef BOOL_H
 #define BOOL_H
 
+extern Object* Bool_proto;
 extern Object* Qtrue;
 extern Object* Qfalse;
 
-Object* Bool_create();
+void Bool_initProto();
+Object* Bool_new();
 
 #endif

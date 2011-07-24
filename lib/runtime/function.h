@@ -2,7 +2,7 @@
 #define FUNCTION_H
 
 extern Object* Function_proto;
-Object* Function_createProto();
+void Function_initProto();
 
 Object* Function_new(FuncPtr, int);
 

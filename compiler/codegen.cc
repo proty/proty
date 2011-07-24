@@ -102,9 +102,7 @@ Value* StringNode::codegen(Compiler* c) {
   Value* string = c->builder->CreateGlobalStringPtr(value.c_str(), ".str");
 
   Function* func = c->module->getFunction("String_new");
-  std::vector<Value*> args;
-  args.push_back(string);
-  return c->builder->CreateCall(func, args.begin(), args.end(), "stringtmp");
+  return c->builder->CreateCall(func, string, "stringtmp");
 }
 
 Value* ListNode::codegen(Compiler* c) {
@@ -136,10 +134,16 @@ Value* HashNode::codegen(Compiler* c) {
   return hash;
 }
 
+Value* SymbolNode::codegen(Compiler* c) {
+  Value* string = c->builder->CreateGlobalStringPtr(name.c_str(), ".sym");
+
+  Function* func = c->module->getFunction("Symbol_get");
+  return c->builder->CreateCall(func, string, "symboltmp");
+}
+
 Value* CallNode::codegen(Compiler* c) {
-  NameNode* name = dynamic_cast<NameNode*>(callee);
-  if (name && name->getValue() == "load") {
-    StringNode* loadName = reinterpret_cast<StringNode*>(args.at(0));
+  if (callee->getValue() == "load") {
+    StringNode* loadName = static_cast<StringNode*>(args.at(0));
     std::string ln = loadName->getValue();
     c->loadModule(ln);
 

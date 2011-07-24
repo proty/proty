@@ -2,6 +2,6 @@
 #define EXCEPTION_H
 
 extern Object* Exception_proto;
-Object* Exception_createProto();
+void Exception_initProto();
 
 #endif

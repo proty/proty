@@ -2,10 +2,11 @@
 #define HASH_H
 
 extern Object* Hash_proto;
-Object* Hash_createProto();
+void Hash_initProto();
+
 Object* Hash_new();
 
-Object* Hash_set(Object*, const char*, Object*);
-Object* Hash_get(Object*, const char*);
+Object* Hash_set(Object*, Object*, Object*);
+Object* Hash_get(Object*, Object*);
 
 #endif

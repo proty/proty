@@ -43,8 +43,5 @@ Object* Function_call(Object* self, int argc, Object* argv[]) {
   return ret;
 }
 
-Object* Function_createProto() {
-  Object* proto = Object_new(Object_proto);
-
-  return proto;
+void Function_initProto() {
 }

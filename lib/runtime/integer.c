@@ -57,23 +57,19 @@ Object* Integer_ge(Object* self, Object* other) {
   return self->data.i >= other->data.i ? Qtrue : Qfalse;
 }
 
-Object* Integer_createProto() {
-  Object* proto = Object_new(Object_proto);
+void Integer_initProto() {
+  Object_setSlot(Integer_proto, "str", FUNC(Integer_str, 1));
+  Object_setSlot(Integer_proto, "bool", FUNC(Integer_bool, 1));
 
-  Object_setSlot(proto, "str", FUNC(Integer_str, 1));
-  Object_setSlot(proto, "bool", FUNC(Integer_bool, 1));
+  Object_setSlot(Integer_proto, "+", FUNC(Integer_add, 2));
+  Object_setSlot(Integer_proto, "-", FUNC(Integer_sub, 2));
+  Object_setSlot(Integer_proto, "*", FUNC(Integer_mul, 2));
+  Object_setSlot(Integer_proto, "/", FUNC(Integer_div, 2));
 
-  Object_setSlot(proto, "+", FUNC(Integer_add, 2));
-  Object_setSlot(proto, "-", FUNC(Integer_sub, 2));
-  Object_setSlot(proto, "*", FUNC(Integer_mul, 2));
-  Object_setSlot(proto, "/", FUNC(Integer_div, 2));
-
-  Object_setSlot(proto, "==", FUNC(Integer_eq, 2));
-  Object_setSlot(proto, "!=", FUNC(Integer_ne, 2));
-  Object_setSlot(proto, "<", FUNC(Integer_lt, 2));
-  Object_setSlot(proto, ">", FUNC(Integer_gt, 2));
-  Object_setSlot(proto, "<=", FUNC(Integer_le, 2));
-  Object_setSlot(proto, ">=", FUNC(Integer_ge, 2));
-
-  return proto;
+  Object_setSlot(Integer_proto, "==", FUNC(Integer_eq, 2));
+  Object_setSlot(Integer_proto, "!=", FUNC(Integer_ne, 2));
+  Object_setSlot(Integer_proto, "<", FUNC(Integer_lt, 2));
+  Object_setSlot(Integer_proto, ">", FUNC(Integer_gt, 2));
+  Object_setSlot(Integer_proto, "<=", FUNC(Integer_le, 2));
+  Object_setSlot(Integer_proto, ">=", FUNC(Integer_ge, 2));
 }

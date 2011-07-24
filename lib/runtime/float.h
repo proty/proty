@@ -2,7 +2,7 @@
 #define FLOAT_H
 
 extern Object* Float_proto;
-Object* Float_createProto();
+void Float_initProto();
 
 Object* Float_new(double);
 

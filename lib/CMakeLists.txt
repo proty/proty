@@ -8,6 +8,7 @@ add_executable(lib/runtime.bc
   runtime/function.c
   runtime/hash.c
   runtime/list.c
+  runtime/symbol.c
   runtime/integer.c
   runtime/float.c
   runtime/string.c
