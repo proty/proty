@@ -203,6 +203,13 @@ void Lexer::tokenize() {
       }
     }
 
+    // ignore shebang
+    else if (currch == '#') {
+      if (nextch == '!') {
+        while (!stream->eof() && stream->get() != '\n');
+      }
+    }
+
     else {
       // ignore eof
       if (!(currch == -1)) {
