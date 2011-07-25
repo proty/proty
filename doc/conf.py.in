@@ -2,30 +2,33 @@
 
 import sys, os
 
-extensions = []
+sys.path.append("@CMAKE_SOURCE_DIR@/doc")
+
+extensions = ["proty"]
 templates_path = []
-source_suffix = '.rst'
-source_encoding = 'utf-8-sig'
-master_doc = 'index'
+source_suffix = ".rst"
+source_encoding = "utf-8-sig"
+master_doc = "index"
 
-project = u'Proty'
-copyright = u'2011, Thomas Gatzweiler'
+project = u"Proty"
+copyright = u"2011, Thomas Gatzweiler"
 
-version = '@VERSION@'
-release = '@VERSION@'
+version = "@VERSION@"
+release = "@VERSION@"
 
 #language = None
+primary_domain = "pr"
 
-today_fmt = '%B %d, %Y'
+today_fmt = "%B %d, %Y"
 
 exclude_patterns = []
 add_module_names = True
 show_authors = False
 
-pygments_style = 'sphinx'
+pygments_style = "sphinx"
 modindex_common_prefix = []
 
-html_theme = 'default'
+html_theme = "default"
 html_theme_options = {}
 html_theme_path = []
 
@@ -34,7 +37,7 @@ html_short_title = html_title
 html_logo = None
 html_favicon = None
 html_static_path = []
-html_last_updated_fmt = '%b %d, %Y'
+html_last_updated_fmt = "%b %d, %Y"
 html_use_smartypants = True
 html_sidebars = {}
 html_additional_pages = {}
@@ -44,28 +47,28 @@ html_split_index = False
 html_show_sourcelink = True
 html_show_sphinx = True
 html_show_copyright = True
-html_use_opensearch = ''
-html_file_suffix = '.html'
-htmlhelp_basename = 'protydoc'
+html_use_opensearch = ""
+html_file_suffix = ".html"
+htmlhelp_basename = "protydoc"
 
-latex_paper_size = 'a4'
-latex_font_size = '10pt'
+latex_paper_size = "a4"
+latex_font_size = "10pt"
 
 latex_documents = [
-  ('index', 'proty.tex', u'Proty Documentation',
-   u'Thomas Gatzweiler', 'manual'),
+  ("index", "proty.tex", u"Proty Documentation",
+   u"Thomas Gatzweiler", "manual"),
 ]
 
 latex_logo = None
 latex_use_parts = False
 latex_show_pagerefs = False
 latex_show_urls = False
-latex_preamble = ''
+latex_preamble = ""
 latex_appendices = []
 latex_domain_indices = True
 
 
 man_pages = [
-    ('index', 'proty', u'Proty Documentation',
-     [u'Thomas Gatzweiler'], 1)
+    ("index", "proty", u"Proty Documentation",
+     [u"Thomas Gatzweiler"], 1)
 ]
