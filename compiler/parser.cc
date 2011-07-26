@@ -4,6 +4,7 @@
 #include "parser.hh"
 #include "lexer.hh"
 #include "ast.hh"
+#include "error.hh"
 
 Node* Parser::parseFile(std::string file) {
   std::istream* stream;
@@ -14,7 +15,7 @@ Node* Parser::parseFile(std::string file) {
     exit (1);
   }
 
-  lexer = new Lexer(stream);
+  lexer = new Lexer(stream, file);
   lexer->tokenize();
 
   Node* root = parse();
@@ -29,7 +30,7 @@ Node* Parser::parseFile(std::string file) {
 
 Node* Parser::parseStr(char* str) {
   std::istream* stream = new std::istringstream(str);
-  lexer = new Lexer(stream);
+  lexer = new Lexer(stream, "str");
   lexer->tokenize();
 
   Node* root = parse();
@@ -40,7 +41,13 @@ Node* Parser::parseStr(char* str) {
 }
 
 Node* Parser::parse() {
-  return parseBlock();
+  try {
+    return parseBlock();
+  }
+  catch (ParseError e) {
+    e.printMessage();
+    exit(1);
+  }
 }
 
 Node* Parser::parseBlock() {
@@ -120,16 +127,14 @@ Node* Parser::parseExpression() {
     return expr;
   }
   else if (lexer->isNext(Token::assign)) {
-    lexer->next();
+    Token t = lexer->next();
     if (!lhs->getValue().empty()) {
       Node* expr = parseExpression();
       Node* assign = new AssignNode(lhs->getValue(), expr);
       return assign;
     }
     else {
-      std::cerr << "only names can be used for assignments" << std::endl;
-      exit(1);
-      return 0;
+      throw ParseError(t.getLocation(), "only names can be used for assignments");
     }
   }
   else return lhs;
@@ -190,9 +195,7 @@ Node* Parser::parsePrimary() {
     prim = parseFunction();
   }
   else {
-    std::cerr << "unexpected token " << lexer->next().getValue() << std::endl;
-    exit(1);
-    return 0;
+    throw ParseError(lexer->next().getLocation(), "unexpected token");
   }
 
   while (lexer->isNext(Token::lpar) || lexer->isNext(Token::dot)) {

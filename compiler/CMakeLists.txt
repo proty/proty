@@ -15,7 +15,7 @@ execute_process(COMMAND ${LLVM_CONFIG} --libs core jit interpreter linker native
                         OUTPUT_STRIP_TRAILING_WHITESPACE)
 
 string(REGEX REPLACE "-O3" "" LLVM_CXXFLAGS ${LLVM_CXXFLAGS})
-
+string(REGEX REPLACE "-fno-exceptions" "" LLVM_CXXFLAGS ${LLVM_CXXFLAGS})
 include_directories(include)
 
 set(PREFIX ${CMAKE_INSTALL_PREFIX})
@@ -24,6 +24,7 @@ configure_file("${CMAKE_CURRENT_SOURCE_DIR}/config.hh.in"
                "${CMAKE_CURRENT_SOURCE_DIR}/config.hh")
 
 add_library(libproty SHARED
+  error.cc
   lexer.cc
   parser.cc
   compiler.cc

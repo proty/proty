@@ -1,13 +1,16 @@
 #include "lexer.hh"
+#include "error.hh"
 #include <fstream>
 #include <sstream>
 #include <cstdlib>
 
-Lexer::Lexer(std::istream* stream) {
+Lexer::Lexer(std::istream* stream, std::string filename) {
   this->stream = stream;
+  this->filename = filename;
 
   tokens = new std::vector<Token>;
   pos = 0;
+  line = 1;
 }
 
 Lexer::~Lexer() {
@@ -15,6 +18,11 @@ Lexer::~Lexer() {
 }
 
 void Lexer::add(Token token) {
+  Location loc;
+  loc.filename = filename;
+  loc.line = line;
+
+  token.setLocation(loc);
   tokens->push_back(token);
 }
 
@@ -31,8 +39,7 @@ bool Lexer::isNext(Token::Type type) {
 }
 
 void Lexer::unexpected(Token found, std::string expected) {
-   std::cerr << "expected " + expected + ", found " + found.getValue() << std::endl;
-   exit(1);
+  throw ParseError(found.getLocation(), "expected " + expected + ", found " + found.getValue());
 }
 
 Token Lexer::match(Token::Type to_match, std::string expected) {
@@ -55,6 +62,9 @@ void Lexer::tokenize() {
   while (true) {
     // whitespace
     if (isspace(currch)) {
+      if (currch == '\n') {
+         line++;
+      }
       // ignore
     }
 
@@ -191,11 +201,14 @@ void Lexer::tokenize() {
     else if (currch == '/') {
       if (nextch == '/') {
         while (!stream->eof() && stream->get() != '\n');
+        line++;
       }
       else if (nextch == '*') {
         stream->get();
         while (!stream->eof() && !(stream->get() == '*'
-                              && stream->peek() == '/'));
+               && stream->peek() == '/')) {
+          if (stream->peek() == '\n') line++;
+        }
         stream->get();
       }
       else {
@@ -207,6 +220,7 @@ void Lexer::tokenize() {
     else if (currch == '#') {
       if (nextch == '!') {
         while (!stream->eof() && stream->get() != '\n');
+        line++;
       }
     }
 

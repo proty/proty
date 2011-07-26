@@ -7,15 +7,17 @@
 
 class Lexer {
 private:
-  std::string filename;
   std::vector<Token>* tokens;
   std::istream* stream;
   int pos;
 
+  std::string filename;
+  int line;
+
   void add(Token);
 
 public:
-  Lexer(std::istream*);
+  Lexer(std::istream*, std::string);
   ~Lexer();
 
   Token next();
