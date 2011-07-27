@@ -32,4 +32,15 @@ public:
   void printMessage();
 };
 
+class CompileError : public Error {
+private:
+  std::string message;
+
+public:
+  CompileError(std::string msg)
+    : message(msg) {}
+
+  void printMessage();
+};
+
 #endif

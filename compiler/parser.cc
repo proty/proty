@@ -189,7 +189,7 @@ Node* Parser::parsePrimary() {
   }
   else {
     throw new ParseError(lexer->peek().getLocation(),
-                         "unexpected token " + lexer->peek().getValue());
+                         "unexpected token '" + lexer->peek().getValue() + "'");
   }
 
   while (lexer->isNext(Token::lpar) || lexer->isNext(Token::dot)) {

@@ -66,7 +66,15 @@ int main(int argc, char** argv) {
 
   Compiler* compiler = new Compiler(file);
   compiler->debug = debug;
-  compiler->addNode(root);
+
+  try {
+    compiler->addNode(root);
+  }
+  catch (Error* e) {
+    e->printMessage();
+    return 2;
+  }
+
   Program* program = compiler->getProgram();
 
   delete parser;

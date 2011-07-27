@@ -28,15 +28,14 @@ int main(int argc, char** argv) {
     Node* root;
     try {
       root = parser->parseStr(input);
+      compiler->run(root);
+      delete root;
     }
     catch (Error* e) {
       e->printMessage();
       delete e;
       continue;
     }
-
-    compiler->run(root);
-    delete root;
 
     free(input);
   }

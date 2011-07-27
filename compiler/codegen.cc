@@ -1,6 +1,7 @@
 #include "ast.hh"
 #include "compiler.hh"
 #include "symtab.hh"
+#include "error.hh"
 #include "llvm.hh"
 
 using namespace llvm;
@@ -27,8 +28,7 @@ Value* BinaryOpNode::codegen(Compiler* c) {
 Value* NameNode::codegen(Compiler* c) {
   Value* v = c->symtab->lookup(value);
   if (!v) {
-    std::cerr << "undefined variable " << value << std::endl;
-    exit(0);
+    throw new CompileError("undefined variable '" + value + "'");
   }
   return c->builder->CreateLoad(v, value.c_str());
 }

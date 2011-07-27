@@ -9,3 +9,7 @@ void ParseError::printMessage() {
   std::cerr << "  " <<  message << std::endl;
 }
 
+void CompileError::printMessage() {
+  std::cerr << "compile error:" << std::endl;
+  std::cerr << "  " <<  message << std::endl;
+}
