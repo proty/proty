@@ -6,6 +6,7 @@
 #include "parser.hh"
 #include "compiler.hh"
 #include "program.hh"
+#include "error.hh"
 #include "config.hh"
 
 int main(int argc, char** argv) {
@@ -16,7 +17,7 @@ int main(int argc, char** argv) {
   std::cout << std::endl;
 
   Parser* parser = new Parser;
-  Compiler* compiler = new Compiler("interactive", true);
+  Compiler* compiler = new Compiler("<ipr>", true);
 
   while (true) {
     char* input = readline(">>> ");
@@ -24,7 +25,16 @@ int main(int argc, char** argv) {
     if (!input) break;
     add_history(input);
 
-    Node* root = parser->parseStr(input);
+    Node* root;
+    try {
+      root = parser->parseStr(input);
+    }
+    catch (Error* e) {
+      e->printMessage();
+      delete e;
+      continue;
+    }
+
     compiler->run(root);
     delete root;
 

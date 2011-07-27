@@ -11,8 +11,7 @@ Node* Parser::parseFile(std::string file) {
   if (file == "<stdin>") stream = &std::cin;
   else stream = new std::ifstream(file.c_str(), std::ifstream::in);
   if (!*stream) {
-    std::cerr << "cannot open file " + file << std::endl;
-    exit (1);
+    throw new GeneralError("cannot open file " + file);
   }
 
   lexer = new Lexer(stream, file);
@@ -30,7 +29,7 @@ Node* Parser::parseFile(std::string file) {
 
 Node* Parser::parseStr(char* str) {
   std::istream* stream = new std::istringstream(str);
-  lexer = new Lexer(stream, "str");
+  lexer = new Lexer(stream, "<string>");
   lexer->tokenize();
 
   Node* root = parse();
@@ -41,13 +40,7 @@ Node* Parser::parseStr(char* str) {
 }
 
 Node* Parser::parse() {
-  try {
-    return parseBlock();
-  }
-  catch (ParseError e) {
-    e.printMessage();
-    exit(1);
-  }
+  return parseBlock();
 }
 
 Node* Parser::parseBlock() {
@@ -134,7 +127,7 @@ Node* Parser::parseExpression() {
       return assign;
     }
     else {
-      throw ParseError(t.getLocation(), "only names can be used for assignments");
+      throw new ParseError(t.getLocation(), "only names can be used for assignments");
     }
   }
   else return lhs;
@@ -195,7 +188,8 @@ Node* Parser::parsePrimary() {
     prim = parseFunction();
   }
   else {
-    throw ParseError(lexer->next().getLocation(), "unexpected token");
+    throw new ParseError(lexer->peek().getLocation(),
+                         "unexpected token " + lexer->peek().getValue());
   }
 
   while (lexer->isNext(Token::lpar) || lexer->isNext(Token::dot)) {

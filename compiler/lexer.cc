@@ -39,7 +39,7 @@ bool Lexer::isNext(Token::Type type) {
 }
 
 void Lexer::unexpected(Token found, std::string expected) {
-  throw ParseError(found.getLocation(), "expected " + expected + ", found " + found.getValue());
+  throw new ParseError(found.getLocation(), "expected " + expected + ", found " + found.getValue());
 }
 
 Token Lexer::match(Token::Type to_match, std::string expected) {

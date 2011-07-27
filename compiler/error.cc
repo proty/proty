@@ -1,7 +1,11 @@
 #include "error.hh"
-#include "lexer.hh"
+
+void GeneralError::printMessage() {
+  std::cerr << message << std::endl;
+}
 
 void ParseError::printMessage() {
   std::cerr << "parse error in " << loc.filename << " at line " << loc.line << ":" << std::endl;
-  std::cerr << "  " <<  message << std::endl; 
+  std::cerr << "  " <<  message << std::endl;
 }
+

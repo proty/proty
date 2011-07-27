@@ -3,6 +3,7 @@
 #include "parser.hh"
 #include "compiler.hh"
 #include "program.hh"
+#include "error.hh"
 #include "config.hh"
 
 void version() {
@@ -53,7 +54,15 @@ int main(int argc, char** argv) {
   }
 
   Parser* parser = new Parser;
-  Node* root = parser->parseFile(file);
+
+  Node* root;
+  try {
+    root = parser->parseFile(file);
+  }
+  catch (Error* e) {
+    e->printMessage();
+    return 1;
+  }
 
   Compiler* compiler = new Compiler(file);
   compiler->debug = debug;
