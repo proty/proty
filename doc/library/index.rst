@@ -11,3 +11,4 @@ Library Reference
     os.rst
     net.rst
     math.rst
+    time.rst
