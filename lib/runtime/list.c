@@ -57,7 +57,7 @@ Object* List_bool(Object* self) {
 
 void List_initProto() {
   Object_setSlot(List_proto, "append", FUNC(List_append, 2));
-  Object_setSlot(List_proto, "get", FUNC(List_get, 2));
+  Object_setSlot(List_proto, "[]", FUNC(List_get, 2));
   Object_setSlot(List_proto, "size", FUNC(List_size, 1));
   Object_setSlot(List_proto, "bool", FUNC(List_bool, 1));
 }

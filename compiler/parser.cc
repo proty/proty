@@ -119,12 +119,17 @@ Node* Parser::parseExpression() {
     lexer->match(Token::rpar, ")");
     return expr;
   }
+  else if (lexer->isNext(Token::lsqb)) {
+    lexer->next();
+    Node* value = parseExpression();
+    lexer->match(Token::rsqb, "]");
+    return new SubscriptNode(lhs, value);
+  }
   else if (lexer->isNext(Token::assign)) {
     Token t = lexer->next();
     if (!lhs->getValue().empty()) {
       Node* expr = parseExpression();
-      Node* assign = new AssignNode(lhs->getValue(), expr);
-      return assign;
+      return new AssignNode(lhs->getValue(), expr);
     }
     else {
       throw new ParseError(lexer->getFilename(), t.getLine(),

@@ -154,6 +154,24 @@ public:
 
 
 /**
+ * A subscript operation.
+ * $object[$value]
+ */
+
+class SubscriptNode : public Node {
+private:
+  Node* object;
+  Node* value;
+
+public:
+  SubscriptNode(Node* object, Node* value)
+    : object(object), value(value) {};
+
+  llvm::Value* codegen(Compiler*);
+};
+
+
+/**
  * A function call.
  * $callee($args)
  */

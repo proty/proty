@@ -160,4 +160,5 @@ void Hash_initProto() {
   Hash_init(Hash_proto->slots);
 
   Object_setSlot(Hash_proto, "init", FUNC(Hash_init, 1));
+  Object_setSlot(Hash_proto, "[]", FUNC(Hash_get, 2));
 }

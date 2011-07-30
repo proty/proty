@@ -25,6 +25,16 @@ Value* BinaryOpNode::codegen(Compiler* c) {
   return call->codegen(c);
 }
 
+Value* SubscriptNode::codegen(Compiler* c) {
+  GetSlotNode* getslot = new GetSlotNode(object, "[]");
+
+  CallNode* call = new CallNode(getslot);
+  call->addArg(object);
+  call->addArg(value);
+
+  return call->codegen(c);
+}
+
 Value* NameNode::codegen(Compiler* c) {
   Value* v = c->symtab->lookup(value);
   if (!v) {
