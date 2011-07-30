@@ -5,7 +5,7 @@ void GeneralError::printMessage() {
 }
 
 void ParseError::printMessage() {
-  std::cerr << "parse error in " << loc.filename << " at line " << loc.line << ":" << std::endl;
+  std::cerr << "parse error in " << filename << " at line " << lineno << ":" << std::endl;
   std::cerr << "  " <<  message << std::endl;
 }
 

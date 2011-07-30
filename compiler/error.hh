@@ -2,7 +2,6 @@
 #define PROTY_ERROR_HH
 
 #include <iostream>
-#include "lexer.hh"
 
 class Error {
 public:
@@ -22,12 +21,13 @@ public:
 
 class ParseError : public Error {
 private:
-  Location loc;
+  std::string filename;
+  int lineno;
   std::string message;
 
 public:
-  ParseError(Location loc, std::string msg)
-    : loc(loc), message(msg) {}
+  ParseError(std::string filename, int lineno, std::string msg)
+    : filename(filename), lineno(lineno), message(msg) {}
 
   void printMessage();
 };

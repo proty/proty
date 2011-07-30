@@ -1,11 +1,6 @@
 #ifndef PROTY_TOKEN_HH
 #define PROTY_TOKEN_HH
 
-struct Location {
-  std::string filename;
-  int line;
-};
-
 class Token {
 public:
   typedef enum {
@@ -51,7 +46,7 @@ private:
   std::string value;
   int precedence;
 
-  Location loc;
+  int lineno;
 
 public:
   Token(Type type, std::string value, int precedence=0)
@@ -61,8 +56,8 @@ public:
   std::string getValue() { return value; }
   int getPrecedence() { return precedence; }
 
-  void setLocation(Location loc) { this->loc = loc; }
-  Location getLocation() { return loc; }
+  void setLine(int lineno) { this->lineno = lineno; }
+  int getLine() { return lineno; }
 };
 
 #endif

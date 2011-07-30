@@ -127,7 +127,8 @@ Node* Parser::parseExpression() {
       return assign;
     }
     else {
-      throw new ParseError(t.getLocation(), "only names can be used for assignments");
+      throw new ParseError(lexer->getFilename(), t.getLine(),
+                           "only names can be used for assignments");
     }
   }
   else return lhs;
@@ -188,7 +189,7 @@ Node* Parser::parsePrimary() {
     prim = parseFunction();
   }
   else {
-    throw new ParseError(lexer->peek().getLocation(),
+    throw new ParseError(lexer->getFilename(), lexer->peek().getLine(),
                          "unexpected token '" + lexer->peek().getValue() + "'");
   }
 

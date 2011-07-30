@@ -12,7 +12,7 @@ private:
   int pos;
 
   std::string filename;
-  int line;
+  int lineno;
 
   void add(Token);
 
@@ -27,6 +27,8 @@ public:
   void unexpected(Token, std::string);
 
   void tokenize();
+
+  std::string getFilename() { return filename; }
 };
 
 #endif
