@@ -40,9 +40,19 @@ Object* List_append(Object* self, Object* obj) {
   return obj;
 }
 
-Object* List_get(Object* self, Object* pos) {
+Object* List_get(Object* self, Object* index) {
   List* list = self->data.ptr;
-  return list->objects[pos->data.i];
+  return list->objects[index->data.i];
+}
+
+Object* List_set(Object* self, Object* index, Object* value) {
+  List* list = self->data.ptr;
+  if (index->data.i > list->size) {
+    /// @todo: throw exception
+    return Qnil;
+  }
+  list->objects[index->data.i] = value;
+  return value;
 }
 
 Object* List_size(Object* self) {
@@ -58,6 +68,7 @@ Object* List_bool(Object* self) {
 void List_initProto() {
   Object_setSlot(List_proto, "append", FUNC(List_append, 2));
   Object_setSlot(List_proto, "[]", FUNC(List_get, 2));
+  Object_setSlot(List_proto, "[]=", FUNC(List_set, 3));
   Object_setSlot(List_proto, "size", FUNC(List_size, 1));
   Object_setSlot(List_proto, "bool", FUNC(List_bool, 1));
 }
