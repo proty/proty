@@ -26,11 +26,14 @@ Value* BinaryOpNode::codegen(Compiler* c) {
 }
 
 Value* SubscriptNode::codegen(Compiler* c) {
-  GetSlotNode* getslot = new GetSlotNode(object, "[]");
+  std::string op = value ? "[]=" : "[]";
+
+  GetSlotNode* getslot = new GetSlotNode(object, op);
 
   CallNode* call = new CallNode(getslot);
   call->addArg(object);
-  call->addArg(value);
+  call->addArg(key);
+  if (value) call->addArg(value);
 
   return call->codegen(c);
 }

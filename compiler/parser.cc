@@ -121,9 +121,16 @@ Node* Parser::parseExpression() {
   }
   else if (lexer->isNext(Token::lsqb)) {
     lexer->next();
-    Node* value = parseExpression();
+    Node* key = parseExpression();
     lexer->match(Token::rsqb, "]");
-    return new SubscriptNode(lhs, value);
+
+    Node* value = 0;
+    if (lexer->isNext(Token::assign)) {
+      lexer->next();
+      value = parseExpression();
+    }
+
+    return new SubscriptNode(lhs, key, value);
   }
   else if (lexer->isNext(Token::assign)) {
     Token t = lexer->next();

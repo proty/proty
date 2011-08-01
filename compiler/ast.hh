@@ -155,17 +155,18 @@ public:
 
 /**
  * A subscript operation.
- * $object[$value]
+ * $object[$key] = $value
  */
 
 class SubscriptNode : public Node {
 private:
   Node* object;
+  Node* key;
   Node* value;
 
 public:
-  SubscriptNode(Node* object, Node* value)
-    : object(object), value(value) {};
+  SubscriptNode(Node* object, Node* key, Node* value)
+    : object(object), key(key), value(value) {};
 
   llvm::Value* codegen(Compiler*);
 };
