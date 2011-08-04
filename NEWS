@@ -1,0 +1,22 @@
+** Proty 0.3 2011-08-06
+
+ - improves error handling
+ - implements symbol object and syntax
+ - implements list object and syntax
+ - implements hash syntax
+ - implements subscript operator syntax
+
+** Proty 0.2 2011-07-16
+
+ - adds 'ipr', an interactive interpreter
+ - adds 'math' library
+ - adds 'time' library
+ - adds 'net' library
+ - implements double object and syntax
+
+** Proty 0.1 2011-06-30
+
+ - implements while and if statements
+ - implements verification of call parameter count
+ - fixes parser 'end of line' bug
+ - fixes hash size extension bug
