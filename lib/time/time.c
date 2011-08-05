@@ -51,7 +51,7 @@ void time_init() {
   Object_setSlot(Time_proto, "str", FUNC(Time_str, 1));
   Object_setSlot(Time_proto, "strftime", FUNC(Time_strftime, 2));
 
-  MODINIT(time_Time, Time_proto);
-  MODINIT(time_now, FUNC(time_now, 1));
-  MODINIT(time_sleep, FUNC(time_sleep, 2));
+  INITOBJ(time_Time, Time_proto);
+  INITFUNC(time_now, 1);
+  INITFUNC(time_sleep, 2);
 }

@@ -41,18 +41,18 @@ EXPORT(math_pi);
 EXPORT(math_e);
 
 void math_init() {
-  MODINIT(math_sin, FUNC(math_sin, 2));
-  MODINIT(math_cos, FUNC(math_cos, 2));
-  MODINIT(math_tan, FUNC(math_cos, 2));
-  MODINIT(math_asin, FUNC(math_asin, 2));
-  MODINIT(math_acos, FUNC(math_acos, 2));
-  MODINIT(math_atan, FUNC(math_atan, 2));
+  INITFUNC(math_sin, 2);
+  INITFUNC(math_cos, 2);
+  INITFUNC(math_tan, 2);
+  INITFUNC(math_asin, 2);
+  INITFUNC(math_acos, 2);
+  INITFUNC(math_atan, 2);
 
-  MODINIT(math_log, FUNC(math_log, 2));
+  INITFUNC(math_log, 2);
 
-  MODINIT(math_pow, FUNC(math_pow, 3));
-  MODINIT(math_sqrt, FUNC(math_sqrt, 2));
+  INITFUNC(math_pow, 3);
+  INITFUNC(math_sqrt, 2);
 
-  MODINIT(math_pi, Float_new(3.141592));
-  MODINIT(math_e, Float_new(2.718281));
+  INITOBJ(math_pi, Float_new(3.141592));
+  INITOBJ(math_e, Float_new(2.718281));
 }

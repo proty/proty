@@ -11,6 +11,6 @@ EXPORT(net_Socket);
 void net_init() {
   Socket_proto = Socket_createProto();
 
-  MODINIT(net_socket, FUNC(net_socket, 1));
-  MODINIT(net_Socket, Socket_proto);
+  INITFUNC(net_socket, 1);
+  INITOBJ(net_Socket, Socket_proto);
 }

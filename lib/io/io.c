@@ -34,7 +34,7 @@ EXPORT(io_File);
 void io_init() {
   File_proto = File_createProto();
 
-  MODINIT(io_print, FUNC(io_print, 2));
-  MODINIT(io_open, FUNC(io_open, 3));
-  MODINIT(io_File, File_proto);
+  INITFUNC(io_print, 2);
+  INITFUNC(io_open, 3);
+  INITOBJ(io_File, File_proto);
 }

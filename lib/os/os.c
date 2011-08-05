@@ -41,8 +41,8 @@ MODFUNC(os_exit, Object* self, Object* status) {
 }
 
 void os_init() {
-  MODINIT(os_system, FUNC(os_system, 2));
-  MODINIT(os_getenv, FUNC(os_getenv, 2));
-  MODINIT(os_setenv, FUNC(os_setenv, 3));
-  MODINIT(os_exit, FUNC(os_exit, 2));
+  INITFUNC(os_system, 2);
+  INITFUNC(os_getenv, 2);
+  INITFUNC(os_setenv, 3);
+  INITFUNC(os_exit, 2);
 }

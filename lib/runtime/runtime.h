@@ -23,7 +23,8 @@ typedef Object* (*FuncPtr)(Object*, ...);
   Object* name(__VA_ARGS__)
 #define EXPORT(name) Object* prmod_##name
 
-#define MODINIT(name, obj) prmod_##name = obj
+#define INITFUNC(name, argc) prmod_##name = FUNC(name, argc)
+#define INITOBJ(name, value) prmod_##name = value
 #define MODGET(name) prmod_##name
 
 #endif
