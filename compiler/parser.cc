@@ -318,6 +318,7 @@ Node* Parser::parseFunction() {
   lexer->match(Token::doKw, "do");
 
   FunctionNode* f = new FunctionNode();
+  f->addArg("self");
 
   if (lexer->isNext(Token::lpar)) {
     lexer->next();

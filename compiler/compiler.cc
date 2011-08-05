@@ -125,8 +125,6 @@ Program* Compiler::getProgram() {
     builder->CreateRet(status);
   }
 
-  currBB->getParent()->dump();
-
   // verify and optimize main
   Function* main = module->getFunction("main");
   verifyFunction(*main);
