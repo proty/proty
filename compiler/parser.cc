@@ -184,7 +184,12 @@ Node* Parser::parsePrimary() {
   }
   else if (lexer->isNext(Token::name)) {
     std::string value = lexer->next().getValue();
-    prim = new NameNode(value);
+    if (lexer->isNext(Token::colon)) {
+      lexer->next();
+      std::string name = lexer->match(Token::name, "module member name").getValue();
+      prim = new ModuleMemberNode(value, name);
+    }
+    else prim = new NameNode(value);
   }
   else if (lexer->isNext(Token::colon)) {
     lexer->next();

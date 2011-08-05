@@ -5,6 +5,7 @@
  - implements list object and syntax
  - implements hash syntax
  - implements subscript operator syntax
+ - new module syntax and api
 
 ** Proty 0.2 2011-07-16
 

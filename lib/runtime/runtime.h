@@ -19,4 +19,11 @@ typedef Object* (*FuncPtr)(Object*, ...);
 #define FUNC(name, argc) Function_new((FuncPtr)name, argc)
 #define SYM(name) Symbol_get(#name)
 
+#define MODFUNC(name, ...) Object* prmod_##name;    \
+  Object* name(__VA_ARGS__)
+#define EXPORT(name) Object* prmod_##name
+
+#define MODINIT(name, obj) prmod_##name = obj
+#define MODGET(name) prmod_##name
+
 #endif

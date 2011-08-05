@@ -2,7 +2,7 @@
 #include "runtime/runtime.h"
 #include "file.h"
 
-Object* io_print(Object* self, Object* obj) {
+MODFUNC(io_print, Object* self, Object* obj) {
   if (obj->proto == String_proto) {
     printf("%s\n", obj->data.ptr);
   }
@@ -19,7 +19,7 @@ Object* io_print(Object* self, Object* obj) {
   return Qnil;
 }
 
-Object* io_open(Object* self, Object* file, Object* mode) {
+MODFUNC(io_open, Object* self, Object* file, Object* mode) {
   if (file->proto == String_proto && mode->proto == String_proto) {
     Object* new = File_new(file->data.ptr, mode->data.ptr);
     return new;
@@ -29,13 +29,12 @@ Object* io_open(Object* self, Object* file, Object* mode) {
   }
 }
 
-Object* io_init() {
+EXPORT(io_File);
+
+void io_init() {
   File_proto = File_createProto();
 
-  Object* io = Object_new(Object_proto);
-
-  Object_setSlot(io, "print", FUNC(io_print, 2));
-  Object_setSlot(io, "open", FUNC(io_open, 3));
-
-  return io;
+  MODINIT(io_print, FUNC(io_print, 2));
+  MODINIT(io_open, FUNC(io_open, 3));
+  MODINIT(io_File, File_proto);
 }

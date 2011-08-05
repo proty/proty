@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <stack>
+#include <map>
 
 class Node;
 class SymbolTable;
@@ -38,6 +39,9 @@ public:
   llvm::Value* Qtrue;
   llvm::Value* Qfalse;
 
+  /// contains all imported modules with their path
+  std::map<std::string, std::string> modules;
+
   std::stack<llvm::BasicBlock*> unwind;
   SymbolTable* symtab;
   bool toplevel;
@@ -52,7 +56,7 @@ public:
   void addNode(Node*);
   void run(Node*);
   Program* getProgram();
-  void loadModule(std::string);
+  void loadModule(std::string, bool);
 };
 
 #endif

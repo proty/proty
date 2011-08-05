@@ -181,11 +181,13 @@ class CallNode : public Node {
 private:
   Node* callee;
   std::vector<Node*> args;
+  Node* self;
 
 public:
-  CallNode(Node* callee) : callee(callee) {}
+  CallNode(Node* callee) : callee(callee), self(0) {}
   ~CallNode() { delete callee; }
 
+  void setSelf(Node* s) { self = s; }
   void addArg(Node* n) { args.push_back(n); }
   llvm::Value* codegen(Compiler*);
 };
@@ -349,6 +351,24 @@ public:
   ~CallSlotNode() { delete obj; }
 
   void addArg(Node* n) { args.push_back(n); }
+  llvm::Value* codegen(Compiler*);
+};
+
+
+/**
+ * Get an object from a module.
+ * $module:$name
+ */
+
+class ModuleMemberNode : public Node {
+private:
+  std::string module;
+  std::string name;
+
+public:
+  ModuleMemberNode(std::string module, std::string name)
+    : module(module), name(name) {}
+
   llvm::Value* codegen(Compiler*);
 };
 

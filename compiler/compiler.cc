@@ -3,6 +3,7 @@
 #include "symtab.hh"
 #include "program.hh"
 #include "llvm.hh"
+#include "error.hh"
 #include "config.hh"
 
 using namespace llvm;
@@ -35,7 +36,7 @@ Compiler::Compiler(std::string name, bool interactive) {
   fpm->add(createCFGSimplificationPass());
 
   // link in the runtime
-  loadModule("runtime");
+  loadModule("runtime", false);
 
   // get the object type which is defined in runtime.bc
   ObjectTy = PointerType::get(module->getTypeByName("struct.Object"), 0);
@@ -71,12 +72,16 @@ Compiler::Compiler(std::string name, bool interactive) {
     FunctionType* mainTy = FunctionType::get(Type::getInt32Ty(getGlobalContext()), argTypes, false);
     Function* main = Function::Create(mainTy, Function::ExternalLinkage, "main", module);
 
-    BasicBlock* mainBB = BasicBlock::Create(getGlobalContext(), "entry", main);
-    builder->SetInsertPoint(mainBB);
+    BasicBlock* initBB = BasicBlock::Create(getGlobalContext(), "init", main);
+    builder->SetInsertPoint(initBB);
 
     // init the runtime
     Function* runtime_init = module->getFunction("runtime_init");
     builder->CreateCall(runtime_init);
+
+    BasicBlock* mainBB = BasicBlock::Create(getGlobalContext(), "start", main);
+    builder->CreateBr(mainBB);
+    builder->SetInsertPoint(mainBB);
   }
   else {
     // init the runtime (now)
@@ -120,6 +125,8 @@ Program* Compiler::getProgram() {
     builder->CreateRet(status);
   }
 
+  currBB->getParent()->dump();
+
   // verify and optimize main
   Function* main = module->getFunction("main");
   verifyFunction(*main);
@@ -128,7 +135,7 @@ Program* Compiler::getProgram() {
   return new Program(CloneModule(module));
 }
 
-void Compiler::loadModule(std::string name) {
+void Compiler::loadModule(std::string name, bool init) {
   bool native = false;
   sys::Path path;
 
@@ -145,9 +152,26 @@ void Compiler::loadModule(std::string name) {
   }
 
   if (!path.isBitcodeFile()) {
-    std::cerr << "error: could not find module " << name << std::endl;
+    throw new CompileError("could not find module '" + name + "'");
   }
   else {
     linker->LinkInFile(path, native);
+  }
+
+  // add this module to the module list
+  modules[name] = path.c_str();
+
+  if (init) {
+    // initialize module in main function
+    Function* initFunc = module->getFunction(name + "_init");
+
+    if (!interactive) {
+      Function* mainFunc = module->getFunction("main");
+      IRBuilder<> tmpBuilder(&mainFunc->getEntryBlock(), --mainFunc->getEntryBlock().end());
+      tmpBuilder.CreateCall(initFunc);
+    }
+    else {
+      builder->CreateCall(initFunc);
+    }
   }
 }

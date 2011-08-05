@@ -1,7 +1,7 @@
 #include <stdlib.h>
 #include "runtime/runtime.h"
 
-Object* os_system(Object* self, Object* command) {
+MODFUNC(os_system, Object* self, Object* command) {
   if (command->proto == String_proto) {
     int res = system(command->data.ptr);
     return Integer_new(res);
@@ -11,7 +11,7 @@ Object* os_system(Object* self, Object* command) {
   }
 }
 
-Object* os_getenv(Object* self, Object* name) {
+MODFUNC(os_getenv, Object* self, Object* name) {
   if (name->proto == String_proto) {
     return String_new(getenv(name->data.ptr));
   }
@@ -20,7 +20,7 @@ Object* os_getenv(Object* self, Object* name) {
   }
 }
 
-Object* os_setenv(Object* self, Object* name, Object* value) {
+MODFUNC(os_setenv, Object* self, Object* name, Object* value) {
   if (name->proto == String_proto && value->proto == String_proto) {
     setenv(name->data.ptr, value->data.ptr, 1);
     return Qtrue;
@@ -30,7 +30,7 @@ Object* os_setenv(Object* self, Object* name, Object* value) {
   }
 }
 
-Object* os_exit(Object* self, Object* status) {
+MODFUNC(os_exit, Object* self, Object* status) {
   if (status->proto == Integer_proto) {
     exit(status->data.i);
     return Qtrue;
@@ -40,13 +40,9 @@ Object* os_exit(Object* self, Object* status) {
   }
 }
 
-Object* os_init() {
-  Object* os = Object_new(Object_proto);
-
-  Object_setSlot(os, "system", FUNC(os_system, 2));
-  Object_setSlot(os, "getenv", FUNC(os_getenv, 2));
-  Object_setSlot(os, "setenv", FUNC(os_setenv, 3));
-  Object_setSlot(os, "exit", FUNC(os_exit, 2));
-
-  return os;
+void os_init() {
+  MODINIT(os_system, FUNC(os_system, 2));
+  MODINIT(os_getenv, FUNC(os_getenv, 2));
+  MODINIT(os_setenv, FUNC(os_setenv, 3));
+  MODINIT(os_exit, FUNC(os_exit, 2));
 }

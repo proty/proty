@@ -19,7 +19,7 @@ Value* BinaryOpNode::codegen(Compiler* c) {
   GetSlotNode* getslot = new GetSlotNode(lhs, op);
 
   CallNode* call = new CallNode(getslot);
-  call->addArg(lhs);
+  call->setSelf(lhs);
   call->addArg(rhs);
 
   return call->codegen(c);
@@ -31,7 +31,7 @@ Value* SubscriptNode::codegen(Compiler* c) {
   GetSlotNode* getslot = new GetSlotNode(object, op);
 
   CallNode* call = new CallNode(getslot);
-  call->addArg(object);
+  call->setSelf(object);
   call->addArg(key);
   if (value) call->addArg(value);
 
@@ -90,13 +90,28 @@ Value* CallSlotNode::codegen(Compiler* c) {
   ValueNode* slotv = new ValueNode(slot->codegen(c));
 
   CallNode* call = new CallNode(slotv);
+  call->setSelf(objv);
 
-  call->addArg(objv);
   for (int i = 0; i < args.size(); i++) {
     call->addArg(args.at(i));
   }
 
   return call->codegen(c);
+}
+
+Value* ModuleMemberNode::codegen(Compiler* c) {
+  // check if the module is already loaded, if not, load it!
+  std::map<std::string,std::string>::const_iterator it = c->modules.find(module);
+  if (it == c->modules.end()) { c->loadModule(module, true); }
+
+  std::string obj_name = "prmod_" + module + "_" + name;
+  Value* obj = c->module->getNamedValue(obj_name);
+
+  if (!obj) {
+    throw new CompileError("member '" + name + "' of module '" + module + "' not found.");
+  }
+
+  return c->builder->CreateLoad(obj);
 }
 
 Value* IntegerNode::codegen(Compiler* c) {
@@ -155,42 +170,39 @@ Value* SymbolNode::codegen(Compiler* c) {
 }
 
 Value* CallNode::codegen(Compiler* c) {
-  if (callee->getValue() == "load") {
-    StringNode* loadName = static_cast<StringNode*>(args.at(0));
-    std::string ln = loadName->getValue();
-    c->loadModule(ln);
+  int argc = args.size();
+  Function* callFunc = c->module->getFunction("Object_call");
 
-    Function* initFunc = c->module->getFunction(ln + "_init");
-    return c->builder->CreateCall(initFunc, ln);
+  std::vector<Value*> argValues;
+  argValues.push_back(callee->codegen(c));
+  argValues.push_back(ConstantInt::get(Type::getInt32Ty(getGlobalContext()), argc+1));
+
+  if (self) {
+    argValues.push_back(self->codegen(c));
   }
   else {
-    int argc = args.size();
-    Function* callFunc = c->module->getFunction("Object_call");
+    argValues.push_back(c->Qnil);
+  }
 
-    std::vector<Value*> argValues;
-    argValues.push_back(callee->codegen(c));
-    argValues.push_back(ConstantInt::get(Type::getInt32Ty(getGlobalContext()), argc));
+  for (int i = 0; i < argc; i++) {
+    argValues.push_back(args.at(i)->codegen(c));
+  }
 
-    for (int i = 0; i < argc; i++) {
-      argValues.push_back(args.at(i)->codegen(c));
-    }
+  // are we in a try block?
+  if (!c->unwind.empty()) {
+    Function* func = c->builder->GetInsertBlock()->getParent();
+    BasicBlock* invcontBB = BasicBlock::Create(getGlobalContext(), "invcont",
+                                               func, c->unwind.top());
+    
+    Value* call = c->builder->CreateInvoke(callFunc, invcontBB, c->unwind.top(),
+                                           argValues.begin(), argValues.end(), "invtmp");
 
-    // are we in a try block?
-    if (!c->unwind.empty()) {
-      Function* func = c->builder->GetInsertBlock()->getParent();
-      BasicBlock* invcontBB = BasicBlock::Create(getGlobalContext(), "invcont",
-                                                 func, c->unwind.top());
+    c->builder->SetInsertPoint(invcontBB);
 
-      Value* call = c->builder->CreateInvoke(callFunc, invcontBB, c->unwind.top(),
-                                             argValues.begin(), argValues.end(), "invtmp");
-
-      c->builder->SetInsertPoint(invcontBB);
-
-      return call;
-    }
-    else {
-      return c->builder->CreateCall(callFunc, argValues.begin(), argValues.end(), "calltmp");
-    }
+    return call;
+  }
+  else {
+    return c->builder->CreateCall(callFunc, argValues.begin(), argValues.end(), "calltmp");
   }
 }
 
