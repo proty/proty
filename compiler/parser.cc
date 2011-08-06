@@ -110,30 +110,24 @@ Node* Parser::parseBlock() {
 Node* Parser::parseExpression() {
   Node* lhs = parsePrimary();
 
+  // binary operation
   if (lexer->isNext(Token::binaryop)) {
     return parseOperation(lhs, 0);
   }
+
+  // expression in parentheses
   else if (lexer->isNext(Token::lpar)) {
     lexer->next();
     Node* expr = parseExpression();
     lexer->match(Token::rpar, ")");
     return expr;
   }
-  else if (lexer->isNext(Token::lsqb)) {
-    lexer->next();
-    Node* key = parseExpression();
-    lexer->match(Token::rsqb, "]");
 
-    Node* value = 0;
-    if (lexer->isNext(Token::assign)) {
-      lexer->next();
-      value = parseExpression();
-    }
-
-    return new SubscriptNode(lhs, key, value);
-  }
+  // variable assignment
   else if (lexer->isNext(Token::assign)) {
     Token t = lexer->next();
+
+    // verify that the primary is a string
     if (!lhs->getValue().empty()) {
       Node* expr = parseExpression();
       return new AssignNode(lhs->getValue(), expr);
@@ -143,6 +137,7 @@ Node* Parser::parseExpression() {
                            "only names can be used for assignments");
     }
   }
+
   else return lhs;
 }
 
@@ -159,11 +154,14 @@ Node* Parser::parseOperation(Node* lhs, int precedence) {
     }
     lhs = new BinaryOpNode(op.getValue(), lhs, rhs);
   }
+
   return lhs;
 }
 
 Node* Parser::parsePrimary() {
   Node* prim;
+
+  // integer
   if (lexer->isNext(Token::integer)) {
     std::string value = lexer->next().getValue();
     std::stringstream ss(value);
@@ -171,6 +169,8 @@ Node* Parser::parsePrimary() {
     ss >> v;
     prim = new IntegerNode(v);
   }
+
+  // decimal
   else if (lexer->isNext(Token::decimal)) {
     std::string value = lexer->next().getValue();
     std::stringstream ss(value);
@@ -178,10 +178,14 @@ Node* Parser::parsePrimary() {
     ss >> v;
     prim = new FloatNode(v);
   }
+
+  // string
   else if (lexer->isNext(Token::string)) {
     std::string value = lexer->next().getValue();
     prim = new StringNode(value);
   }
+
+  // variable
   else if (lexer->isNext(Token::name)) {
     std::string value = lexer->next().getValue();
     if (lexer->isNext(Token::colon)) {
@@ -191,36 +195,69 @@ Node* Parser::parsePrimary() {
     }
     else prim = new NameNode(value);
   }
+
+  // symbol
   else if (lexer->isNext(Token::colon)) {
     lexer->next();
     std::string name = lexer->match(Token::name, "symbol name").getValue();
     prim = new SymbolNode(name);
   }
+
+  // list
   else if (lexer->isNext(Token::lsqb)) {
     prim = parseList();
   }
+
+  // hash
   else if (lexer->isNext(Token::lbrace)) {
     prim = parseHash();
   }
+
+  // function
   else if (lexer->isNext(Token::doKw)) {
     prim = parseFunction();
   }
+
+  // unexpected
   else {
     throw new ParseError(lexer->getFilename(), lexer->peek().getLine(),
                          "unexpected token '" + lexer->peek().getValue() + "'");
   }
 
-  while (lexer->isNext(Token::lpar) || lexer->isNext(Token::dot)) {
+  while (lexer->isNext(Token::lpar) || lexer->isNext(Token::lsqb)
+         || lexer->isNext(Token::dot)) {
+
+    // simple function call
     if (lexer->isNext(Token::lpar)) {
       prim = parseCall(prim);
     }
+
+    // subscript operator
+    else if (lexer->isNext(Token::lsqb)) {
+      lexer->next();
+      Node* key = parseExpression();
+      lexer->match(Token::rsqb, "]");
+
+      Node* value = 0;
+      if (lexer->isNext(Token::assign)) {
+        lexer->next();
+        value = parseExpression();
+      }
+
+      return new SubscriptNode(prim, key, value);
+    }
+
+    // slot access
     else if (lexer->isNext(Token::dot)) {
       lexer->next();
       std::string n = lexer->match(Token::name, "slot name").getValue();
 
+      // is the slot called?
       if (lexer->isNext(Token::lpar)) {
         lexer->next();
         prim = new CallSlotNode(prim, n);
+
+        // parse call arguments
         while (true) {
           if (lexer->isNext(Token::rpar)) {
             lexer->next();
@@ -236,16 +273,21 @@ Node* Parser::parsePrimary() {
           }
         }
       }
+
+      // is there something to be assigned to the slot?
       else if (lexer->isNext(Token::assign)) {
         lexer->next();
         Node* expr = parseExpression();
         prim = new SetSlotNode(prim, n, expr);
       }
+
+      // just a simple slot access
       else {
         prim = new GetSlotNode(prim, n);
       }
     }
   }
+
   return prim;
 }
 
