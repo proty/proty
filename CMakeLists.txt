@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 2.8)
 
 project(proty)
-set(VERSION 0.2)
+set(VERSION 0.3)
 
 set(CMAKE_C_COMPILER "clang")
 set(CMAKE_C_FLAGS "--std=c99 -Wall")
