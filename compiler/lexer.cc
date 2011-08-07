@@ -61,7 +61,8 @@ void Lexer::tokenize() {
     // whitespace
     if (isspace(currch)) {
       if (currch == '\n') {
-         lineno++;
+        add(Token(Token::newline, "new line"));
+        lineno++;
       }
       // ignore
     }
@@ -199,6 +200,7 @@ void Lexer::tokenize() {
     else if (currch == '/') {
       if (nextch == '/') {
         while (!stream->eof() && stream->get() != '\n');
+        add(Token(Token::newline, "new line"));
         lineno++;
       }
       else if (nextch == '*') {
@@ -218,6 +220,7 @@ void Lexer::tokenize() {
     else if (currch == '#') {
       if (nextch == '!') {
         while (!stream->eof() && stream->get() != '\n');
+        add(Token(Token::newline, "new line"));
         lineno++;
       }
     }

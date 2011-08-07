@@ -101,36 +101,44 @@ Node* Parser::parseBlock() {
         }
         return block;
 
+      case Token::newline:
+        lexer->next();
+        break;
+
       default:
         block->add(parseExpression());
+
+        // verify that the expression ends with a new line
+        if (!(lexer->isNext(Token::newline) || lexer->isNext(Token::eof))) {
+          lexer->unexpected(lexer->next(), "new line");
+        }
     }
   }
 }
 
 Node* Parser::parseExpression() {
-  Node* lhs = parsePrimary();
+  Node* expr = parsePrimary();
 
   // binary operation
   if (lexer->isNext(Token::binaryop)) {
-    return parseOperation(lhs, 0);
+    expr = parseOperation(expr, 0);
   }
 
   // expression in parentheses
   else if (lexer->isNext(Token::lpar)) {
     lexer->next();
-    Node* expr = parseExpression();
+    expr = parseExpression();
     lexer->match(Token::rpar, ")");
-    return expr;
   }
 
   // variable assignment
   else if (lexer->isNext(Token::assign)) {
     Token t = lexer->next();
 
-    // verify that the primary is a string
-    if (!lhs->getValue().empty()) {
-      Node* expr = parseExpression();
-      return new AssignNode(lhs->getValue(), expr);
+    // verify that expr is a string
+    if (!expr->getValue().empty()) {
+      Node* assign_expr = parseExpression();
+      expr = new AssignNode(expr->getValue(), assign_expr);
     }
     else {
       throw new ParseError(lexer->getFilename(), t.getLine(),
@@ -138,7 +146,7 @@ Node* Parser::parseExpression() {
     }
   }
 
-  else return lhs;
+  return expr;
 }
 
 Node* Parser::parseOperation(Node* lhs, int precedence) {

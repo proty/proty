@@ -37,6 +37,7 @@ public:
     dot,
     colon,
 
+    newline,
     eof,
     unknown,
   } Type;
