@@ -5,31 +5,24 @@
 
 using namespace llvm;
 
-Value* Runtime::externObject(Compiler* c, std::string name) {
-  return new GlobalVariable(*c->module, c->getObjectTy(), false,
-                            GlobalValue::ExternalWeakLinkage,
-                            UndefValue::get(c->getObjectTy()), name);
-
-}
-
 void Runtime::declareTypes(Compiler* c) {
   Type* ObjectTy = OpaqueType::get(getGlobalContext());
   c->module->addTypeName("struct.Object", ObjectTy);
 
-  c->symtab->store("Object", Runtime::externObject(c, "Object_proto"));
-  c->symtab->store("Integer", Runtime::externObject(c, "Integer_proto"));
-  c->symtab->store("Float", Runtime::externObject(c, "Float_proto"));
-  c->symtab->store("String", Runtime::externObject(c, "String_proto"));
-  c->symtab->store("Exception", Runtime::externObject(c, "Exception_proto"));
-  c->symtab->store("Hash", Runtime::externObject(c, "Hash_proto"));
-  c->symtab->store("Function", Runtime::externObject(c, "Function_proto"));
-  c->symtab->store("Symbol", Runtime::externObject(c, "Symbol_proto"));
-  c->symtab->store("List", Runtime::externObject(c, "List_proto"));
-  c->symtab->store("Bool", Runtime::externObject(c, "Bool_proto"));
+  c->symtab->store("Object", c->declareExternObject("Object_proto"));
+  c->symtab->store("Integer", c->declareExternObject("Integer_proto"));
+  c->symtab->store("Float", c->declareExternObject("Float_proto"));
+  c->symtab->store("String", c->declareExternObject("String_proto"));
+  c->symtab->store("Exception", c->declareExternObject("Exception_proto"));
+  c->symtab->store("Hash", c->declareExternObject("Hash_proto"));
+  c->symtab->store("Function", c->declareExternObject("Function_proto"));
+  c->symtab->store("Symbol", c->declareExternObject("Symbol_proto"));
+  c->symtab->store("List", c->declareExternObject("List_proto"));
+  c->symtab->store("Bool", c->declareExternObject("Bool_proto"));
 
-  c->symtab->store("nil", Runtime::externObject(c, "Qnil"));
-  c->symtab->store("true", Runtime::externObject(c, "Qtrue"));
-  c->symtab->store("false", Runtime::externObject(c, "Qfalse"));
+  c->symtab->store("nil", c->declareExternObject("Qnil"));
+  c->symtab->store("true", c->declareExternObject("Qtrue"));
+  c->symtab->store("false", c->declareExternObject("Qfalse"));
 }
 
 void Runtime::declareFunctions(Compiler* c) {

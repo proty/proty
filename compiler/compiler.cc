@@ -58,7 +58,7 @@ Compiler::Compiler(std::string name, bool interactive) {
     builder->SetInsertPoint(mainBB);
   }
   else {
-    loadModule("runtime", false);
+    loadModule("runtime");
 
     // init the runtime (now)
     Function* runtime_init = module->getFunction("runtime_init");
@@ -94,30 +94,59 @@ void Compiler::run(Node* root) {
   f();
 }
 
-Program* Compiler::getProgram() {
+Program* Compiler::getProgram(bool standalone) {
+  // terminate the init function for the current module
   builder->CreateRetVoid();
 
   // verify and optimize init function
   verifyFunction(*initFunction);
   fpm->run(*initFunction);
 
-  // create main function
-  std::vector<const Type*> argTypes;
-  argTypes.push_back(Type::getInt32Ty(getGlobalContext()));
-  argTypes.push_back(PointerType::get(Type::getInt8PtrTy(getGlobalContext()), 0));
-  FunctionType* mainTy = FunctionType::get(Type::getInt32Ty(getGlobalContext()), argTypes, false);
-  Function* main = Function::Create(mainTy, Function::ExternalWeakLinkage, "main", module);
+  if (standalone) {
+    loadModule("runtime");
 
-  BasicBlock* BB = BasicBlock::Create(getGlobalContext(), "entry", main);
-  builder->SetInsertPoint(BB);
-  builder->CreateCall(initFunction);
-  builder->CreateRet(ConstantInt::get(Type::getInt32Ty(getGlobalContext()), 0));
+    // create a main function
+    std::vector<const Type*> argTypes;
+    argTypes.push_back(Type::getInt32Ty(getGlobalContext()));
+    argTypes.push_back(PointerType::get(Type::getInt8PtrTy(getGlobalContext()), 0));
+
+    const Type* retTy = Type::getInt32Ty(getGlobalContext());
+    FunctionType* mainTy = FunctionType::get(retTy, argTypes, false);
+    Function* main = Function::Create(mainTy, Function::ExternalLinkage, "main", module);
+
+    BasicBlock* BB = BasicBlock::Create(getGlobalContext(), "entry", main);
+    builder->SetInsertPoint(BB);
+
+    std::map<std::string, Module*>::iterator it;
+
+    // link in all modules
+    for (it = modules.begin(); it != modules.end(); it++) {
+      linker->LinkInModule((*it).second);
+    }
+
+    // make sure that the runtime is initialized first
+    Function* runtime_init = module->getFunction("runtime_init");
+    builder->CreateCall(runtime_init);
+    modules.erase("runtime");
+
+    // call the initializers for all modules
+    for (it = modules.begin(); it != modules.end(); it++) {
+      std::string module_name = (*it).first;
+      Function* module_init = module->getFunction(module_name + "_init");
+      builder->CreateCall(module_init);
+    }
+
+    // call the current module's init function
+    builder->CreateCall(initFunction);
+
+    // return exit status 0
+    builder->CreateRet(ConstantInt::get(Type::getInt32Ty(getGlobalContext()), 0));
+  }
 
   return new Program(CloneModule(module));
 }
 
-void Compiler::loadModule(std::string name, bool init) {
-  bool native = false;
+Module* Compiler::loadModule(std::string name) {
   sys::Path path;
 
   // check local files
@@ -135,25 +164,21 @@ void Compiler::loadModule(std::string name, bool init) {
   if (!path.isBitcodeFile()) {
     throw new CompileError("could not find module '" + name + "'");
   }
-  else {
-    linker->LinkInFile(path, native);
-  }
+
+  OwningPtr<MemoryBuffer> Buffer;
+  MemoryBuffer::getFile(path.c_str(), Buffer);
+  Module* mod = ParseBitcodeFile(Buffer.get(), getGlobalContext());
 
   // add this module to the module list
-  modules[name] = path.c_str();
+  modules[name] = mod;
 
-  if (init) {
-    // initialize module in main function
+  if (interactive) {
+    linker->LinkInModule(mod);
     Function* initFunc = module->getFunction(name + "_init");
-
-    if (!interactive) {
-      IRBuilder<> tmpBuilder(&initFunction->getEntryBlock(), --initFunction->getEntryBlock().end());
-      tmpBuilder.CreateCall(initFunc);
-    }
-    else {
-      builder->CreateCall(initFunc);
-    }
+    builder->CreateCall(initFunc);
   }
+
+  return mod;
 }
 
 const Type* Compiler::getObjectTy() {
@@ -166,4 +191,10 @@ Value* Compiler::getBool(bool value) {
 
 Value* Compiler::getNil() {
   return module->getNamedValue("Qnil");
+}
+
+Value* Compiler::declareExternObject(std::string name) {
+  return new GlobalVariable(*module, getObjectTy(), false,
+                            GlobalValue::ExternalWeakLinkage,
+                            UndefValue::get(getObjectTy()), name);
 }

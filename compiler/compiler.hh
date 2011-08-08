@@ -38,8 +38,8 @@ public:
   llvm::FunctionPassManager* fpm;
   llvm::Linker* linker;
 
-  /// contains all imported modules with their path
-  std::map<std::string, std::string> modules;
+  /// contains all imported modules
+  std::map<std::string, llvm::Module*> modules;
 
   std::stack<llvm::BasicBlock*> unwind;
   SymbolTable* symtab;
@@ -54,12 +54,14 @@ public:
 
   void addNode(Node*);
   void run(Node*);
-  Program* getProgram();
-  void loadModule(std::string, bool);
+  Program* getProgram(bool);
+  llvm::Module* loadModule(std::string);
 
   const llvm::Type* getObjectTy();
   llvm::Value* getBool(bool);
   llvm::Value* getNil();
+
+  llvm::Value* declareExternObject(std::string);
 };
 
 #endif

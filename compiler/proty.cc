@@ -20,10 +20,10 @@ void version() {
 void help() {
   std::cerr <<
   "Usage: proty [options ...] [input file]\n"
-  "  -c           Compile as module\n"
   "  -d           Dump LLVM code\n"
   "  -g           Enable debugging symbols\n"
   "  --help, -h   Shows this message\n"
+  "  -m           Compile to a module\n"
   "  -o [file]    Set output file\n"
   "  --version    Shows version information\n"
   "  --           Stop reading options\n";
@@ -35,15 +35,15 @@ int main(int argc, char** argv) {
 
   bool dump = false;
   bool debug = false;
-  bool compile = false;
+  bool module = false;
 
   for (int count = 1; count < argc; count++) {
     if (argv[count][0] == '-') {
-      if      (argv[count] == std::string("-c"))          { compile = true; }
-      else if (argv[count] == std::string("-d"))          { dump = true; }
+      if      (argv[count] == std::string("-d"))          { dump = true; }
       else if (argv[count] == std::string("-g"))          { debug = true; }
       else if (argv[count] == std::string("-h"))          { help(); return 0; }
       else if (argv[count] == std::string("--help"))      { help(); return 0; }
+      else if (argv[count] == std::string("-m"))          { module = true; }
       else if (argv[count] == std::string("-o"))          { output = argv[++count]; }
       else if (argv[count] == std::string("--version"))   { version(); return 0; }
       else if (argv[count] == std::string("--"))          { break; }
@@ -56,10 +56,10 @@ int main(int argc, char** argv) {
     else { file = std::string(argv[count]); break; }
   }
 
-  std::string module = "<stdin>";
+  std::string module_name = "<stdin>";
   if (file != "<stdin>") {
     int fsize = file.size();
-    module = file.substr(0, fsize-3);
+    module_name = file.substr(0, fsize-3);
 
     std::string ext = file.substr(fsize-3, fsize);
     if (ext != ".pr") {
@@ -67,8 +67,8 @@ int main(int argc, char** argv) {
       return 10;
     }
 
-    if (output.empty()) {
-      output = module + ".bc";
+    if (module && output.empty()) {
+      output = module_name + ".bc";
     }
   }
 
@@ -83,7 +83,7 @@ int main(int argc, char** argv) {
     return 1;
   }
 
-  Compiler* compiler = new Compiler(module);
+  Compiler* compiler = new Compiler(module_name);
   compiler->debug = debug;
 
   try {
@@ -94,13 +94,7 @@ int main(int argc, char** argv) {
     return 2;
   }
 
-  // link in the runtime if the program will not
-  // be compiled to a module
-  if (!compile) {
-    compiler->loadModule("runtime", false);
-  }
-
-  Program* program = compiler->getProgram();
+  Program* program = compiler->getProgram(!module);
 
   delete parser;
   delete root;
@@ -108,7 +102,7 @@ int main(int argc, char** argv) {
 
   if (dump) program->dump();
 
-  if (compile) {
+  if (!output.empty()) {
     program->writeToFile(output);
   }
   else {

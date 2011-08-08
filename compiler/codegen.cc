@@ -100,15 +100,30 @@ Value* CallSlotNode::codegen(Compiler* c) {
 }
 
 Value* ModuleMemberNode::codegen(Compiler* c) {
+  Module* mod;
+
   // check if the module is already loaded, if not, load it!
-  std::map<std::string,std::string>::const_iterator it = c->modules.find(module);
-  if (it == c->modules.end()) { c->loadModule(module, true); }
+  std::map<std::string, Module*>::iterator it = c->modules.find(module);
+  if (it == c->modules.end()) {
+    mod = c->loadModule(module);
+  }
+  else {
+    mod = (*it).second;
+  }
 
   std::string obj_name = "prmod_" + module + "_" + name;
+
   Value* obj = c->module->getNamedValue(obj_name);
 
+  // if this object is not declare in the current module,
+  // verfiy that it exists and declare it.
+  if (!obj && (obj = mod->getNamedValue(obj_name))) {
+    obj = c->declareExternObject(obj_name);
+  }
+
   if (!obj) {
-    throw new CompileError("member '" + name + "' of module '" + module + "' not found.");
+    throw new CompileError("member '" + name + "' of module '"
+                           + module + "' not found.");
   }
 
   return c->builder->CreateLoad(obj);
