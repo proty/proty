@@ -30,8 +30,8 @@ execute_process(COMMAND git describe
                 OUTPUT_VARIABLE GIT_VERSION
                 RESULT_VARIABLE GIT_RETURN_VALUE
                 OUTPUT_STRIP_TRAILING_WHITESPACE
-                ERROR_QUIET
-                OUTPUT_QUIET)
+                ERROR_QUIET)
+
 if(NOT GIT_RETURN_VALUE EQUAL 0)
   unset(GIT_VERSION)
 endif(NOT GIT_RETURN_VALUE EQUAL 0)

@@ -14,7 +14,6 @@ execute_process(COMMAND ${LLVM_CONFIG} --libs core jit interpreter linker native
                         OUTPUT_STRIP_TRAILING_WHITESPACE)
 
 find_library(LLVM_SHARED NAMES "LLVM-${LLVM_VERSION}" PATH_SUFFIXES llvm)
-message(${LLVM_SHARED})
 if(LLVM_SHARED)
     set(LLVM_LIBS ${LLVM_SHARED})
 endif(LLVM_SHARED)
