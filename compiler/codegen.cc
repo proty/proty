@@ -51,14 +51,14 @@ Value* AssignNode::codegen(Compiler* c) {
   Value* variable = c->symtab->lookup(name);
   if (!variable) {
     if (c->interactive && c->toplevel) {
-      variable = new GlobalVariable(*c->module, c->ObjectTy, false,
+      variable = new GlobalVariable(*c->module, c->getObjectTy(), false,
                                   GlobalValue::ExternalLinkage,
-                                  UndefValue::get(c->ObjectTy), name);
+                                  UndefValue::get(c->getObjectTy()), name);
       c->builder->CreateStore(v, variable);
       c->symtab->store(name, variable);
     }
     else {
-      variable = c->builder->CreateAlloca(c->ObjectTy, 0, name);
+      variable = c->builder->CreateAlloca(c->getObjectTy(), 0, name);
       c->builder->CreateStore(v, variable);
       c->symtab->store(name, variable);
     }
@@ -181,7 +181,7 @@ Value* CallNode::codegen(Compiler* c) {
     argValues.push_back(self->codegen(c));
   }
   else {
-    argValues.push_back(c->Qnil);
+    argValues.push_back(c->getNil());
   }
 
   for (int i = 0; i < argc; i++) {
@@ -193,7 +193,7 @@ Value* CallNode::codegen(Compiler* c) {
     Function* func = c->builder->GetInsertBlock()->getParent();
     BasicBlock* invcontBB = BasicBlock::Create(getGlobalContext(), "invcont",
                                                func, c->unwind.top());
-    
+
     Value* call = c->builder->CreateInvoke(callFunc, invcontBB, c->unwind.top(),
                                            argValues.begin(), argValues.end(), "invtmp");
 
@@ -211,10 +211,10 @@ Value* FunctionNode::codegen(Compiler* c) {
 
   std::vector<const Type*> argTypes;
   for(int i = 0; i < argc; i++) {
-    argTypes.push_back(c->ObjectTy);
+    argTypes.push_back(c->getObjectTy());
   }
 
-  FunctionType* funcTy = FunctionType::get(c->ObjectTy, argTypes, false);
+  FunctionType* funcTy = FunctionType::get(c->getObjectTy(), argTypes, false);
   Function* func = Function::Create(funcTy, Function::InternalLinkage, "proty_func", c->module);
 
   // backup current block and setup new block
@@ -226,7 +226,7 @@ Value* FunctionNode::codegen(Compiler* c) {
   Function::arg_iterator AI = func->arg_begin();
   for (int i = 0; i < argc; i++, AI++) {
       AI->setName(args.at(i));
-      AllocaInst* alloca = c->builder->CreateAlloca(c->ObjectTy, 0, args.at(i));
+      AllocaInst* alloca = c->builder->CreateAlloca(c->getObjectTy(), 0, args.at(i));
       c->builder->CreateStore(AI, alloca);
       c->symtab->store(args.at(i), alloca);
   }
@@ -241,7 +241,7 @@ Value* FunctionNode::codegen(Compiler* c) {
       c->builder->CreateRet(returnValue);
     }
     else {
-      Value* Qnil = c->builder->CreateLoad(c->Qnil);
+      Value* Qnil = c->builder->CreateLoad(c->getNil());
       c->builder->CreateRet(Qnil);
     }
   }
@@ -256,9 +256,9 @@ Value* FunctionNode::codegen(Compiler* c) {
 
   // get a pointer to the generated function
   std::vector<const Type*> funcPtrArgTypes;
-  funcPtrArgTypes.push_back(c->ObjectTy);
-  FunctionType* funcPtrTy = FunctionType::get(c->ObjectTy, funcPtrArgTypes, true);
-  const Type* FunctionPtr = PointerType::get(funcPtrTy, 0);
+  funcPtrArgTypes.push_back(c->getObjectTy());
+  FunctionType* funcPtrTy = FunctionType::get(c->getObjectTy(), funcPtrArgTypes, true);
+  Type* FunctionPtr = PointerType::get(funcPtrTy, 0);
   Value* funcPtr = c->builder->CreateBitCast(func, FunctionPtr);
 
   Function* newFunc = c->module->getFunction("Function_new");
@@ -274,7 +274,7 @@ Value* IfNode::codegen(Compiler* c) {
 
   CallSlotNode* boolean = new CallSlotNode(cond, "bool");
 
-  Value* Qtrue = c->builder->CreateLoad(c->Qtrue);
+  Value* Qtrue = c->builder->CreateLoad(c->getBool(true));
   Value* EndCond = c->builder->CreateICmpEQ(boolean->codegen(c), Qtrue);
   c->builder->CreateCondBr(EndCond, ThenBB, ElseBB);
 
@@ -306,7 +306,7 @@ Value* WhileNode::codegen(Compiler* c) {
 
   CallSlotNode* boolean = new CallSlotNode(cond, "bool");
 
-  Value* Qtrue = c->builder->CreateLoad(c->Qtrue);
+  Value* Qtrue = c->builder->CreateLoad(c->getBool(true));
   Value* EndCond = c->builder->CreateICmpEQ(boolean->codegen(c), Qtrue);
   c->builder->CreateCondBr(EndCond, LoopBB, AfterBB);
 
@@ -347,11 +347,11 @@ Value* TryNode::codegen(Compiler* c) {
   Value* personality = c->builder->CreatePointerCast(proty_personality, Type::getInt8PtrTy(getGlobalContext()));
   Function* eh_selector = c->module->getFunction("llvm.eh.selector");
   Value* selector = c->builder->CreateCall3(eh_selector, exception_ptr, personality,
-                                            c->builder->CreateLoad(c->Qnil));
+                                            c->builder->CreateLoad(c->getNil()));
 
   c->symtab->enterScope();
 
-  //AllocaInst* alloca = c->builder->CreateAlloca(c->ObjectTy, 0, ename);
+  //AllocaInst* alloca = c->builder->CreateAlloca(c->getObjectTy(), 0, ename);
   //c->builder->CreateStore(exception, alloca);
   //c->symtab->store(ename, alloca);
 
@@ -373,6 +373,27 @@ Value* TryNode::codegen(Compiler* c) {
 
   // finally
   c->builder->SetInsertPoint(finallyBB);
+
+  return 0;
+}
+
+Value* PropertyNode::codegen(Compiler* c) {
+  if (name == "export") {
+    for (int i = 0; i < values.size(); i++) {
+      std::string varname = "prmod_";
+      varname.append(c->module->getModuleIdentifier());
+      varname.append("_" + values.at(i));
+
+      Value* variable = new GlobalVariable(*c->module, c->getObjectTy(), false,
+                                           GlobalValue::ExternalLinkage,
+                                           UndefValue::get(c->getObjectTy()), varname);
+
+      c->symtab->store(values.at(i), variable);
+    }
+  }
+  else {
+    throw new CompileError("unknown property name '" + name + "'");
+  }
 
   return 0;
 }

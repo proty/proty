@@ -1,4 +1,4 @@
-.TH PROTY "1" "2011-06-25" "" "Proty Programmers Reference Guide"
+.TH PROTY "1" "2011-08-07" "" "Proty Programmers Reference Guide"
 .SH NAME
 proty \- a dynamic, prototype based programming language
 .SH SYNOPSIS
@@ -25,17 +25,20 @@ proty \- a dynamic, prototype based programming language
 
 .SH OPTIONS
 .TP
-.BI "\-c " file
-write llvm bitcode to file
+.B \-c
+write compiled module to file
 .TP
 .B \-d
-write llvm intermediate code to stdout
+dump llvm intermediate code to stdout
 .TP
 .B \-g
-generate debug symbols
+generate debugging symbols
 .TP
 .B \-h, \-\-help
 display a compact option overview
+.TP
+.BI "\-o " file
+set the output file
 .TP
 .B \--version
 display version information

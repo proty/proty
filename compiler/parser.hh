@@ -27,6 +27,7 @@ private:
   Node* parseIf();
   Node* parseWhile();
   Node* parseTry();
+  Node* parseProperty();
 };
 
 #endif

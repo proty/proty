@@ -1,6 +1,7 @@
 #include "compiler.hh"
 #include "ast.hh"
 #include "symtab.hh"
+#include "runtime.hh"
 #include "program.hh"
 #include "llvm.hh"
 #include "error.hh"
@@ -35,55 +36,30 @@ Compiler::Compiler(std::string name, bool interactive) {
   fpm->add(createGVNPass());
   fpm->add(createCFGSimplificationPass());
 
-  // link in the runtime
-  loadModule("runtime", false);
-
-  // get the object type which is defined in runtime.bc
-  ObjectTy = PointerType::get(module->getTypeByName("struct.Object"), 0);
-
-  // define proty runtime classes
   symtab->enterScope();
-  symtab->store("Object", module->getNamedValue("Object_proto"));
-  symtab->store("Integer", module->getNamedValue("Integer_proto"));
-  symtab->store("Float", module->getNamedValue("Float_proto"));
-  symtab->store("String", module->getNamedValue("String_proto"));
-  symtab->store("Exception", module->getNamedValue("Exception_proto"));
-  symtab->store("Hash", module->getNamedValue("Hash_proto"));
-  symtab->store("List", module->getNamedValue("List_proto"));
 
-  Qnil = module->getNamedValue("Qnil");
-  symtab->store("nil", Qnil);
-
-  Qtrue = module->getNamedValue("Qtrue");
-  symtab->store("true", Qtrue);
-
-  Qfalse = module->getNamedValue("Qfalse");
-  symtab->store("false", Qfalse);
-
-  // declare llvm functions
-  getDeclaration(module, llvm::Intrinsic::eh_exception);
-  getDeclaration(module, llvm::Intrinsic::eh_selector);
+  Runtime::declareTypes(this);
 
   if (!interactive) {
-    // create the main function
-    std::vector<const Type*> argTypes;
-    argTypes.push_back(Type::getInt32Ty(getGlobalContext()));
-    argTypes.push_back(PointerType::get(Type::getInt8PtrTy(getGlobalContext()), 0));
-    FunctionType* mainTy = FunctionType::get(Type::getInt32Ty(getGlobalContext()), argTypes, false);
-    Function* main = Function::Create(mainTy, Function::ExternalLinkage, "main", module);
+    Runtime::declareFunctions(this);
 
-    BasicBlock* initBB = BasicBlock::Create(getGlobalContext(), "init", main);
+    // create the init  function
+    FunctionType* initTy = FunctionType::get(Type::getVoidTy(getGlobalContext()), false);
+    initFunction = Function::Create(initTy, Function::ExternalLinkage, name + "_init", module);
+    BasicBlock* initBB = BasicBlock::Create(getGlobalContext(), "init", initFunction);
     builder->SetInsertPoint(initBB);
 
     // init the runtime
     Function* runtime_init = module->getFunction("runtime_init");
     builder->CreateCall(runtime_init);
 
-    BasicBlock* mainBB = BasicBlock::Create(getGlobalContext(), "start", main);
+    BasicBlock* mainBB = BasicBlock::Create(getGlobalContext(), "start", initFunction);
     builder->CreateBr(mainBB);
     builder->SetInsertPoint(mainBB);
   }
   else {
+    loadModule("runtime", false);
+
     // init the runtime (now)
     Function* runtime_init = module->getFunction("runtime_init");
     void (*init)() = (void (*)())executionEngine->getPointerToFunction(runtime_init);
@@ -107,7 +83,7 @@ void Compiler::run(Node* root) {
   if (!interactive) return;
   FunctionType* funcTy = FunctionType::get(Type::getVoidTy(getGlobalContext()), false);
   Function* func = Function::Create(funcTy, Function::ExternalLinkage, "interactive", module);
-  BasicBlock* BB= BasicBlock::Create(getGlobalContext(), "entry", func);
+  BasicBlock* BB = BasicBlock::Create(getGlobalContext(), "entry", func);
   builder->CreateBr(BB);
   builder->SetInsertPoint(BB);
 
@@ -119,16 +95,23 @@ void Compiler::run(Node* root) {
 }
 
 Program* Compiler::getProgram() {
-  BasicBlock* currBB = builder->GetInsertBlock();
-  if (!currBB->getTerminator()) {
-    Value* status = ConstantInt::get(Type::getInt32Ty(getGlobalContext()), 0);
-    builder->CreateRet(status);
-  }
+  builder->CreateRetVoid();
 
-  // verify and optimize main
-  Function* main = module->getFunction("main");
-  verifyFunction(*main);
-  fpm->run(*main);
+  // verify and optimize init function
+  verifyFunction(*initFunction);
+  fpm->run(*initFunction);
+
+  // create main function
+  std::vector<const Type*> argTypes;
+  argTypes.push_back(Type::getInt32Ty(getGlobalContext()));
+  argTypes.push_back(PointerType::get(Type::getInt8PtrTy(getGlobalContext()), 0));
+  FunctionType* mainTy = FunctionType::get(Type::getInt32Ty(getGlobalContext()), argTypes, false);
+  Function* main = Function::Create(mainTy, Function::ExternalWeakLinkage, "main", module);
+
+  BasicBlock* BB = BasicBlock::Create(getGlobalContext(), "entry", main);
+  builder->SetInsertPoint(BB);
+  builder->CreateCall(initFunction);
+  builder->CreateRet(ConstantInt::get(Type::getInt32Ty(getGlobalContext()), 0));
 
   return new Program(CloneModule(module));
 }
@@ -164,12 +147,23 @@ void Compiler::loadModule(std::string name, bool init) {
     Function* initFunc = module->getFunction(name + "_init");
 
     if (!interactive) {
-      Function* mainFunc = module->getFunction("main");
-      IRBuilder<> tmpBuilder(&mainFunc->getEntryBlock(), --mainFunc->getEntryBlock().end());
+      IRBuilder<> tmpBuilder(&initFunction->getEntryBlock(), --initFunction->getEntryBlock().end());
       tmpBuilder.CreateCall(initFunc);
     }
     else {
       builder->CreateCall(initFunc);
     }
   }
+}
+
+const Type* Compiler::getObjectTy() {
+  return module->getTypeByName("struct.Object")->getPointerTo(0);
+}
+
+Value* Compiler::getBool(bool value) {
+  return module->getNamedValue(value ? "Qtrue" : "Qfalse");
+}
+
+Value* Compiler::getNil() {
+  return module->getNamedValue("Qnil");
 }

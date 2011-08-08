@@ -19,13 +19,14 @@ void version() {
 
 void help() {
   std::cerr <<
-  "Usage: proty [options ...] [file] [arguments]\n"
-  "-d           Dump LLVM code\n"
-  "-g           Enable debug symbols\n"
-  "--help, -h   Shows this message\n"
-  "-c [file]    Write LLVM Bitcode to file\n"
-  "--version    Version and copyright info\n"
-  "--           Stop reading options\n";
+  "Usage: proty [options ...] [input file]\n"
+  "  -c           Compile as module\n"
+  "  -d           Dump LLVM code\n"
+  "  -g           Enable debugging symbols\n"
+  "  --help, -h   Shows this message\n"
+  "  -o [file]    Set output file\n"
+  "  --version    Shows version information\n"
+  "  --           Stop reading options\n";
 }
 
 int main(int argc, char** argv) {
@@ -34,14 +35,16 @@ int main(int argc, char** argv) {
 
   bool dump = false;
   bool debug = false;
+  bool compile = false;
 
   for (int count = 1; count < argc; count++) {
     if (argv[count][0] == '-') {
-      if      (argv[count] == std::string("-d"))          { dump = true; }
+      if      (argv[count] == std::string("-c"))          { compile = true; }
+      else if (argv[count] == std::string("-d"))          { dump = true; }
       else if (argv[count] == std::string("-g"))          { debug = true; }
       else if (argv[count] == std::string("-h"))          { help(); return 0; }
       else if (argv[count] == std::string("--help"))      { help(); return 0; }
-      else if (argv[count] == std::string("-c"))          { output = argv[++count]; }
+      else if (argv[count] == std::string("-o"))          { output = argv[++count]; }
       else if (argv[count] == std::string("--version"))   { version(); return 0; }
       else if (argv[count] == std::string("--"))          { break; }
       else {
@@ -51,6 +54,22 @@ int main(int argc, char** argv) {
       }
     }
     else { file = std::string(argv[count]); break; }
+  }
+
+  std::string module = "<stdin>";
+  if (file != "<stdin>") {
+    int fsize = file.size();
+    module = file.substr(0, fsize-3);
+
+    std::string ext = file.substr(fsize-3, fsize);
+    if (ext != ".pr") {
+      std::cerr << "proty: unknown file extension" << std::endl;
+      return 10;
+    }
+
+    if (output.empty()) {
+      output = module + ".bc";
+    }
   }
 
   Parser* parser = new Parser;
@@ -64,7 +83,7 @@ int main(int argc, char** argv) {
     return 1;
   }
 
-  Compiler* compiler = new Compiler(file);
+  Compiler* compiler = new Compiler(module);
   compiler->debug = debug;
 
   try {
@@ -75,6 +94,12 @@ int main(int argc, char** argv) {
     return 2;
   }
 
+  // link in the runtime if the program will not
+  // be compiled to a module
+  if (!compile) {
+    compiler->loadModule("runtime", false);
+  }
+
   Program* program = compiler->getProgram();
 
   delete parser;
@@ -83,7 +108,7 @@ int main(int argc, char** argv) {
 
   if (dump) program->dump();
 
-  if (!output.empty()) {
+  if (compile) {
     program->writeToFile(output);
   }
   else {

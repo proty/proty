@@ -400,6 +400,25 @@ public:
 
 
 /**
+ * A property.
+ * #$name $value
+ */
+
+class PropertyNode : public Node {
+private:
+  std::string name;
+  std::vector<std::string> values;
+
+public:
+  PropertyNode(std::string name)
+    : name(name) {}
+
+  void addValue(std::string val) { values.push_back(val); }
+  llvm::Value* codegen(Compiler*);
+};
+
+
+/**
  * Holds a llvm::Value.
  */
 

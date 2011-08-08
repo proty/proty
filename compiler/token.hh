@@ -36,6 +36,7 @@ public:
     comma,
     dot,
     colon,
+    hash,
 
     newline,
     eof,

@@ -216,12 +216,15 @@ void Lexer::tokenize() {
       }
     }
 
-    // ignore shebang
     else if (currch == '#') {
+      // ignore shebang
       if (nextch == '!') {
         while (!stream->eof() && stream->get() != '\n');
         add(Token(Token::newline, "new line"));
         lineno++;
+      }
+      else {
+        add(Token(Token::hash, "#"));
       }
     }
 

@@ -101,6 +101,10 @@ Node* Parser::parseBlock() {
         }
         return block;
 
+      case Token::hash:
+        block->add(parseProperty());
+        break;
+
       case Token::newline:
         lexer->next();
         break;
@@ -425,4 +429,27 @@ Node* Parser::parseTry() {
   }
 
   return new TryNode(tryBlock, ename, catchBlock, elseBlock);
+}
+
+Node* Parser::parseProperty() {
+  lexer->match(Token::hash, "#");
+  std::string name = lexer->match(Token::name, "property name").getValue();
+
+  PropertyNode* prop = new PropertyNode(name);
+
+  lexer->match(Token::lpar, "(");
+  while (true) {
+    std::string value = lexer->match(Token::name, "property value").getValue();
+    prop->addValue(value);
+
+    if (lexer->isNext(Token::comma)) {
+      lexer->next();
+    }
+    else {
+      lexer->match(Token::rpar, ")");
+      break;
+    }
+  }
+
+  return prop;
 }

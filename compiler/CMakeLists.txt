@@ -35,6 +35,7 @@ add_library(libproty SHARED
   compiler.cc
   symtab.cc
   codegen.cc
+  runtime.cc
   program.cc
 )
 target_link_libraries(libproty ${LLVM_LIBS})

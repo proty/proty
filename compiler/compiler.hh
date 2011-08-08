@@ -17,6 +17,7 @@ namespace llvm {
   class Module;
   class ExecutionEngine;
   class FunctionPassManager;
+  class Function;
   class Linker;
   class Type;
   class Value;
@@ -27,17 +28,15 @@ namespace llvm {
  */
 
 class Compiler {
+private:
+  llvm::Function* initFunction;
+
 public:
   llvm::IRBuilder<true, llvm::ConstantFolder, llvm::IRBuilderDefaultInserter<true> >* builder;
   llvm::Module* module;
   llvm::ExecutionEngine *executionEngine;
   llvm::FunctionPassManager* fpm;
   llvm::Linker* linker;
-
-  const llvm::Type* ObjectTy;
-  llvm::Value* Qnil;
-  llvm::Value* Qtrue;
-  llvm::Value* Qfalse;
 
   /// contains all imported modules with their path
   std::map<std::string, std::string> modules;
@@ -57,6 +56,10 @@ public:
   void run(Node*);
   Program* getProgram();
   void loadModule(std::string, bool);
+
+  const llvm::Type* getObjectTy();
+  llvm::Value* getBool(bool);
+  llvm::Value* getNil();
 };
 
 #endif
