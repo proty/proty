@@ -131,6 +131,9 @@ public:
    * @returns The declared GlobalVariable
    */
   llvm::Value* declareExternObject(std::string name);
+
+private:
+  void loadDependentModules(llvm::Module*);
 };
 
 #endif

@@ -115,26 +115,13 @@ Program* Compiler::getProgram(bool standalone) {
       linker->LinkInModule((*it).second);
     }
 
-
     // make sure that the runtime is initialized first
     Function* runtime_init = module->getFunction("runtime_init");
     builder->CreateCall(runtime_init);
     modules.erase("runtime");
 
     // load and initialize depended modules
-    Module::lib_iterator depmod_it;
-    for (depmod_it = module->lib_begin(); depmod_it != module->lib_end(); depmod_it++) {
-      std::string depmod = (*depmod_it);
-      if (!depmod.compare(0, 3, "pr:")) {
-        std::string moduleName = depmod.substr(3);
-        Module* m = loadModule(moduleName);
-        linker->LinkInModule(m);
-
-        Function* moduleInit = module->getFunction(moduleName + "_init");
-        builder->CreateCall(moduleInit);
-        modules.erase(moduleName);
-      }
-    }
+    loadDependentModules(module);
 
     // call the initializers for all remaining modules
     for (it = modules.begin(); it != modules.end(); it++) {
@@ -196,6 +183,7 @@ Module* Compiler::loadModule(std::string name) {
 
   if (interactive) {
     linker->LinkInModule(mod);
+    loadDependentModules(mod);
     Function* initFunc = module->getFunction(name + "_init");
     builder->CreateCall(initFunc);
   }
@@ -219,4 +207,20 @@ Value* Compiler::declareExternObject(std::string name) {
   return new GlobalVariable(*module, getObjectTy(), false,
                             GlobalValue::ExternalWeakLinkage,
                             UndefValue::get(getObjectTy()), name);
+}
+
+void Compiler::loadDependentModules(Module* m) {
+  Module::lib_iterator depmod_it;
+  for (depmod_it = m->lib_begin(); depmod_it != m->lib_end(); depmod_it++) {
+    std::string depmod = (*depmod_it);
+    if (!depmod.compare(0, 3, "pr:")) {
+      std::string moduleName = depmod.substr(3);
+      Module* m = loadModule(moduleName);
+      linker->LinkInModule(m);
+
+      Function* moduleInit = module->getFunction(moduleName + "_init");
+      builder->CreateCall(moduleInit);
+      modules.erase(moduleName);
+    }
+  }
 }
