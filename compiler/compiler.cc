@@ -46,16 +46,8 @@ Compiler::Compiler(std::string name, bool interactive) {
     // create the init  function
     FunctionType* initTy = FunctionType::get(Type::getVoidTy(getGlobalContext()), false);
     initFunction = Function::Create(initTy, Function::ExternalLinkage, name + "_init", module);
-    BasicBlock* initBB = BasicBlock::Create(getGlobalContext(), "init", initFunction);
-    builder->SetInsertPoint(initBB);
-
-    // init the runtime
-    Function* runtime_init = module->getFunction("runtime_init");
-    builder->CreateCall(runtime_init);
-
-    BasicBlock* mainBB = BasicBlock::Create(getGlobalContext(), "start", initFunction);
-    builder->CreateBr(mainBB);
-    builder->SetInsertPoint(mainBB);
+    BasicBlock* entryBB = BasicBlock::Create(getGlobalContext(), "entry", initFunction);
+    builder->SetInsertPoint(entryBB);
   }
   else {
     loadModule("runtime");
@@ -117,23 +109,38 @@ Program* Compiler::getProgram(bool standalone) {
     BasicBlock* BB = BasicBlock::Create(getGlobalContext(), "entry", main);
     builder->SetInsertPoint(BB);
 
-    std::map<std::string, Module*>::iterator it;
-
     // link in all modules
+    std::map<std::string, Module*>::iterator it;
     for (it = modules.begin(); it != modules.end(); it++) {
       linker->LinkInModule((*it).second);
     }
+
 
     // make sure that the runtime is initialized first
     Function* runtime_init = module->getFunction("runtime_init");
     builder->CreateCall(runtime_init);
     modules.erase("runtime");
 
-    // call the initializers for all modules
+    // load and initialize depended modules
+    Module::lib_iterator depmod_it;
+    for (depmod_it = module->lib_begin(); depmod_it != module->lib_end(); depmod_it++) {
+      std::string depmod = (*depmod_it);
+      if (!depmod.compare(0, 3, "pr:")) {
+        std::string moduleName = depmod.substr(3);
+        Module* m = loadModule(moduleName);
+        linker->LinkInModule(m);
+
+        Function* moduleInit = module->getFunction(moduleName + "_init");
+        builder->CreateCall(moduleInit);
+        modules.erase(moduleName);
+      }
+    }
+
+    // call the initializers for all remaining modules
     for (it = modules.begin(); it != modules.end(); it++) {
-      std::string module_name = (*it).first;
-      Function* module_init = module->getFunction(module_name + "_init");
-      builder->CreateCall(module_init);
+      std::string moduleName = (*it).first;
+      Function* moduleInit = module->getFunction(moduleName + "_init");
+      builder->CreateCall(moduleInit);
     }
 
     // call the current module's init function
@@ -142,11 +149,26 @@ Program* Compiler::getProgram(bool standalone) {
     // return exit status 0
     builder->CreateRet(ConstantInt::get(Type::getInt32Ty(getGlobalContext()), 0));
   }
+  // if this program is not standalone
+  else {
+    std::map<std::string, Module*>::iterator it;
+
+    // add dependencies for all modules
+    for (it = modules.begin(); it != modules.end(); it++) {
+      module->addLibrary("pr:" + (*it).first);
+    }
+  }
 
   return new Program(CloneModule(module));
 }
 
 Module* Compiler::loadModule(std::string name) {
+  // check if the module is already loaded, if not, load it!
+  std::map<std::string, Module*>::iterator it = modules.find(name);
+  if (it != modules.end()) {
+    return (*it).second;
+  }
+
   sys::Path path;
 
   // check local files
