@@ -75,7 +75,7 @@ Compiler::~Compiler() {
   delete linker;
 }
 
-void Compiler::addNode(Node* root) {
+void Compiler::compile(Node* root) {
   root->codegen(this);
 }
 

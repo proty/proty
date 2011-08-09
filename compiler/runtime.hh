@@ -2,7 +2,8 @@
 #define PROTY_RUNTIME
 
 /**
- * Manages functions and types that are needed to use the runtime library.
+ * Manages functions and types that are needed to use the runtime
+ * library.
  */
 
 class Runtime {

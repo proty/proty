@@ -35,7 +35,7 @@ int main(int argc, char** argv) {
 
   bool dump = false;
   bool debug = false;
-  bool module = false;
+  bool compileModule = false;
 
   for (int count = 1; count < argc; count++) {
     if (argv[count][0] == '-') {
@@ -43,7 +43,7 @@ int main(int argc, char** argv) {
       else if (argv[count] == std::string("-g"))          { debug = true; }
       else if (argv[count] == std::string("-h"))          { help(); return 0; }
       else if (argv[count] == std::string("--help"))      { help(); return 0; }
-      else if (argv[count] == std::string("-m"))          { module = true; }
+      else if (argv[count] == std::string("-m"))          { compileModule = true; }
       else if (argv[count] == std::string("-o"))          { output = argv[++count]; }
       else if (argv[count] == std::string("--version"))   { version(); return 0; }
       else if (argv[count] == std::string("--"))          { break; }
@@ -56,10 +56,10 @@ int main(int argc, char** argv) {
     else { file = std::string(argv[count]); break; }
   }
 
-  std::string module_name = "<stdin>";
+  std::string moduleName = "<stdin>";
   if (file != "<stdin>") {
     int fsize = file.size();
-    module_name = file.substr(0, fsize-3);
+    moduleName = file.substr(0, fsize-3);
 
     std::string ext = file.substr(fsize-3, fsize);
     if (ext != ".pr") {
@@ -67,8 +67,8 @@ int main(int argc, char** argv) {
       return 10;
     }
 
-    if (module && output.empty()) {
-      output = module_name + ".bc";
+    if (compileModule && output.empty()) {
+      output = moduleName + ".bc";
     }
   }
 
@@ -83,18 +83,18 @@ int main(int argc, char** argv) {
     return 1;
   }
 
-  Compiler* compiler = new Compiler(module_name);
+  Compiler* compiler = new Compiler(moduleName);
   compiler->debug = debug;
 
   try {
-    compiler->addNode(root);
+    compiler->compile(root);
   }
   catch (Error* e) {
     e->printMessage();
     return 2;
   }
 
-  Program* program = compiler->getProgram(!module);
+  Program* program = compiler->getProgram(!compileModule);
 
   delete parser;
   delete root;
