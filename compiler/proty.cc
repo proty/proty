@@ -58,14 +58,24 @@ int main(int argc, char** argv) {
 
   std::string moduleName = "<stdin>";
   if (file != "<stdin>") {
-    int fsize = file.size();
-    moduleName = file.substr(0, fsize-3);
+    moduleName = file;
+    int start = 0;
+    int length = moduleName.size();
 
-    std::string ext = file.substr(fsize-3, fsize);
+    // strip path if necessary
+    size_t found_slash = moduleName.find_last_of("/");
+    if (found_slash < length) start = found_slash + 1;
+
+    // strip and verify file extension
+    std::string ext = moduleName.substr(length-3, 3);
+    length = length - start - 3;
+
     if (ext != ".pr") {
       std::cerr << "proty: unknown file extension" << std::endl;
       return 10;
     }
+
+    moduleName = moduleName.substr(start, length);
 
     if (compileModule && output.empty()) {
       output = moduleName + ".bc";

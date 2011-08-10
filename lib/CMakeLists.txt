@@ -3,6 +3,16 @@ set(CMAKE_C_FLAGS "-emit-llvm -fexceptions ${CMAKE_C_FLAGS}")
 
 include_directories(.)
 
+macro(proty_module TARGET SOURCE)
+  add_custom_target(${TARGET} ALL
+    COMMAND proty -o ${CMAKE_BINARY_DIR}/lib/${TARGET}
+                  -m ${CMAKE_SOURCE_DIR}/lib/${SOURCE}
+    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+    DEPENDS proty
+    COMMENT "Compiling proty module ${TARGET}"
+    SOURCES ${SOURCE})
+endmacro(proty_module)
+
 add_executable(lib/runtime.bc
   runtime/object.c
   runtime/function.c
@@ -32,13 +42,14 @@ add_executable(lib/os.bc os/os.c)
 add_executable(lib/math.bc math/math.c)
 add_executable(lib/time.bc time/time.c)
 
+proty_module(test.bc test.pr)
+
 install(TARGETS
     lib/runtime.bc
     lib/io.bc
     lib/net.bc
     lib/os.bc
     lib/math.bc
-    lib/time.bc
 DESTINATION lib/proty)
 
 # install runtime headers

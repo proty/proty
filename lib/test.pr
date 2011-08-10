@@ -1,7 +1,9 @@
-assert = do x
+#export(assert)
+
+assert = do(x)
   if x
-    io.print("+")
+    io:print("+")
   else
-    io.print("-")
+    io:print("-")
   end
 end
