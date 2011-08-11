@@ -205,7 +205,7 @@ Value* Compiler::getNil() {
 
 Value* Compiler::declareExternObject(std::string name) {
   return new GlobalVariable(*module, getObjectTy(), false,
-                            GlobalValue::ExternalWeakLinkage,
+                            GlobalValue::CommonLinkage,
                             UndefValue::get(getObjectTy()), name);
 }
 

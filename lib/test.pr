@@ -2,8 +2,8 @@
 
 assert = do(x)
   if x
-    io:print("+")
+    io:write("+")
   else
-    io:print("-")
+    io:write("-")
   end
 end

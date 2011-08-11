@@ -121,18 +121,21 @@ Node* Parser::parseBlock() {
 }
 
 Node* Parser::parseExpression() {
-  Node* expr = parsePrimary();
+  Node* expr;
+
+  // expression in parentheses
+  if (lexer->isNext(Token::lpar)) {
+    lexer->next();
+    expr = parseExpression();
+    lexer->match(Token::rpar, ")");
+  }
+  else {
+    expr = parsePrimary();
+  }
 
   // binary operation
   if (lexer->isNext(Token::binaryop)) {
     expr = parseOperation(expr, 0);
-  }
-
-  // expression in parentheses
-  else if (lexer->isNext(Token::lpar)) {
-    lexer->next();
-    expr = parseExpression();
-    lexer->match(Token::rpar, ")");
   }
 
   // variable assignment

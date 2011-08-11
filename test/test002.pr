@@ -1,11 +1,9 @@
-test = load("test")
-
 a = 1337
-test.assert(a == 1337)
+test:assert(a == 1337)
 
 b = 5
 b = b + 102
-test.assert(b == 107)
+test:assert(b == 107)
 
 s = "test"
-test.assert(s == "test")
+test:assert(s == "test")
