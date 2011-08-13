@@ -133,8 +133,17 @@ Node* Parser::parseExpression() {
     expr = parsePrimary();
   }
 
+
+  // inplace operation
+  if (lexer->isNext(Token::binaryop) && lexer->peek(1).getType() == Token::assign) {
+    std::string op = lexer->next().getValue() + "=";
+    lexer->next();
+    Node* assignExpr = parseExpression();
+    expr = new BinaryOpNode(op, expr, assignExpr);
+  }
+
   // binary operation
-  if (lexer->isNext(Token::binaryop)) {
+  else if (lexer->isNext(Token::binaryop)) {
     expr = parseOperation(expr, 0);
   }
 
@@ -144,8 +153,8 @@ Node* Parser::parseExpression() {
 
     // verify that expr is a string
     if (!expr->getValue().empty()) {
-      Node* assign_expr = parseExpression();
-      expr = new AssignNode(expr->getValue(), assign_expr);
+      Node* assignExpr = parseExpression();
+      expr = new AssignNode(expr->getValue(), assignExpr);
     }
     else {
       throw new ParseError(lexer->getFilename(), t.getLine(),

@@ -7,6 +7,10 @@ Object* Integer_new(int value) {
   return new;
 }
 
+/*
+ * Type conversions
+ */
+
 Object* Integer_str(Object* self) {
   char buffer[20];
   sprintf(buffer, "%d", self->data.i);
@@ -16,6 +20,10 @@ Object* Integer_str(Object* self) {
 Object* Integer_bool(Object* self) {
   return self->data.i ? Qtrue : Qfalse;
 }
+
+/*
+ * Binary operations
+ */
 
 Object* Integer_add(Object* self, Object* other) {
   return Integer_new(self->data.i + other->data.i);
@@ -57,6 +65,30 @@ Object* Integer_ge(Object* self, Object* other) {
   return self->data.i >= other->data.i ? Qtrue : Qfalse;
 }
 
+/*
+ * Inplace operations
+ */
+
+Object* Integer_iadd(Object* self, Object* other) {
+  self->data.i += other->data.i;
+  return self;
+}
+
+Object* Integer_isub(Object* self, Object* other) {
+  self->data.i += other->data.i;
+  return self;
+}
+
+Object* Integer_imul(Object* self, Object* other) {
+  self->data.i += other->data.i;
+  return self;
+}
+
+Object* Integer_idiv(Object* self, Object* other) {
+  self->data.i += other->data.i;
+  return self;
+}
+
 void Integer_initProto() {
   Object_setSlot(Integer_proto, "str", FUNC(Integer_str, 1));
   Object_setSlot(Integer_proto, "bool", FUNC(Integer_bool, 1));
@@ -72,4 +104,9 @@ void Integer_initProto() {
   Object_setSlot(Integer_proto, ">", FUNC(Integer_gt, 2));
   Object_setSlot(Integer_proto, "<=", FUNC(Integer_le, 2));
   Object_setSlot(Integer_proto, ">=", FUNC(Integer_ge, 2));
+
+  Object_setSlot(Integer_proto, "+=", FUNC(Integer_iadd, 2));
+  Object_setSlot(Integer_proto, "-=", FUNC(Integer_isub, 2));
+  Object_setSlot(Integer_proto, "*=", FUNC(Integer_imul, 2));
+  Object_setSlot(Integer_proto, "/=", FUNC(Integer_idiv, 2));
 }

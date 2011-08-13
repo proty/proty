@@ -1,4 +1,9 @@
-** Proty 0.3 2011-08-06
+* Proty 0.4 2011-08-20
+
+ - implements inplace operations
+ - fixes parser bugs
+
+* Proty 0.3 2011-08-06
 
  - improves error handling
  - implements symbol object and syntax
@@ -7,7 +12,7 @@
  - implements subscript operator syntax
  - new module syntax and api
 
-** Proty 0.2 2011-07-16
+* Proty 0.2 2011-07-16
 
  - adds 'ipr', an interactive interpreter
  - adds 'math' library
@@ -15,7 +20,7 @@
  - adds 'net' library
  - implements double object and syntax
 
-** Proty 0.1 2011-06-30
+* Proty 0.1 2011-06-30
 
  - implements while and if statements
  - implements verification of call parameter count
