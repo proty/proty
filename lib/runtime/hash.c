@@ -11,9 +11,8 @@ typedef struct {
 } Hash;
 
 /*
- * Generates an integer hash of a string value.
- * This function should generate hashes
- * fast and with a low collision rate.
+ * Generates an integer hash of a string value. This function should
+ * generate hashes fast and with a low collision rate.
  */
 
 unsigned int hash_str(const char* str) {

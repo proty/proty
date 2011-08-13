@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <stdarg.h>
+#include <stdio.h>
 #include "runtime.h"
 
 Object* Object_new(Object* proto) {
@@ -31,6 +32,12 @@ Object* Object_getSlot(Object* self, const char* key) {
 }
 
 Object* Object_call(Object* self, int argc, ...) {
+  /// @todo: throw exception
+  if (self->proto != Function_proto) {
+    printf("proty: called non-function object\n");
+    abort();
+  }
+
   va_list varargs;
 
   Object** argv = malloc(sizeof(Object*)*argc);

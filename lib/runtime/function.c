@@ -24,8 +24,8 @@ Object* Function_call(Object* self, int argc, Object* argv[]) {
 
   /// @todo: throw exception
   if (argc != function->argc) {
-    printf("wrong argument count, expected %i, got %i", function->argc, argc);
-    exit(0);
+    printf("proty: call with wrong argument count, expected %i, got %i\n", function->argc, argc);
+    abort();
   }
 
   FuncPtr func = function->func;
