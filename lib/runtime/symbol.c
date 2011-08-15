@@ -13,17 +13,16 @@ Symtab* symtab;
 
 void SymbolTable_init() {
   symtab = malloc(sizeof(Symtab));
-  symtab->keys = malloc(sizeof(char*)*64);
-  memset(symtab->keys, 0, 64*sizeof(const char*));
+  symtab->keys = calloc(sizeof(char*), ma64);
   symtab->values = malloc(sizeof(Object*)*64);
+
   symtab->bounds = 64;
   symtab->size = 0;
 }
 
 /*
- * Generates an integer hash of a string value.
- * This function should generate hashes
- * fast and with a low collision rate.
+ * Generates an integer hash of a string value. This function should
+ * generate hashes fast and with a low collision rate.
  */
 
 unsigned int hash_string(const char* str) {
@@ -37,9 +36,8 @@ unsigned int hash_string(const char* str) {
 }
 
 /*
- * Returns a symbol for the given string.
- * If this symbol is not already in the
- * symbol table, a new symbol will be created.
+ * Returns a symbol for the given string. If this symbol is not
+ * already in the symbol table, a new symbol will be created.
  */
 
 Object* Symbol_get(const char* id) {

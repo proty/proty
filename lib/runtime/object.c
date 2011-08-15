@@ -40,7 +40,7 @@ Object* Object_call(Object* self, int argc, ...) {
 
   va_list varargs;
 
-  Object** argv = malloc(sizeof(Object*)*argc);
+  Object** argv = alloca(sizeof(Object*)*argc);
 
   va_start(varargs, argc);
   for (int i = 0; i < argc; i++) {
@@ -49,7 +49,6 @@ Object* Object_call(Object* self, int argc, ...) {
   va_end(varargs);
 
   Object* ret = Function_call(self, argc, argv);
-  free(argv);
 
   return ret;
 }

@@ -80,10 +80,8 @@ Object* Hash_init(Object* self) {
   hash->size = 0;
   hash->bounds = 8;
 
-  hash->keys = malloc(sizeof(Object*)*hash->bounds);
+  hash->keys = calloc(sizeof(Object*), hash->bounds);
   hash->values = malloc(sizeof(Object*)*hash->bounds);
-
-  memset(hash->keys, 0, hash->bounds*sizeof(Object*));
 
   self->data.ptr = hash;
   return self;
@@ -100,10 +98,8 @@ Object* Hash_set(Object* self, Object* key, Object* value) {
 
   // double the hash bounds if the hash is more than 75% full
   if ((hash->size*100)/hash->bounds > 75) {
-    Object** tmpKeys = malloc(sizeof(Object*)*hash->bounds*2);
+    Object** tmpKeys = calloc(sizeof(Object*), hash->bounds*2);
     Object** tmpValues = malloc(sizeof(Object*)*hash->bounds*2);
-
-    memset(tmpKeys, 0, sizeof(Object*)*hash->bounds*2);
 
     // rehash each key
     for (int i = 0; i < hash->bounds; i++) {
