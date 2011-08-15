@@ -13,7 +13,7 @@ Symtab* symtab;
 
 void SymbolTable_init() {
   symtab = malloc(sizeof(Symtab));
-  symtab->keys = calloc(sizeof(char*), ma64);
+  symtab->keys = calloc(sizeof(char*), 64);
   symtab->values = malloc(sizeof(Object*)*64);
 
   symtab->bounds = 64;
