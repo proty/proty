@@ -15,7 +15,7 @@ typedef struct {
  * generate hashes fast and with a low collision rate.
  */
 
-unsigned int hash_str(const char* str) {
+static unsigned int hash_str(const char* str) {
   unsigned int hash = 5381;
   int c;
 
@@ -30,7 +30,7 @@ unsigned int hash_str(const char* str) {
  * http://www.concentric.net/~ttwang/tech/addrhash.htm
  */
 
-unsigned int hash_addr(void* addr) {
+static unsigned int hash_addr(void* addr) {
   unsigned int key = (unsigned int)addr;
   return (key >> 3) * 2654435761;
 }
@@ -39,7 +39,7 @@ unsigned int hash_addr(void* addr) {
  * Invokes the matching hash function.
  */
 
-unsigned int hash_obj(Object* obj) {
+static unsigned int hash_obj(Object* obj) {
   if (obj->proto == String_proto) {
     return hash_str(obj->data.ptr);
   }
@@ -56,17 +56,17 @@ unsigned int hash_obj(Object* obj) {
  * Tests objects for equality.
  */
 
-int cmp_obj(Object* a, Object* b) {
-  if (a->proto == String_proto) {
+static int cmp_obj(Object* a, Object* b) {
+  if (a->proto == Symbol_proto) {
+    return a == b;
+  }
+  else if (a->proto == String_proto) {
     if (b->proto == String_proto) {
       return strcmp(a->data.ptr, b->data.ptr) ? 0 : 1;
     }
     else {
       return 0;
     }
-  }
-  else if (a->proto == Symbol_proto) {
-    return a == b;
   }
   else {
     Object* h = Object_getSlot(a, "==");
@@ -98,15 +98,17 @@ Object* Hash_set(Object* self, Object* key, Object* value) {
 
   // double the hash bounds if the hash is more than 75% full
   if ((hash->size*100)/hash->bounds > 75) {
-    Object** tmpKeys = calloc(sizeof(Object*), hash->bounds*2);
-    Object** tmpValues = malloc(sizeof(Object*)*hash->bounds*2);
+    int newBounds = hash->bounds * 2;
+
+    Object** tmpKeys = calloc(sizeof(Object*), newBounds);
+    Object** tmpValues = malloc(sizeof(Object*)*newBounds);
 
     // rehash each key
     for (int i = 0; i < hash->bounds; i++) {
       if (hash->keys[i]) {
-        unsigned int pos = hash_obj(hash->keys[i]) % (hash->bounds*2);
+        unsigned int pos = hash_obj(hash->keys[i]) % newBounds;
         while (tmpKeys[pos] && !cmp_obj(hash->keys[i], tmpKeys[pos])) {
-          pos = (pos+1) % hash->bounds;
+          pos = (pos+1) % newBounds;
         }
         tmpKeys[pos] = hash->keys[i];
         tmpValues[pos] = hash->values[i];
@@ -119,7 +121,7 @@ Object* Hash_set(Object* self, Object* key, Object* value) {
     hash->keys = tmpKeys;
     hash->values = tmpValues;
 
-    hash->bounds *= 2;
+    hash->bounds = newBounds;
   }
 
   unsigned int pos = hash_obj(key) % hash->bounds;

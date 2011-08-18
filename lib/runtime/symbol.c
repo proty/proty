@@ -25,7 +25,7 @@ void SymbolTable_init() {
  * generate hashes fast and with a low collision rate.
  */
 
-unsigned int hash_string(const char* str) {
+static unsigned int hash_string(const char* str) {
   unsigned int hash = 5381;
   int c;
 
