@@ -9,7 +9,7 @@ using namespace llvm;
 Value* BlockNode::codegen(Compiler* c) {
   std::vector<Node*>::iterator it;
   Value* last = 0;
-  for (it = nodes.begin(); it != nodes.end(); it++) {
+  for (it = nodes.begin(); it != nodes.end(); ++it) {
     last = (*it)->codegen(c);
   }
   return last;
@@ -158,7 +158,7 @@ Value* HashNode::codegen(Compiler* c) {
   Function* set = c->module->getFunction("Hash_set");
 
   std::map<Node*, Node*>::iterator it;
-  for(it = items.begin(); it != items.end(); it++) {
+  for(it = items.begin(); it != items.end(); ++it) {
     Value* k = it->first->codegen(c);
     Value* v = it->second->codegen(c);
     c->builder->CreateCall3(set, hash, k, v);

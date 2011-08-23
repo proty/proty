@@ -111,7 +111,7 @@ Program* Compiler::getProgram(bool standalone) {
 
     // link in all modules
     std::map<std::string, Module*>::iterator it;
-    for (it = modules.begin(); it != modules.end(); it++) {
+    for (it = modules.begin(); it != modules.end(); ++it) {
       linker->LinkInModule((*it).second);
     }
 
@@ -124,7 +124,7 @@ Program* Compiler::getProgram(bool standalone) {
     loadDependentModules(module);
 
     // call the initializers for all remaining modules
-    for (it = modules.begin(); it != modules.end(); it++) {
+    for (it = modules.begin(); it != modules.end(); ++it) {
       std::string moduleName = (*it).first;
       Function* moduleInit = module->getFunction(moduleName + "_init");
       builder->CreateCall(moduleInit);
@@ -141,7 +141,7 @@ Program* Compiler::getProgram(bool standalone) {
     std::map<std::string, Module*>::iterator it;
 
     // add dependencies for all modules
-    for (it = modules.begin(); it != modules.end(); it++) {
+    for (it = modules.begin(); it != modules.end(); ++it) {
       module->addLibrary("pr:" + (*it).first);
     }
   }
