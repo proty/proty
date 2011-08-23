@@ -28,7 +28,7 @@ public:
 
   void tokenize();
 
-  std::string getFilename() { return filename; }
+  const std::string getFilename() { return filename; }
 };
 
 #endif

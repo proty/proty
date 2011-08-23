@@ -52,14 +52,14 @@ private:
 
 public:
   Token(Type type, std::string value, int precedence=0)
-    : type(type), value(value), precedence(precedence) {}
+    : type(type), value(value), precedence(precedence), lineno(0) {}
 
-  Type getType() { return type; }
-  std::string getValue() { return value; }
-  int getPrecedence() { return precedence; }
+  const Type getType() { return type; }
+  const std::string getValue() { return value; }
+  const int getPrecedence() { return precedence; }
 
   void setLine(int lineno) { this->lineno = lineno; }
-  int getLine() { return lineno; }
+  const int getLine() { return lineno; }
 };
 
 #endif

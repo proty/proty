@@ -9,7 +9,7 @@
 
 using namespace llvm;
 
-Compiler::Compiler(std::string name, bool interactive) {
+Compiler::Compiler(std::string name, bool debug, bool interactive) {
   builder = new IRBuilder<>(getGlobalContext());
   module = new Module(name, getGlobalContext());
   linker = new Linker(name, module);
@@ -17,7 +17,7 @@ Compiler::Compiler(std::string name, bool interactive) {
   symtab = new SymbolTable();
   toplevel = true;
 
-  debug = false;
+  this->debug = debug;
   this->interactive = interactive;
 
   // setup the ExecutionEngine

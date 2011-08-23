@@ -17,7 +17,7 @@ int main(int argc, char** argv) {
   std::cout << std::endl;
 
   Parser* parser = new Parser;
-  Compiler* compiler = new Compiler("<ipr>", true);
+  Compiler* compiler = new Compiler("<ipr>", false, true);
 
   while (true) {
     char* input = readline(">>> ");

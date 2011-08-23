@@ -93,8 +93,7 @@ int main(int argc, char** argv) {
     return 1;
   }
 
-  Compiler* compiler = new Compiler(moduleName);
-  compiler->debug = debug;
+  Compiler* compiler = new Compiler(moduleName, debug);
 
   try {
     compiler->compile(root);

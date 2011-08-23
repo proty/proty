@@ -63,9 +63,10 @@ public:
    * needed for compilation.
    *
    * @param name Name for the Module
-   * @param interactive True when the Compiler is used interactive.
+   * @param interactive True if the Compiler is used interactive.
+   * @param debug True if the Compiler should include debugging symbols.
    */
-  Compiler(std::string name, bool interactive=false);
+  Compiler(std::string name, bool debug=false, bool interactive=false);
 
   ~Compiler();
 

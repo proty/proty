@@ -1,7 +1,7 @@
 #ifndef RUNTIME_H
 #define RUNTIME_H
 
-typedef struct Object Object;
+typedef struct Object_t Object;
 typedef Object* (*FuncPtr)(Object*, ...);
 
 #include "object.h"

@@ -116,4 +116,9 @@ void Runtime::declareFunctions(Compiler* c) {
   // exception handling declarations
   getDeclaration(c->module, llvm::Intrinsic::eh_exception);
   getDeclaration(c->module, llvm::Intrinsic::eh_selector);
+
+  // debugging functions
+  if (c->debug) {
+    getDeclaration(c->module, llvm::Intrinsic::dbg_declare);
+  }
 }
