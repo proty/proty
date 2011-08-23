@@ -11,7 +11,7 @@ private:
   Lexer* lexer;
 
 public:
-  Parser() {}
+  Parser() : lexer(0) {}
   Node* parseFile(std::string);
   Node* parseStr(char*);
 
