@@ -134,6 +134,25 @@ public:
 
 
 /**
+ * A unary operation.
+ * $op $obj
+ */
+
+class UnaryOpNode : public Node {
+private:
+  std::string op;
+  Node* obj;
+
+public:
+  UnaryOpNode(std::string op, Node* obj)
+    : op(op), obj(obj) {}
+  ~UnaryOpNode() { delete obj; }
+
+  llvm::Value* codegen(Compiler*);
+};
+
+
+/**
  * A binary operation.
  * $lhs $op $rhs
  */

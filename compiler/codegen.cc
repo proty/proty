@@ -15,6 +15,15 @@ Value* BlockNode::codegen(Compiler* c) {
   return last;
 }
 
+Value* UnaryOpNode::codegen(Compiler* c) {
+  GetSlotNode* getslot = new GetSlotNode(obj, op);
+
+  CallNode* call = new CallNode(getslot);
+  call->setSelf(obj);
+
+  return call->codegen(c);
+}
+
 Value* BinaryOpNode::codegen(Compiler* c) {
   GetSlotNode* getslot = new GetSlotNode(lhs, op);
 

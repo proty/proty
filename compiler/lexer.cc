@@ -168,7 +168,7 @@ void Lexer::tokenize() {
         stream->get();
         add(Token(Token::binaryop, ">=", 20));
       }
-      else add(Token(Token::binaryop, ">", 15));
+      else add(Token(Token::binaryop, ">", 20));
     }
 
     // < and <=
@@ -180,19 +180,32 @@ void Lexer::tokenize() {
       else add(Token(Token::binaryop, "<", 20));
     }
 
-    // != and @todo: !
+    // != and !
     else if (currch == '!') {
       if (nextch == '=') {
         stream->get();
         add(Token(Token::binaryop, "!=", 20));
       }
-      else add(Token(Token::unknown, "unknown"));
+      else add(Token(Token::excl, "!"));
+    }
+
+    // &&
+    else if (currch == '&' && nextch == '&') {
+      stream->get();
+      add(Token(Token::binaryop, "&&", 5));
+    }
+
+    // ||
+    else if (currch == '|' && nextch == '|') {
+      stream->get();
+      add(Token(Token::binaryop, "||", 5));
     }
 
     else if (currch == '+') add(Token(Token::binaryop, "+", 10));
     else if (currch == '-') add(Token(Token::binaryop, "-", 10));
     else if (currch == '*') add(Token(Token::binaryop, "*", 15));
     else if (currch == '%') add(Token(Token::binaryop, "%", 15));
+
     else if (currch == '.') add(Token(Token::dot, "."));
     else if (currch == ':') add(Token(Token::colon, ":"));
 

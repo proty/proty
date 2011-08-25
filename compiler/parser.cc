@@ -112,8 +112,11 @@ Node* Parser::parseBlock() {
       default:
         block->add(parseExpression());
 
-        // verify that the expression ends with a new line
-        if (!(lexer->isNext(Token::newline) || lexer->isNext(Token::eof))) {
+        // verify that the expression ends with a newline/closing token
+        if (!(lexer->isNext(Token::newline)
+              || lexer->isNext(Token::eof)
+              || lexer->isNext(Token::rbrace))) {
+
           lexer->unexpected(lexer->next(), "new line");
         }
     }
@@ -128,6 +131,11 @@ Node* Parser::parseExpression() {
     lexer->next();
     expr = parseExpression();
     lexer->match(Token::rpar, ")");
+  }
+  else if (lexer->isNext(Token::excl)) {
+    lexer->next();
+    expr = parseExpression();
+    expr = new UnaryOpNode("!", expr);
   }
   else {
     expr = parsePrimary();

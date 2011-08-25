@@ -37,6 +37,7 @@ public:
     dot,
     colon,
     hash,
+    excl,
 
     newline,
     eof,
