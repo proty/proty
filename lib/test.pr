@@ -1,9 +1,41 @@
-#export(assert)
+#export(TestCase)
+#export(run)
 
-assert = do(x)
-  if x
-    io:write("+")
-  else
-    io:write("-")
-  end
+TestCase = Object.new()
+
+TestCase.assert = do(x)
+    if x
+        self.successCount += 1
+    else
+        self.failureCount += 1
+    end
+    x
+end
+
+TestCase.assertEqual = do(x, y)
+    self.assert(x == y)
+end
+
+TestCase.assertTrue = do(x)
+    self.assert(x)
+end
+
+TestCase.printResults = do
+    io:write(self.name)
+    io:write(";" + self.successCount.str())
+    io:print(";" + self.failureCount.str())
+end
+
+TestCase.create = do(name)
+    tc = TestCase.new()
+    tc.name = name
+    tc.successCount = 0
+    tc.failureCount = 0
+    tc
+end
+
+run = do(name, func)
+    t = TestCase.create(name)
+    func(t)
+    t.printResults()
 end

@@ -131,6 +131,9 @@ void Lexer::tokenize() {
           case '\\':
             buf << '\\';
             break;
+          case '"':
+            buf << '"';
+            break;
           default:
             buf << '\\';
             buf << stream->unget();
