@@ -24,7 +24,7 @@ for file in os.listdir(dir):
 
         tests = 0
         failures = 0
-        suitename = file.split(".pr")[0]
+        suitename = "proty." + file.split(".pr")[0]
 
         suite = doc.createElement("testsuite")
         suite.setAttribute("id", str(id))
@@ -33,24 +33,27 @@ for file in os.listdir(dir):
         suite.setAttribute("hostname", "prsys")
         suite.setAttribute("timestamp", time.strftime("%Y-%m-%dT%H:%M:%S"))
 
+        start = time.time()
+
         proc = subprocess.Popen(["./proty", os.path.join(dir, file)],
                                 stdout=subprocess.PIPE)
 
         for line in proc.stdout:
             testcase = doc.createElement("testcase")
 
-            line = str(line.rstrip(), "utf-8")
+            line = line.rstrip().decode("utf-8")
             name, successCount, failureCount = line.split(";")
 
             tests += int(successCount) + int(failureCount)
             failures += int(failureCount)
 
             testcase.setAttribute("name", name)
-            testcase.setAttribute("classname", "nil")
+            testcase.setAttribute("classname", suitename)
             testcase.setAttribute("time", "0.0")
             suite.appendChild(testcase)
 
-        suite.setAttribute("time", "0.0")
+        elapsed = (time.time() - start)
+        suite.setAttribute("time", "%.4f" % elapsed)
         suite.setAttribute("tests", str(tests))
         suite.setAttribute("failures", str(failures))
         suite.setAttribute("errors", "0")
