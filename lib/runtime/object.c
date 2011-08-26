@@ -57,7 +57,14 @@ Object* Object_bool(Object* self) {
   return (self == Qfalse) ? Qfalse : Qtrue;
 }
 
+Object* Object_not(Object* self) {
+  Object* boolFunc = Object_getSlot(self, "bool");
+  Object* bool = Object_call(boolFunc, 1, self);
+  return bool == Qtrue ? Qfalse: Qtrue;
+}
+
 void Object_initProto() {
   Object_setSlot(Object_proto, "new", FUNC(Object_new, 1));
   Object_setSlot(Object_proto, "bool", FUNC(Object_bool, 1));
+  Object_setSlot(Object_proto, "!", FUNC(Object_not, 1));
 }
