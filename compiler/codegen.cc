@@ -111,7 +111,7 @@ Value* CallSlotNode::codegen(Compiler* c) {
 Value* ModuleMemberNode::codegen(Compiler* c) {
   Module* mod = c->loadModule(module);
 
-  std::string obj_name = "prmod_" + module + "_" + name;
+  std::string obj_name = "pr_" + module + "_" + name;
   Value* obj = c->module->getNamedValue(obj_name);
 
   // if this object is not declare in the current module,
@@ -394,7 +394,7 @@ Value* TryNode::codegen(Compiler* c) {
 Value* PropertyNode::codegen(Compiler* c) {
   if (name == "export") {
     for (int i = 0; i < values.size(); i++) {
-      std::string varname = "prmod_";
+      std::string varname = "pr_";
       varname.append(c->module->getModuleIdentifier());
       varname.append("_" + values.at(i));
 

@@ -19,12 +19,12 @@ typedef Object* (*FuncPtr)(Object*, ...);
 #define FUNC(name, argc) Function_new((FuncPtr)name, argc)
 #define SYM(name) Symbol_get(#name)
 
-#define MODFUNC(name, ...) Object* prmod_##name = 0;\
+#define MODFUNC(name, ...) Object* pr_##name = 0;\
   Object* name(__VA_ARGS__)
-#define EXPORT(name) Object* prmod_##name
+#define EXPORT(name) Object* pr_##name
 
-#define INITFUNC(name, argc) prmod_##name = FUNC(name, argc)
-#define INITOBJ(name, value) prmod_##name = value
-#define MODGET(name) prmod_##name
+#define INITFUNC(name, argc) pr_##name = FUNC(name, argc)
+#define INITOBJ(name, value) pr_##name = value
+#define MODGET(name) pr_##name
 
 #endif
