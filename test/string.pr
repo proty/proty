@@ -1,0 +1,22 @@
+test:run("append", do(test) {
+    a = "a"
+    b = "b"
+    c = "c"
+    test.assertEqual(a+b+c, "abc")
+})
+
+test:run("compare", do(test) {
+    test.assertTrue("xyz" == "xyz")
+})
+
+test:run("length", do(test) {
+    a = ""
+    test.assertEqual(a.length(), 0)
+    b = "Hello World"
+    test.assertEqual(b.length(), 11)
+})
+
+test:run("bool", do(test) {
+    test.assertTrue("xyz")
+    test.assertFalse("")
+})

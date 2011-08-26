@@ -1,0 +1,23 @@
+test:run("and operator", do(test) {
+    test.assertFalse(true && false)
+    test.assertFalse(false && true)
+    test.assertFalse(false && false)
+    test.assertTrue(true && true)
+})
+
+test:run("or operator", do(test) {
+    test.assertTrue(true || true)
+    test.assertTrue(true || false)
+    test.assertTrue(false || true)
+    test.assertFalse(false || false)
+})
+
+test:run("not operator", do(test) {
+    test.assertTrue(!false)
+    test.assertFalse(!true)
+})
+
+test:run("string", do(test) {
+    test.assertEqual(true.str(), "<true>")
+    test.assertEqual(false.str(), "<false>")
+})

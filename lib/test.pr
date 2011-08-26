@@ -20,6 +20,10 @@ TestCase.assertTrue = do(x)
     self.assert(x)
 end
 
+TestCase.assertFalse = do(x)
+    self.assert(!x)
+end
+
 TestCase.printResults = do
     io:write(self.name)
     io:write(";" + self.successCount.str())
