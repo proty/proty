@@ -1,20 +1,20 @@
 #include "runtime.h"
 #include <stdio.h>
 
-Object* Object_proto;
-Object* Function_proto;
-Object* Hash_proto;
-Object* List_proto;
-Object* Symbol_proto;
-Object* Bool_proto;
-Object* Integer_proto;
-Object* Float_proto;
-Object* String_proto;
-Object* Exception_proto;
+Object* Object_proto = 0;
+Object* Function_proto = 0;
+Object* Hash_proto = 0;
+Object* List_proto = 0;
+Object* Symbol_proto = 0;
+Object* Bool_proto = 0;
+Object* Integer_proto = 0;
+Object* Float_proto = 0;
+Object* String_proto = 0;
+Object* Exception_proto = 0;
 
-Object* Qnil;
-Object* Qtrue;
-Object* Qfalse;
+Object* Qnil = 0;
+Object* Qtrue = 0;
+Object* Qfalse = 0;
 
 void runtime_init() {
   Object_proto = Object_new(0);
