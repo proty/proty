@@ -2,23 +2,6 @@
 #include "runtime/runtime.h"
 #include "file.h"
 
-MODFUNC(io_print, Object* self, Object* obj) {
-  if (obj->proto == String_proto) {
-    printf("%s\n", obj->data.ptr);
-  }
-  else {
-    Object* get_str = Object_getSlot(obj, "str");
-    if (get_str != Qnil) {
-      Object* string = Object_call(get_str, 1, obj);
-      printf("%s\n", string->data.ptr);
-    }
-    else {
-      printf("<%p>\n", obj);
-    }
-  }
-  return Qnil;
-}
-
 MODFUNC(io_write, Object* self, Object* obj) {
   if (obj->proto == String_proto) {
     printf("%s", obj->data.ptr);
@@ -34,6 +17,12 @@ MODFUNC(io_write, Object* self, Object* obj) {
     }
   }
   return Qnil;
+}
+
+MODFUNC(io_print, Object* self, Object* obj) {
+  Object* ret = io_write(self, obj);
+  printf("\n");
+  return ret;
 }
 
 MODFUNC(io_open, Object* self, Object* file, Object* mode) {
