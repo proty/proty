@@ -55,6 +55,14 @@ Object* List_set(Object* self, Object* index, Object* value) {
   return value;
 }
 
+Object* List_each(Object* self, Object* func) {
+  List* list = self->data.ptr;
+  for (int i = 0; i < list->size; i++) {
+    Object_call(func, 2, self, list->objects[i]);
+  }
+  return Qnil;
+}
+
 Object* List_size(Object* self) {
   List* list = self->data.ptr;
   return Integer_new(list->size);
@@ -69,6 +77,7 @@ void List_initProto() {
   Object_setSlot(List_proto, "append", FUNC(List_append, 2));
   Object_setSlot(List_proto, "[]", FUNC(List_get, 2));
   Object_setSlot(List_proto, "[]=", FUNC(List_set, 3));
+  Object_setSlot(List_proto, "each", FUNC(List_each, 2));
   Object_setSlot(List_proto, "size", FUNC(List_size, 1));
   Object_setSlot(List_proto, "bool", FUNC(List_bool, 1));
 }
