@@ -42,12 +42,16 @@ Object* List_append(Object* self, Object* obj) {
 
 Object* List_get(Object* self, Object* index) {
   List* list = self->data.ptr;
+  if (index->data.i >= list->size) {
+    /// @todo: throw exception
+    return Qnil;
+  }
   return list->objects[index->data.i];
 }
 
 Object* List_set(Object* self, Object* index, Object* value) {
   List* list = self->data.ptr;
-  if (index->data.i > list->size) {
+  if (index->data.i >= list->size) {
     /// @todo: throw exception
     return Qnil;
   }
@@ -61,6 +65,23 @@ Object* List_each(Object* self, Object* func) {
     Object_call(func, 2, self, list->objects[i]);
   }
   return Qnil;
+
+Object* List_remove(Object* self, Object* index) {
+  List* list = self->data.ptr;
+  if (index->data.i >= list->size) {
+    /// @todo: throw exception
+    return Qnil;
+  }
+
+  Object* ret = list->objects[index->data.i];
+
+  for (int i = index->data.i; i < list->size; i++) {
+    list->objects[i] = list->objects[i+1];
+  }
+
+  list->size--;
+
+  return ret;
 }
 
 Object* List_size(Object* self) {
@@ -75,6 +96,7 @@ Object* List_bool(Object* self) {
 
 void List_initProto() {
   Object_setSlot(List_proto, "append", FUNC(List_append, 2));
+  Object_setSlot(List_proto, "remove", FUNC(List_remove, 2));
   Object_setSlot(List_proto, "[]", FUNC(List_get, 2));
   Object_setSlot(List_proto, "[]=", FUNC(List_set, 3));
   Object_setSlot(List_proto, "each", FUNC(List_each, 2));
