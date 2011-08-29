@@ -65,6 +65,7 @@ Object* List_each(Object* self, Object* func) {
     Object_call(func, 2, self, list->objects[i]);
   }
   return Qnil;
+}
 
 Object* List_remove(Object* self, Object* index) {
   List* list = self->data.ptr;
