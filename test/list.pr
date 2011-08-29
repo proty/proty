@@ -1,0 +1,44 @@
+test:run("get", do(test) {
+    a = [1, 2, 3]
+    test.assertEqual(a[0], 1)
+    test.assertEqual(a[1], 2)
+    test.assertEqual(a[2], 3)
+})
+
+test:run("set", do(test) {
+    a = [3, 2, 1]
+    a[0] = 1
+    a[2] = 3
+    test.assertEqual(a[0], 1)
+    test.assertEqual(a[1], 2)
+    test.assertEqual(a[2], 3)
+})
+
+test:run("append", do(test) {
+    a = [1, 2]
+    a.append(5)
+    test.assertEqual(a[2], 5)
+})
+
+test:run("insert", do(test) {
+    a = [1, 2, 3, 5, 6]
+    a.insert(3, 4)
+    test.assertEqual(a[2], 3)
+    test.assertEqual(a[3], 4)
+    test.assertEqual(a[4], 5)
+    test.assertEqual(a[5], 6)
+})
+
+test:run("remove", do(test) {
+    a = [1, 2, 2, 3, 4]
+    a.remove(1)
+    test.assertEqual(a[0], 1)
+    test.assertEqual(a[1], 2)
+    test.assertEqual(a[2], 3)
+    test.assertEqual(a[3], 4)
+})
+
+test:run("bool", do(test) {
+    test.assertFalse([])
+    test.assertTrue([1, 2, 3])
+})
