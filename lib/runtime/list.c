@@ -7,6 +7,16 @@ typedef struct {
   Object** objects;
 } List;
 
+static inline void List_resize(List* list) {
+  // if the list is full
+  if (list->size == list->bounds) {
+    int new_size = list->bounds + 1;
+    new_size = (new_size >> 3) + (new_size < 9 ? 3 : 6) + new_size;
+    list->objects = realloc(list->objects, new_size*sizeof(Object*));
+    list->bounds = new_size;
+  }
+}
+
 Object* List_init(Object* self) {
   List* list = malloc(sizeof(List));
 
@@ -26,17 +36,8 @@ Object* List_new() {
 
 Object* List_append(Object* self, Object* obj) {
   List* list = self->data.ptr;
-
-  // resize if the list is full
-  if (list->size == list->bounds) {
-    int new_size = list->bounds + 1;
-    new_size = (new_size >> 3) + (new_size < 9 ? 3 : 6) + new_size;
-    list->objects = realloc(list->objects, new_size*sizeof(Object*));
-    list->bounds = new_size;
-  }
-
+  List_resize(list);
   list->objects[list->size++] = obj;
-
   return obj;
 }
 
@@ -65,6 +66,25 @@ Object* List_each(Object* self, Object* func) {
     Object_call(func, 2, self, list->objects[i]);
   }
   return Qnil;
+}
+
+Object* List_insert(Object* self, Object* index, Object* value) {
+  List* list = self->data.ptr;
+  if (index->data.i >= list->size) {
+    /// @todo: throw exception
+    return Qnil;
+  }
+
+  List_resize(list);
+
+  for (int i = list->size; i > index->data.i; i--) {
+    list->objects[i] = list->objects[i-1];
+  }
+
+  list->objects[index->data.i] = value;
+  list->size++;
+
+  return value;
 }
 
 Object* List_remove(Object* self, Object* index) {
@@ -97,6 +117,7 @@ Object* List_bool(Object* self) {
 
 void List_initProto() {
   Object_setSlot(List_proto, "append", FUNC(List_append, 2));
+  Object_setSlot(List_proto, "insert", FUNC(List_insert, 3));
   Object_setSlot(List_proto, "remove", FUNC(List_remove, 2));
   Object_setSlot(List_proto, "[]", FUNC(List_get, 2));
   Object_setSlot(List_proto, "[]=", FUNC(List_set, 3));
