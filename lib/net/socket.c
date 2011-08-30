@@ -75,10 +75,10 @@ Object* Socket_close(Object* self) {
 Object* Socket_createProto() {
   Object* proto = Object_new(Object_proto);
 
-  Object_setSlot(proto, "connect", FUNC(Socket_connect, 3));
-  Object_setSlot(proto, "send", FUNC(Socket_send, 2));
-  Object_setSlot(proto, "recv", FUNC(Socket_recv, 2));
-  Object_setSlot(proto, "close", FUNC(Socket_close, 1));
+  Object_setSlot(proto, SYM(connect), FUNC(Socket_connect, 3));
+  Object_setSlot(proto, SYM(send), FUNC(Socket_send, 2));
+  Object_setSlot(proto, SYM(recv), FUNC(Socket_recv, 2));
+  Object_setSlot(proto, SYM(close), FUNC(Socket_close, 1));
 
   return proto;
 }

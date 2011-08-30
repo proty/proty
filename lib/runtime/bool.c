@@ -7,8 +7,7 @@ Object* Bool_str(Object* self) {
 
 Object* Bool_eq(Object* self, Object* other) {
   if (other == self) return Qtrue;
-  Object* otherBoolFunc = Object_getSlot(other, "bool");
-  Object* otherBool = Object_call(otherBoolFunc, 1, other);
+  Object* otherBool = Object_send(other, SYM(bool), 0);
   return self == otherBool ? Qtrue : Qfalse;
 }
 
@@ -29,9 +28,9 @@ Object* Bool_new() {
 }
 
 void Bool_initProto() {
-  Object_setSlot(Bool_proto, "==", FUNC(Bool_eq, 2));
-  Object_setSlot(Bool_proto, "&&", FUNC(Bool_and, 2));
-  Object_setSlot(Bool_proto, "||", FUNC(Bool_or, 2));
-  Object_setSlot(Bool_proto, "!", FUNC(Bool_not, 1));
-  Object_setSlot(Bool_proto, "str", FUNC(Bool_str, 1));
+  Object_setSlot(Bool_proto, SYM(==), FUNC(Bool_eq, 2));
+  Object_setSlot(Bool_proto, SYM(&&), FUNC(Bool_and, 2));
+  Object_setSlot(Bool_proto, SYM(||), FUNC(Bool_or, 2));
+  Object_setSlot(Bool_proto, SYM(!), FUNC(Bool_not, 1));
+  Object_setSlot(Bool_proto, SYM(str), FUNC(Bool_str, 1));
 }

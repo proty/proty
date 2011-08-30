@@ -36,14 +36,14 @@ void Runtime::declareFunctions(Compiler* c) {
   // Object* Object_getSlot(Object*, Object*)
   args.clear();
   args.push_back(c->getObjectTy());
-  args.push_back(Type::getInt8PtrTy(getGlobalContext()));
+  args.push_back(c->getObjectTy());
   funcTy = FunctionType::get(c->getObjectTy(), args, false);
   Function::Create(funcTy, Function::ExternalLinkage, "Object_getSlot", c->module);
 
   // Object* Object_setSlot(Object*, Object*, Object*)
   args.clear();
   args.push_back(c->getObjectTy());
-  args.push_back(Type::getInt8PtrTy(getGlobalContext()));
+  args.push_back(c->getObjectTy());
   args.push_back(c->getObjectTy());
   funcTy = FunctionType::get(c->getObjectTy(), args, false);
   Function::Create(funcTy, Function::ExternalLinkage, "Object_setSlot", c->module);
@@ -54,6 +54,14 @@ void Runtime::declareFunctions(Compiler* c) {
   args.push_back(Type::getInt32Ty(getGlobalContext()));
   funcTy = FunctionType::get(c->getObjectTy(), args, true);
   Function::Create(funcTy, Function::ExternalLinkage, "Object_call", c->module);
+
+  // Object* Object_send(Object*, Object*, int, ...)
+  args.clear();
+  args.push_back(c->getObjectTy());
+  args.push_back(c->getObjectTy());
+  args.push_back(Type::getInt32Ty(getGlobalContext()));
+  funcTy = FunctionType::get(c->getObjectTy(), args, true);
+  Function::Create(funcTy, Function::ExternalLinkage, "Object_send", c->module);
 
   // Object* Integer_new(int)
   args.clear();

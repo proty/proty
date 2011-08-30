@@ -179,13 +179,13 @@ public:
 
 class SubscriptNode : public Node {
 private:
-  Node* object;
+  Node* obj;
   Node* key;
   Node* value;
 
 public:
-  SubscriptNode(Node* object, Node* key, Node* value)
-    : object(object), key(key), value(value) {};
+  SubscriptNode(Node* obj, Node* key, Node* value)
+    : obj(obj), key(key), value(value) {};
 
   llvm::Value* codegen(Compiler*);
 };
@@ -200,13 +200,11 @@ class CallNode : public Node {
 private:
   Node* callee;
   std::vector<Node*> args;
-  Node* self;
 
 public:
-  CallNode(Node* callee) : callee(callee), self(0) {}
+  CallNode(Node* callee) : callee(callee) {}
   ~CallNode() { delete callee; }
 
-  void setSelf(Node* s) { self = s; }
   void addArg(Node* n) { args.push_back(n); }
   llvm::Value* codegen(Compiler*);
 };
@@ -354,20 +352,20 @@ public:
 
 
 /**
- * Call a slot of an object.
+ * Send a message to an object.
  * $obj.$name($args)
  */
 
-class CallSlotNode : public Node {
+class SendNode : public Node {
 private:
   Node* obj;
   std::string name;
   std::vector<Node*> args;
 
 public:
-  CallSlotNode(Node* obj, std::string name)
+  SendNode(Node* obj, std::string name)
     : obj(obj), name(name) {}
-  ~CallSlotNode() { delete obj; }
+  ~SendNode() { delete obj; }
 
   void addArg(Node* n) { args.push_back(n); }
   llvm::Value* codegen(Compiler*);

@@ -47,8 +47,7 @@ static unsigned int hash_obj(Object* obj) {
     return hash_addr(obj);
   }
   else {
-    Object* h = Object_getSlot(obj, "hash");
-    return Object_call(h, 1, obj)->data.i;
+    return Object_send(obj, SYM(hash), 0)->data.i;
   }
 }
 
@@ -69,8 +68,7 @@ static int cmp_obj(Object* a, Object* b) {
     }
   }
   else {
-    Object* h = Object_getSlot(a, "==");
-    return Object_call(h, 2, a, b) == Qtrue;
+    return Object_send(a, SYM(==), 1, b) == Qtrue;
   }
 }
 
@@ -156,7 +154,7 @@ void Hash_initProto() {
   Hash_proto->slots = Object_new(Hash_proto);
   Hash_init(Hash_proto->slots);
 
-  Object_setSlot(Hash_proto, "init", FUNC(Hash_init, 1));
-  Object_setSlot(Hash_proto, "[]", FUNC(Hash_get, 2));
-  Object_setSlot(Hash_proto, "[]=", FUNC(Hash_set, 3));
+  Object_setSlot(Hash_proto, SYM(init), FUNC(Hash_init, 1));
+  Object_setSlot(Hash_proto, SYM([]), FUNC(Hash_get, 2));
+  Object_setSlot(Hash_proto, SYM([]=), FUNC(Hash_set, 3));
 }

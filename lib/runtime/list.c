@@ -116,12 +116,12 @@ Object* List_bool(Object* self) {
 }
 
 void List_initProto() {
-  Object_setSlot(List_proto, "append", FUNC(List_append, 2));
-  Object_setSlot(List_proto, "insert", FUNC(List_insert, 3));
-  Object_setSlot(List_proto, "remove", FUNC(List_remove, 2));
-  Object_setSlot(List_proto, "[]", FUNC(List_get, 2));
-  Object_setSlot(List_proto, "[]=", FUNC(List_set, 3));
-  Object_setSlot(List_proto, "each", FUNC(List_each, 2));
-  Object_setSlot(List_proto, "size", FUNC(List_size, 1));
-  Object_setSlot(List_proto, "bool", FUNC(List_bool, 1));
+  Object_setSlot(List_proto, SYM(append), FUNC(List_append, 2));
+  Object_setSlot(List_proto, SYM(insert), FUNC(List_insert, 3));
+  Object_setSlot(List_proto, SYM(remove), FUNC(List_remove, 2));
+  Object_setSlot(List_proto, SYM([]), FUNC(List_get, 2));
+  Object_setSlot(List_proto, SYM([]=), FUNC(List_set, 3));
+  Object_setSlot(List_proto, SYM(each), FUNC(List_each, 2));
+  Object_setSlot(List_proto, SYM(size), FUNC(List_size, 1));
+  Object_setSlot(List_proto, SYM(bool), FUNC(List_bool, 1));
 }

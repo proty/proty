@@ -16,35 +16,25 @@ Value* BlockNode::codegen(Compiler* c) {
 }
 
 Value* UnaryOpNode::codegen(Compiler* c) {
-  GetSlotNode* getslot = new GetSlotNode(obj, op);
-
-  CallNode* call = new CallNode(getslot);
-  call->setSelf(obj);
-
-  return call->codegen(c);
+  SendNode* send = new SendNode(obj, op);
+  return send->codegen(c);
 }
 
 Value* BinaryOpNode::codegen(Compiler* c) {
-  GetSlotNode* getslot = new GetSlotNode(lhs, op);
+  SendNode* send = new SendNode(lhs, op);
+  send->addArg(rhs);
 
-  CallNode* call = new CallNode(getslot);
-  call->setSelf(lhs);
-  call->addArg(rhs);
-
-  return call->codegen(c);
+  return send->codegen(c);
 }
 
 Value* SubscriptNode::codegen(Compiler* c) {
   std::string op = value ? "[]=" : "[]";
 
-  GetSlotNode* getslot = new GetSlotNode(object, op);
+  SendNode* send = new SendNode(obj, op);
+  send->addArg(key);
+  if (value) send->addArg(value);
 
-  CallNode* call = new CallNode(getslot);
-  call->setSelf(object);
-  call->addArg(key);
-  if (value) call->addArg(value);
-
-  return call->codegen(c);
+  return send->codegen(c);
 }
 
 Value* NameNode::codegen(Compiler* c) {
@@ -81,31 +71,39 @@ Value* AssignNode::codegen(Compiler* c) {
 Value* GetSlotNode::codegen(Compiler* c) {
   Function* getslot = c->module->getFunction("Object_getSlot");
   Value* object = obj->codegen(c);
-  Value* slot = c->builder->CreateGlobalStringPtr(name.c_str(), ".str");
+
+  SymbolNode* sym = new SymbolNode(name);
+  Value* slot = sym->codegen(c);
+
   return c->builder->CreateCall2(getslot, object, slot, name + "_tmp");
 }
 
 Value* SetSlotNode::codegen(Compiler* c) {
   Function* setslot = c->module->getFunction("Object_setSlot");
+
   Value* object = obj->codegen(c);
-  Value* slot = c->builder->CreateGlobalStringPtr(name.c_str(), ".str");
+  Value* slot = (new SymbolNode(name))->codegen(c);
   Value* v = value->codegen(c);
+
   return c->builder->CreateCall3(setslot, object, slot, v, "set_" + name + "_tmp");
 }
 
-Value* CallSlotNode::codegen(Compiler* c) {
-  ValueNode* objv = new ValueNode(obj->codegen(c));
-  GetSlotNode* slot = new GetSlotNode(objv, name);
-  ValueNode* slotv = new ValueNode(slot->codegen(c));
+Value* SendNode::codegen(Compiler* c) {
+  Function* send = c->module->getFunction("Object_send");
 
-  CallNode* call = new CallNode(slotv);
-  call->setSelf(objv);
+  SymbolNode* sym = new SymbolNode(name);
+  Value* slot = sym->codegen(c);
+
+  std::vector<Value*> argValues;
+  argValues.push_back(obj->codegen(c));
+  argValues.push_back(slot);
+  argValues.push_back(ConstantInt::get(Type::getInt32Ty(getGlobalContext()), args.size()));
 
   for (int i = 0; i < args.size(); i++) {
-    call->addArg(args.at(i));
+    argValues.push_back(args.at(i)->codegen(c));
   }
 
-  return call->codegen(c);
+  return c->builder->CreateCall(send, argValues.begin(), argValues.end(), "sendtmp");
 }
 
 Value* ModuleMemberNode::codegen(Compiler* c) {
@@ -180,7 +178,7 @@ Value* SymbolNode::codegen(Compiler* c) {
   Value* string = c->builder->CreateGlobalStringPtr(name.c_str(), ".sym");
 
   Function* func = c->module->getFunction("Symbol_get");
-  return c->builder->CreateCall(func, string, "symboltmp");
+  return c->builder->CreateCall(func, string, "sym_" + name);
 }
 
 Value* CallNode::codegen(Compiler* c) {
@@ -190,13 +188,7 @@ Value* CallNode::codegen(Compiler* c) {
   std::vector<Value*> argValues;
   argValues.push_back(callee->codegen(c));
   argValues.push_back(ConstantInt::get(Type::getInt32Ty(getGlobalContext()), argc+1));
-
-  if (self) {
-    argValues.push_back(self->codegen(c));
-  }
-  else {
-    argValues.push_back(c->getNil());
-  }
+  argValues.push_back(c->getNil());
 
   for (int i = 0; i < argc; i++) {
     argValues.push_back(args.at(i)->codegen(c));
@@ -286,7 +278,7 @@ Value* IfNode::codegen(Compiler* c) {
   BasicBlock* ElseBB = BasicBlock::Create(getGlobalContext(), "else");
   BasicBlock* MergeBB = BasicBlock::Create(getGlobalContext(), "ifcont");
 
-  CallSlotNode* boolean = new CallSlotNode(cond, "bool");
+  SendNode* boolean = new SendNode(cond, "bool");
 
   Value* Qtrue = c->builder->CreateLoad(c->getBool(true));
   Value* EndCond = c->builder->CreateICmpEQ(boolean->codegen(c), Qtrue);
@@ -318,7 +310,7 @@ Value* WhileNode::codegen(Compiler* c) {
   c->builder->CreateBr(CondBB);
   c->builder->SetInsertPoint(CondBB);
 
-  CallSlotNode* boolean = new CallSlotNode(cond, "bool");
+  SendNode* boolean = new SendNode(cond, "bool");
 
   Value* Qtrue = c->builder->CreateLoad(c->getBool(true));
   Value* EndCond = c->builder->CreateICmpEQ(boolean->codegen(c), Qtrue);

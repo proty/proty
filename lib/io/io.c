@@ -7,9 +7,8 @@ MODFUNC(io_write, Object* self, Object* obj) {
     printf("%s", obj->data.ptr);
   }
   else {
-    Object* get_str = Object_getSlot(obj, "str");
-    if (get_str != Qnil) {
-      Object* string = Object_call(get_str, 1, obj);
+    Object* string = Object_send(obj, SYM(str), 0);
+    if (string != Qnil) {
       printf("%s", string->data.ptr);
     }
     else {

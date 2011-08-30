@@ -90,23 +90,23 @@ Object* Integer_idiv(Object* self, Object* other) {
 }
 
 void Integer_initProto() {
-  Object_setSlot(Integer_proto, "str", FUNC(Integer_str, 1));
-  Object_setSlot(Integer_proto, "bool", FUNC(Integer_bool, 1));
+  Object_setSlot(Integer_proto, SYM(str), FUNC(Integer_str, 1));
+  Object_setSlot(Integer_proto, SYM(bool), FUNC(Integer_bool, 1));
 
-  Object_setSlot(Integer_proto, "+", FUNC(Integer_add, 2));
-  Object_setSlot(Integer_proto, "-", FUNC(Integer_sub, 2));
-  Object_setSlot(Integer_proto, "*", FUNC(Integer_mul, 2));
-  Object_setSlot(Integer_proto, "/", FUNC(Integer_div, 2));
+  Object_setSlot(Integer_proto, SYM(+), FUNC(Integer_add, 2));
+  Object_setSlot(Integer_proto, SYM(-), FUNC(Integer_sub, 2));
+  Object_setSlot(Integer_proto, SYM(*), FUNC(Integer_mul, 2));
+  Object_setSlot(Integer_proto, SYM(/), FUNC(Integer_div, 2));
 
-  Object_setSlot(Integer_proto, "==", FUNC(Integer_eq, 2));
-  Object_setSlot(Integer_proto, "!=", FUNC(Integer_ne, 2));
-  Object_setSlot(Integer_proto, "<", FUNC(Integer_lt, 2));
-  Object_setSlot(Integer_proto, ">", FUNC(Integer_gt, 2));
-  Object_setSlot(Integer_proto, "<=", FUNC(Integer_le, 2));
-  Object_setSlot(Integer_proto, ">=", FUNC(Integer_ge, 2));
+  Object_setSlot(Integer_proto, SYM(==), FUNC(Integer_eq, 2));
+  Object_setSlot(Integer_proto, SYM(!=), FUNC(Integer_ne, 2));
+  Object_setSlot(Integer_proto, SYM(<), FUNC(Integer_lt, 2));
+  Object_setSlot(Integer_proto, SYM(>), FUNC(Integer_gt, 2));
+  Object_setSlot(Integer_proto, SYM(<=), FUNC(Integer_le, 2));
+  Object_setSlot(Integer_proto, SYM(>=), FUNC(Integer_ge, 2));
 
-  Object_setSlot(Integer_proto, "+=", FUNC(Integer_iadd, 2));
-  Object_setSlot(Integer_proto, "-=", FUNC(Integer_isub, 2));
-  Object_setSlot(Integer_proto, "*=", FUNC(Integer_imul, 2));
-  Object_setSlot(Integer_proto, "/=", FUNC(Integer_idiv, 2));
+  Object_setSlot(Integer_proto, SYM(+=), FUNC(Integer_iadd, 2));
+  Object_setSlot(Integer_proto, SYM(-=), FUNC(Integer_isub, 2));
+  Object_setSlot(Integer_proto, SYM(*=), FUNC(Integer_imul, 2));
+  Object_setSlot(Integer_proto, SYM(/=), FUNC(Integer_idiv, 2));
 }

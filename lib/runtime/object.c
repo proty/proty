@@ -10,24 +10,24 @@ Object* Object_new(Object* proto) {
   return new;
 }
 
-Object* Object_setSlot(Object* self, const char* key, Object* value) {
+Object* Object_setSlot(Object* self, Object* key, Object* value) {
   if (!self->slots) self->slots = Hash_new();
-  Hash_set(self->slots, Symbol_get(key), value);
-  return value;
+  return Hash_set(self->slots, key, value);
 }
 
-Object* Object_getSlot(Object* self, const char* key) {
+Object* Object_getSlot(Object* self, Object* key) {
   Object* proto = self;
 
   while (1) {
     if (proto->slots) {
-      Object* value = Hash_get(proto->slots, Symbol_get(key));
+      Object* value = Hash_get(proto->slots, key);
       if (value != Qnil) return value;
     }
 
     if (proto->proto) proto = proto->proto;
     else break;
   }
+
   return Qnil;
 }
 
@@ -39,7 +39,6 @@ Object* Object_call(Object* self, int argc, ...) {
   }
 
   va_list varargs;
-
   Object** argv = alloca(sizeof(Object*)*argc);
 
   va_start(varargs, argc);
@@ -48,9 +47,29 @@ Object* Object_call(Object* self, int argc, ...) {
   }
   va_end(varargs);
 
-  Object* ret = Function_call(self, argc, argv);
+  return Function_call(self, argc, argv);
+}
 
-  return ret;
+Object* Object_send(Object* self, Object* key, int argc, ...) {
+  Object* func = Object_getSlot(self, key);
+
+  if (func->proto != Function_proto) {
+    printf("proty: called non-function object\n");
+    abort();
+  }
+
+  va_list varargs;
+  Object** argv = alloca(sizeof(Object*)*argc);
+  argv[0] = self;
+
+  va_start(varargs, argc);
+  argc++;
+  for (int i = 1; i < argc; i++) {
+    argv[i] = va_arg(varargs, Object*);
+  }
+  va_end(varargs);
+
+  return Function_call(func, argc, argv);
 }
 
 Object* Object_bool(Object* self) {
@@ -58,13 +77,12 @@ Object* Object_bool(Object* self) {
 }
 
 Object* Object_not(Object* self) {
-  Object* boolFunc = Object_getSlot(self, "bool");
-  Object* bool = Object_call(boolFunc, 1, self);
-  return bool == Qtrue ? Qfalse: Qtrue;
+  Object* bool = Object_send(self, SYM(bool), 0);
+  return bool == Qtrue ? Qfalse : Qtrue;
 }
 
 void Object_initProto() {
-  Object_setSlot(Object_proto, "new", FUNC(Object_new, 1));
-  Object_setSlot(Object_proto, "bool", FUNC(Object_bool, 1));
-  Object_setSlot(Object_proto, "!", FUNC(Object_not, 1));
+  Object_setSlot(Object_proto, SYM(new), FUNC(Object_new, 1));
+  Object_setSlot(Object_proto, SYM(bool), FUNC(Object_bool, 1));
+  Object_setSlot(Object_proto, SYM(!), FUNC(Object_not, 1));
 }

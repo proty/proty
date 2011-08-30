@@ -48,8 +48,8 @@ MODFUNC(time_sleep, Object* self, Object* duration) {
 void time_init() {
   Object* Time_proto = Object_new(Object_proto);
 
-  Object_setSlot(Time_proto, "str", FUNC(Time_str, 1));
-  Object_setSlot(Time_proto, "strftime", FUNC(Time_strftime, 2));
+  Object_setSlot(Time_proto, SYM(str), FUNC(Time_str, 1));
+  Object_setSlot(Time_proto, SYM(strftime), FUNC(Time_strftime, 2));
 
   INITOBJ(time_Time, Time_proto);
   INITFUNC(time_now, 1);

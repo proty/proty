@@ -17,9 +17,10 @@ void Object_initProto();
 
 Object* Object_new(Object*);
 
-Object* Object_setSlot(Object*, const char*, Object*);
-Object* Object_getSlot(Object*, const char*);
+Object* Object_setSlot(Object*, Object*, Object*);
+Object* Object_getSlot(Object*, Object*);
 
+Object* Object_send(Object*, Object*, int, ...);
 Object* Object_call(Object*, int, ...);
 
 #endif

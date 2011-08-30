@@ -36,13 +36,13 @@ Object* String_length(Object* self) {
 }
 
 void String_initProto() {
-  Object_setSlot(String_proto, "+", FUNC(String_add, 2));
+  Object_setSlot(String_proto, SYM(+), FUNC(String_add, 2));
 
-  Object_setSlot(String_proto, "==", FUNC(String_eq, 2));
-  Object_setSlot(String_proto, "!=", FUNC(String_ne, 2));
+  Object_setSlot(String_proto, SYM(==), FUNC(String_eq, 2));
+  Object_setSlot(String_proto, SYM(!=), FUNC(String_ne, 2));
 
-  Object_setSlot(String_proto, "bool", FUNC(String_bool, 1));
+  Object_setSlot(String_proto, SYM(bool), FUNC(String_bool, 1));
 
-  Object_setSlot(String_proto, "length", FUNC(String_length, 1));
+  Object_setSlot(String_proto, SYM(length), FUNC(String_length, 1));
 }
 

@@ -284,19 +284,19 @@ Node* Parser::parsePrimary() {
       lexer->next();
       std::string n = lexer->match(Token::name, "slot name").getValue();
 
-      // is the slot called?
+      // is this a message?
       if (lexer->isNext(Token::lpar)) {
         lexer->next();
-        prim = new CallSlotNode(prim, n);
+        prim = new SendNode(prim, n);
 
-        // parse call arguments
+        // parse arguments
         while (true) {
           if (lexer->isNext(Token::rpar)) {
             lexer->next();
             break;
           }
           else {
-            ((CallSlotNode*)prim)->addArg(parseExpression());
+            ((SendNode*)prim)->addArg(parseExpression());
             if (lexer->isNext(Token::rpar)) {
               lexer->next();
               break;
