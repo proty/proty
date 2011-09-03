@@ -20,3 +20,11 @@ test:run("bool", do(test) {
     test.assertTrue("xyz")
     test.assertFalse("")
 })
+
+test:run("split", do(test) {
+    str = "abc:def:ghi"
+    list = str.split(":")
+    test.assertEqual(list[0], "abc")
+    test.assertEqual(list[1], "def")
+    test.assertEqual(list[2], "ghi")
+})
