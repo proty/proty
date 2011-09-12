@@ -76,6 +76,16 @@ Object* List_map(Object* self, Object* func) {
   return Qnil;
 }
 
+Object* List_reverse(Object* self) {
+  List* list = self->data.ptr;
+  for (int i = 0, j = list->size-1; i < list->size/2; i++, j--) {
+    Object* tmp = list->objects[j];
+    list->objects[j] = list->objects[i];
+    list->objects[i] = tmp;
+  }
+  return Qnil;
+}
+
 Object* List_insert(Object* self, Object* index, Object* value) {
   List* list = self->data.ptr;
   if (index->data.i >= list->size) {
@@ -131,6 +141,7 @@ void List_initProto() {
   Object_setSlot(List_proto, SYM([]=), FUNC(List_set, 3));
   Object_setSlot(List_proto, SYM(each), FUNC(List_each, 2));
   Object_setSlot(List_proto, SYM(map), FUNC(List_map, 2));
+  Object_setSlot(List_proto, SYM(reverse), FUNC(List_reverse, 1));
   Object_setSlot(List_proto, SYM(size), FUNC(List_size, 1));
   Object_setSlot(List_proto, SYM(bool), FUNC(List_bool, 1));
 }

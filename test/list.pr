@@ -38,6 +38,16 @@ test:run("map", do (test) {
     test.assertEqual(a[3], 16)
 })
 
+test:run("reverse", do (test) {
+    a = [1, 2, 3, 4, 5]
+    a.reverse()
+    test.assertEqual(a[0], 5)
+    test.assertEqual(a[1], 4)
+    test.assertEqual(a[2], 3)
+    test.assertEqual(a[3], 2)
+    test.assertEqual(a[4], 1)
+})
+
 test:run("remove", do(test) {
     a = [1, 2, 2, 3, 4]
     a.remove(1)
