@@ -162,6 +162,10 @@ void Lexer::tokenize() {
         stream->get();
         add(Token(Token::binaryop, "==", 20));
       }
+      else if (nextch == '>') {
+        stream->get();
+        add(Token(Token::arrow, "=>"));
+      }
       else add(Token(Token::assign, "="));
     }
 

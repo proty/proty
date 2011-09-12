@@ -38,6 +38,7 @@ public:
     colon,
     hash,
     excl,
+    arrow,
 
     newline,
     eof,

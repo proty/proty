@@ -355,7 +355,7 @@ Node* Parser::parseHash() {
     }
     else {
       Node* key = parseExpression();
-      lexer->match(Token::colon, ":");
+      lexer->match(Token::arrow, "=>");
       Node* value = parseExpression();
       hn->add(key, value);
       if (!lexer->isNext(Token::rbrace)) {
