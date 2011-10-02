@@ -36,6 +36,7 @@ public:
     comma,
     dot,
     colon,
+    semicolon,
     hash,
     excl,
     arrow,

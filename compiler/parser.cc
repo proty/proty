@@ -106,6 +106,7 @@ Node* Parser::parseBlock() {
         break;
 
       case Token::newline:
+      case Token::semicolon:
         lexer->next();
         break;
 
@@ -114,6 +115,7 @@ Node* Parser::parseBlock() {
 
         // verify that the expression ends with a newline/closing token
         if (!(lexer->isNext(Token::newline)
+              || lexer->isNext(Token::semicolon)
               || lexer->isNext(Token::eof)
               || lexer->isNext(Token::rbrace))) {
 

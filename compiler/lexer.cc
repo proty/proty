@@ -215,6 +215,7 @@ void Lexer::tokenize() {
 
     else if (currch == '.') add(Token(Token::dot, "."));
     else if (currch == ':') add(Token(Token::colon, ":"));
+    else if (currch == ';') add(Token(Token::semicolon, ";"));
 
     // division and comments
     else if (currch == '/') {
