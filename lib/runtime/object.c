@@ -41,8 +41,12 @@ Object* Object_call(Object* self, int argc, ...) {
   va_list varargs;
   Object** argv = alloca(sizeof(Object*)*argc);
 
+  // self is nil for calls
+  argc++;
+  argv[0] = Qnil;
+
   va_start(varargs, argc);
-  for (int i = 0; i < argc; i++) {
+  for (int i = 1; i < argc; i++) {
     argv[i] = va_arg(varargs, Object*);
   }
   va_end(varargs);

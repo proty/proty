@@ -187,8 +187,7 @@ Value* CallNode::codegen(Compiler* c) {
 
   std::vector<Value*> argValues;
   argValues.push_back(callee->codegen(c));
-  argValues.push_back(ConstantInt::get(Type::getInt32Ty(getGlobalContext()), argc+1));
-  argValues.push_back(c->getNil());
+  argValues.push_back(ConstantInt::get(Type::getInt32Ty(getGlobalContext()), argc));
 
   for (int i = 0; i < argc; i++) {
     argValues.push_back(args.at(i)->codegen(c));
