@@ -22,3 +22,4 @@ CMakeFiles
 .project
 *.xcodeproj/
 .pydevproject
+.dir-locals.el

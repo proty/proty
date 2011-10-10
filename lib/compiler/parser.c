@@ -1,10 +1,6 @@
-#include <sstream>
-#include <fstream>
-#include <cstdlib>
-#include "parser.hh"
-#include "lexer.hh"
-#include "ast.hh"
-#include "error.hh"
+#include "parser.h"
+#include "lexer.h"
+#include "ast.h"
 
 Node* Parser::parseFile(std::string file) {
   std::istream* stream;

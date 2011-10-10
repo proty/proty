@@ -3,9 +3,7 @@ cmake_minimum_required(VERSION 2.8)
 project(proty)
 set(VERSION 0.3)
 
-set(CMAKE_C_COMPILER "clang")
 set(CMAKE_C_FLAGS "--std=c99 -Wall")
-set(CMAKE_CXX_COMPILER "clang++")
 set(CMAKE_CXX_FLAGS "-Wall")
 set(EXECUTABLE_OUTPUT_PATH "${CMAKE_BINARY_DIR}")
 set(LIBRARY_OUTPUT_PATH "${CMAKE_BINARY_DIR}/lib")
@@ -36,7 +34,7 @@ if(NOT GIT_RETURN_VALUE EQUAL 0)
   unset(GIT_VERSION)
 endif(NOT GIT_RETURN_VALUE EQUAL 0)
 
-add_subdirectory(compiler)
+add_subdirectory(src)
 add_subdirectory(lib)
 
 # documentation

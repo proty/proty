@@ -1,13 +1,12 @@
-#include <cstdlib>
-#include <cstdio>
+#include <stdlib.h>
+#include <stdio.h>
 #include <readline/readline.h>
 #include <readline/history.h>
-#include "ast.hh"
-#include "parser.hh"
-#include "compiler.hh"
-#include "program.hh"
-#include "error.hh"
-#include "config.hh"
+#include "compiler/ast.h"
+#include "compiler/parser.h"
+#include "compiler/compiler.h"
+#include "compiler/error.h"
+#include "compiler/config.h"
 
 int main(int argc, char** argv) {
   std::cout << "Proty " VERSION " " BUILD_TYPE " (" __DATE__ ", " __TIME__ ")" << std::endl;

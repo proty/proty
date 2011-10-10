@@ -1,8 +1,6 @@
 #ifndef PROTY_PARSER_HH
 #define PROTY_PARSER_HH
 
-#include <iostream>
-
 class Lexer;
 class Node;
 
