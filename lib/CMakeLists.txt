@@ -2,6 +2,7 @@ include_directories(.)
 
 add_subdirectory(runtime)
 add_subdirectory(compiler)
+add_subdirectory(vm)
 
 #add_executable(lib/io.bc io/io.c io/file.c)
 #add_executable(lib/net.bc net/net.c net/socket.c)

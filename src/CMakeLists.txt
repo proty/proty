@@ -1,3 +1,5 @@
+include_directories(${CMAKE_SOURCE_DIR}/lib/)
+
 add_executable(proty proty.c)
 target_link_libraries(proty protyc)
 
