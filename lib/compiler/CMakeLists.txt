@@ -21,6 +21,6 @@ add_library(protyc SHARED
   symtab.c
   codegen.c
 )
-target_link_libraries(protyc protyrt)
+target_link_libraries(protyc protyvm)
 
 install(TARGETS protyc LIBRARY DESTINATION lib)

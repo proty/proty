@@ -6,7 +6,7 @@
 #include "config.h"
 #include "parser.h"
 
-void Compiler_compileFile(const char* file) {
+Module* Compiler_compileFile(const char* file) {
     void* scanner;
     Node* root;
 
@@ -16,52 +16,72 @@ void Compiler_compileFile(const char* file) {
     yylex_destroy(scanner);
 
     if (!res) {
-        Context* context = calloc(sizeof(Context), 1);
-        Compiler_compile(root, context);
-        free(context);
+        return Compiler_compileRoot(root, file);
     }
+    else return 0;
 }
 
-void Compiler_compileString(const char* str) {
+Module* Compiler_compileString(const char* str) {
     void* scanner;
-    void* buf;
     Node* root;
 
     yylex_init(&scanner);
-    buf = yy_scan_string(str, scanner);
+    yy_scan_string(str, scanner);
     int res = yyparse(scanner, &root);
-    yy_delete_buffer(buf, scanner);
     yylex_destroy(scanner);
 
     if (!res) {
-        Context* context = calloc(sizeof(Context), 1);
-        Compiler_compile(root, context);
-        free(context);
+        return Compiler_compileRoot(root, "<eval>");
     }
+    else return 0;
 }
 
-int Compiler_compile(Node* node, Context* context) {
+Module* Compiler_compileRoot(Node* root, const char* name) {
+    Context* context = calloc(sizeof(Context), 1);
+
+    context->module = Module_new(name);
+    context->block = Block_new("entry");
+    Module_addBlock(context->module, context->block);
+
+    Compiler_compile(root, context);
+    Block_append(context->block, OP_RET, 0);
+
+    free(context);
+
+    Module_dump(context->module);
+    return context->module;
+}
+
+void Compiler_compile(Node* node, Context* context) {
     switch (node->tag) {
     case BranchNode:
         printf("Branch Node\n");
-	Compiler_compile(node->left, context);
+        Compiler_compile(node->left, context);
         break;
 
     case BinOpNode: {
-        int lhs = Compiler_compile(node->left, context);
-	int rhs = Compiler_compile(node->right, context);
-	printf("%s %i %i %i\n", node->data.sval, context->reg, lhs, rhs);
-	return context->reg++;
+        // push rhs onto the stack
+        Compiler_compile(node->right, context);
+
+        // push the symbol onto the stack
+        int sym = Module_addSymbol(context->module, node->data.sval);
+        Block_append(context->block, OP_SYM, 1, sym);
+
+        // push lhs onto the stack
+        Compiler_compile(node->left, context);
+
+        // send the operator as message to lhs
+        Block_append(context->block, OP_SEND, 1, 2);
     }
 
     case UnOpNode:
         printf("UnOp Node\n");
-	Compiler_compile(node->right, context);
-        return 0;
+        Compiler_compile(node->right, context);
+        break;
 
     case CallNode:
         printf("Call Node\n");
-	return 0;
+        break;
 
     case SendNode:
         printf("Send Node\n");
@@ -88,8 +108,8 @@ int Compiler_compile(Node* node, Context* context) {
         break;
 
     case IntegerNode:
-        printf("int %i %i\n", context->reg, node->data.ival);
-	return context->reg++;
+        Block_append(context->block, OP_INT, 1, node->data.ival);
+        break;
 
     case FloatNode:
         printf("Float Node\n");

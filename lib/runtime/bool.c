@@ -7,7 +7,7 @@ Object* Bool_str(Object* self) {
 
 Object* Bool_eq(Object* self, Object* other) {
   if (other == self) return Qtrue;
-  Object* otherBool = Object_send(other, SYM(bool), 0);
+  Object* otherBool = Object_send(other, SYM(bool), 0, 0);
   return self == otherBool ? Qtrue : Qfalse;
 }
 

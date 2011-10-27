@@ -1,4 +1,5 @@
 %{
+#include <stdio.h>
 #include "ast.h"
 #include "parser.h"
 int yyerror(void* yyloc, void* scanner, Node** root, const char* msg);

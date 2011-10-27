@@ -31,47 +31,23 @@ Object* Object_getSlot(Object* self, Object* key) {
   return Qnil;
 }
 
-Object* Object_call(Object* self, int argc, ...) {
+Object* Object_call(Object* self, int argc, Object** argv) {
   /// @todo: throw exception
   if (self->proto != Function_proto) {
     printf("proty: called non-function object\n");
     abort();
   }
 
-  va_list varargs;
-  Object** argv = alloca(sizeof(Object*)*argc);
-
-  // self is nil for calls
-  argc++;
-  argv[0] = Qnil;
-
-  va_start(varargs, argc);
-  for (int i = 1; i < argc; i++) {
-    argv[i] = va_arg(varargs, Object*);
-  }
-  va_end(varargs);
-
   return Function_call(self, argc, argv);
 }
 
-Object* Object_send(Object* self, Object* key, int argc, ...) {
+Object* Object_send(Object* self, Object* key, int argc, Object** argv) {
   Object* func = Object_getSlot(self, key);
 
   if (func->proto != Function_proto) {
     printf("proty: called non-function object\n");
     abort();
   }
-
-  va_list varargs;
-  Object** argv = alloca(sizeof(Object*)*argc);
-  argv[0] = self;
-
-  va_start(varargs, argc);
-  argc++;
-  for (int i = 1; i < argc; i++) {
-    argv[i] = va_arg(varargs, Object*);
-  }
-  va_end(varargs);
 
   return Function_call(func, argc, argv);
 }
@@ -81,7 +57,7 @@ Object* Object_bool(Object* self) {
 }
 
 Object* Object_not(Object* self) {
-  Object* bool = Object_send(self, SYM(bool), 0);
+  Object* bool = Object_send(self, SYM(bool), 0, 0);
   return bool == Qtrue ? Qfalse : Qtrue;
 }
 

@@ -27,4 +27,6 @@ typedef Object* (*FuncPtr)(Object*, ...);
 #define INITOBJ(name, value) pr_##name = value
 #define MODGET(name) pr_##name
 
+void runtime_init();
+
 #endif

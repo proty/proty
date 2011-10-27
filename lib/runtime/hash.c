@@ -47,7 +47,7 @@ static unsigned int hash_obj(Object* obj) {
     return hash_addr(obj);
   }
   else {
-    return Object_send(obj, SYM(hash), 0)->data.i;
+    return Object_send(obj, SYM(hash), 0, 0)->data.i;
   }
 }
 
@@ -68,7 +68,7 @@ static int cmp_obj(Object* a, Object* b) {
     }
   }
   else {
-    return Object_send(a, SYM(==), 1, b) == Qtrue;
+    return Object_send(a, SYM(==), 1, &b) == Qtrue;
   }
 }
 

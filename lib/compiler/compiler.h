@@ -2,13 +2,17 @@
 #define PROTY_COMPILER_H
 
 #include "ast.h"
+#include <vm/module.h>
+#include <vm/block.h>
 
 typedef struct Context {
-    int reg;
+    Module* module;
+    Block* block;
 } Context;
 
-void Compiler_compileFile(const char* file);
-void Compiler_compileString(const char* string);
-int Compiler_compile(Node* node, Context* context);
+Module* Compiler_compileFile(const char* file);
+Module* Compiler_compileString(const char* string);
+Module* Compiler_compileRoot(Node* root, const char* name);
+void Compiler_compile(Node* node, Context* context);
 
 #endif
