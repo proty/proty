@@ -12,6 +12,11 @@ int yylex(void* yylval_param, void* loc, void* scanner);
 %parse-param {void* scanner}
 %parse-param {Node** root}
 %lex-param {yyscan_t* scanner}
+%defines
+
+%code provides {
+    int yyparse(void* scanner, Node** root);
+}
 
 %union {
     int ival;
@@ -25,12 +30,12 @@ int yylex(void* yylval_param, void* loc, void* scanner);
 %token UNDEF "unknown token"
 
 // operators
-%left ASSIGN IADD ISUB IMUL IDIV
-%left MUL DIV
-%left ADD SUB
-%left EQ NE GT LT LE GE
-%left AND OR
 %left NOT
+%left AND OR
+%left EQ NE GT LT LE GE
+%left ADD SUB
+%left MUL DIV
+%left ASSIGN IADD ISUB IMUL IDIV
 
 // primitive data types
 %token <ival> INTEGER "integer"

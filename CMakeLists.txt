@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 2.8)
 project(proty)
 set(VERSION 0.3)
 
-set(CMAKE_C_FLAGS "--std=c99 -Wall")
+set(CMAKE_C_FLAGS "-std=c99 -fPIC -pedantic-errors")
 set(CMAKE_CXX_FLAGS "-Wall")
 set(EXECUTABLE_OUTPUT_PATH "${CMAKE_BINARY_DIR}")
 set(LIBRARY_OUTPUT_PATH "${CMAKE_BINARY_DIR}/lib")

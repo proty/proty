@@ -8,17 +8,10 @@ typedef struct Module {
 
     Block** blocks;
     int blockc;
-
-    const char** symbols;
-    const char** strings;
-    int symbolc;
-    int stringc;
 } Module;
 
 Module* Module_new(const char* name);
 int Module_addBlock(Module* self, Block* block);
-int Module_addSymbol(Module* self, const char* symbol);
-int Module_addString(Module* self, const char* string);
 void Module_dump(Module* self);
 
 #endif

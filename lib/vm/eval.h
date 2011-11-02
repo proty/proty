@@ -2,8 +2,8 @@
 #define PROTY_EVAL_H
 
 #include <runtime/runtime.h>
-#include "module.h"
+#include "block.h"
 
-Object* eval(Module* module);
+Object* eval(Block* block);
 
 #endif

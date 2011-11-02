@@ -1,17 +1,22 @@
 #include <stdlib.h>
 #include <stdio.h>
-#include <readline/readline.h>
-#include <readline/history.h>
+#include <runtime/runtime.h>
 #include <compiler/compiler.h>
 #include <vm/eval.h>
 #include <compiler/config.h>
 
+// GNU readline
+#include <readline/readline.h>
+#include <readline/history.h>
+
 int main(int argc, char** argv) {
     printf("Proty " VERSION " " BUILD_TYPE " (" __DATE__ ", " __TIME__ ")\n");
-#ifdef GIT_VERSION
+    #ifdef GIT_VERSION
     printf("[" GIT_VERSION "]\n");
-#endif
+    #endif
     printf("\n");
+
+    runtime_init();
 
     while (1) {
         char* input = readline(">>> ");
@@ -19,8 +24,9 @@ int main(int argc, char** argv) {
         if (!input) break;
         add_history(input);
 
-        Module* m = Compiler_compileString(input);
-        Object* o = eval(m);
+        Block* block = Compiler_compileString(input);
+        Object* object = eval(block);
+        printf("=> %i\n", object->data.i);
         free(input);
     }
     return 0;

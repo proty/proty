@@ -10,6 +10,7 @@ typedef enum OpCode {
     OP_GET,
     OP_CALL,
     OP_SEND,
+    OP_PUSH,
     OP_POP,
 } OpCode;
 
@@ -22,19 +23,21 @@ static const char* OpCodeNames[] = {
     "get",
     "call",
     "send",
+    "push",
     "pop",
 };
 
 static const int OpCodeSize[] = {
     0,
-    0,
+    1,
+    2,
+    2,
+    3,
+    2,
+    3,
+    4,
     1,
     1,
-    0,
-    0,
-    1,
-    1,
-    0,
 };
 
 #endif

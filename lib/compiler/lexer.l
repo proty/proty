@@ -11,6 +11,7 @@ typedef struct Node Node;
 %option yylineno
 %option bison-locations
 %option stack
+%option never-interactive
 
 %x STR
 %x COMMENT

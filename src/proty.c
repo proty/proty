@@ -5,9 +5,9 @@
 
 void version() {
     fprintf(stderr, "Proty " VERSION " " BUILD_TYPE " (" __DATE__ ", " __TIME__ ")\n");
-#ifdef GIT_VERSION
+    #ifdef GIT_VERSION
     fprintf(stderr, "[" GIT_VERSION "]\n");;
-#endif
+    #endif
     fprintf(stderr, "\n");
     fprintf(stderr, "This program comes with ABSOLUTELY NO WARRANTY.\n");
     fprintf(stderr, "This is free software, and you are welcome to redistribute it\n");

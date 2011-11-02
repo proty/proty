@@ -15,8 +15,8 @@ typedef struct {
  * generate hashes fast and with a low collision rate.
  */
 
-static unsigned int hash_str(const char* str) {
-  unsigned int hash = 5381;
+static unsigned hash_str(const char* str) {
+  unsigned hash = 5381;
   int c;
 
   while ((c = *str++))
@@ -31,7 +31,7 @@ static unsigned int hash_str(const char* str) {
  */
 
 static unsigned int hash_addr(void* addr) {
-  unsigned int key = (unsigned int)addr;
+  unsigned key = (unsigned)addr;
   return (key >> 3) * 2654435761;
 }
 

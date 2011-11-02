@@ -1,47 +1,61 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <alloca.h>
 #include "eval.h"
 
-#define POP() *(sp--)
-#define TOP() *sp
-#define PUSH(obj) *(++sp) = obj
+#define R(x) registers[x]
+#define PCi *(pc++)
+#define PC(x) (*(pc+x))
 
-Object* eval(Module* module) {
-    int* pc = module->blocks[0]->data;
+Object* eval(Block* block) {
+    int* pc = block->data;
+    int sp = 0;
 
+    Object* registers[256];
     Object* stack[256];
-    Object** sp = stack;
-
-    runtime_init();
 
     for (;;) {
-        switch (*(pc++)) {
+        switch (PCi) {
         case OP_INT:
-            PUSH(Integer_new(*pc));
-            pc++;
+            R(PC(0)) = Integer_new(PC(1));
+            pc += 2;
             break;
 
         case OP_SYM:
-            PUSH(Symbol_get(module->symbols[*pc]));
-            pc++;
+            R(PC(0)) = Symbol_get(block->constants[PC(1)]->data);
+            pc += 2;
             break;
 
         case OP_SEND: {
-            Object* msg = POP();
-            Object* obj = POP();
-            int argc = POP();
-            PUSH(Object_send(obj, msg, argc, sp-argc));
-            pc++;
+            int ret = PCi;
+            Object* obj = R(PCi);
+            Object* msg = R(PCi);
+            int argc = PCi+1;
+
+            Object** args = alloca(sizeof(Object*)*argc);
+            args[0] = obj;
+            for (int i = 1; i < argc; i++) {
+                args[i] = stack[--sp];
+            }
+
+            R(ret) = Object_send(obj, msg, argc, args);
             break;
         }
 
         case OP_RET:
-            return TOP();
+            return R(PCi);
+
+        case OP_PUSH:
+            stack[sp++] = R(PCi);
+            break;
+
+        case OP_POP:
+            R(PCi) = stack[--sp];
+            break;
 
         default:
             fprintf(stderr, "error. unknown instruction.");
             abort();
         }
-
     }
 }
