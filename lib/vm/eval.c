@@ -42,6 +42,23 @@ Object* eval(Block* block) {
             break;
         }
 
+        case OP_GET: {
+            int ret = PCi;
+            Object* obj = R(PCi);
+            Object* slot = R(PCi);
+            R(ret) = Object_getSlot(obj, slot);
+            break;
+        }
+
+        case OP_SET: {
+            int ret = PCi;
+            Object* obj = R(PCi);
+            Object* slot = R(PCi);
+            Object* val = R(PCi);
+            R(ret) = Object_setSlot(obj, slot, val);
+            break;
+        }
+
         case OP_RET:
             return R(PCi);
 

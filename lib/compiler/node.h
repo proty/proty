@@ -27,6 +27,7 @@ typedef struct Node {
         int ival;
         double dval;
         const char* sval;
+        struct Node* node;
     } data;
 
     struct Node* left;

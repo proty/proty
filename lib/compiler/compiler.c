@@ -44,24 +44,20 @@ Block* Compiler_compileRoot(Node* root, const char* name) {
     Block* block = context->block;
     free(context);
 
+    Block_dump(block);
     return block;
 }
 
 int Compiler_compile(Node* node, Context* context) {
     switch (node->tag) {
     case BranchNode:
-        printf("Branch Node\n");
         Compiler_compile(node->left, context);
         break;
 
     case BinOpNode: {
         int lhs = Compiler_compile(node->left, context);
         int rhs = Compiler_compile(node->right, context);
-
-        // get the operator symbol
-        int sym = Block_constant(context->block, CONSTANT_SYMBOL, (void*)node->data.sval);
-        Block_append(context->block, OP_SYM, context->reg, sym);
-        int op = context->reg++;
+        int op = Compiler_compile(node->data.node, context);
 
         // push rhs onto the stack
         Block_append(context->block, OP_PUSH, rhs);
@@ -85,13 +81,20 @@ int Compiler_compile(Node* node, Context* context) {
         printf("Send Node\n");
         break;
 
-    case SetSlotNode:
-        printf("SetSlotNode\n");
-        break;
+    case SetSlotNode: {
+        int obj = Compiler_compile(node->left, context);
+        int val = Compiler_compile(node->right, context);
+        int slot = Compiler_compile(node->data.node, context);
+        Block_append(context->block, OP_SET, context->reg, obj, slot, val);
+        return context->reg++;
+    }
 
-    case GetSlotNode:
-        printf("GetSlotNode\n");
-        break;
+    case GetSlotNode: {
+        int obj = Compiler_compile(node->left, context);
+        int slot = Compiler_compile(node->data.node, context);
+        Block_append(context->block, OP_GET, context->reg, obj, slot);
+        return context->reg++;
+    }
 
     case AssignNode:
         printf("Assign Node\n");
@@ -121,9 +124,11 @@ int Compiler_compile(Node* node, Context* context) {
         printf("Name Node\n");
         break;
 
-    case SymbolNode:
-        printf("Symbol Node\n");
-        break;
+    case SymbolNode: {
+        int sym = Block_constant(context->block, CONSTANT_SYMBOL, (void*)node->data.sval);
+        Block_append(context->block, OP_SYM, context->reg, sym);
+        return context->reg++;
+    }
 
     default:
         printf("Something else %i\n", node->tag);

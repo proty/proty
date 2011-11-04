@@ -1,6 +1,6 @@
 %{
 #include <stdio.h>
-#include "ast.h"
+#include "node.h"
 #include "parser.h"
 int yyerror(void* yyloc, void* scanner, Node** root, const char* msg);
 int yylex(void* yylval_param, void* loc, void* scanner);
@@ -67,6 +67,8 @@ int yylex(void* yylval_param, void* loc, void* scanner);
 %token SEMICOLON ";"
 %token ARROW "=>"
 
+%right DOT
+
 %type <node> primary block statements unop binop expression
 %type <node> if_stmt while_stmt
 
@@ -91,6 +93,9 @@ expression:     LPAR expression RPAR { $$ = $2; }
               | unop                 { $$ = $1; }
               | binop                { $$ = $1; }
               | primary              { $$ = $1; }
+              | expression DOT NAME  { $$ = Node_new(GetSlotNode, $1, 0);
+                                       $$->data.node = Node_new(SymbolNode, 0, 0);
+                                       $$->data.node->data.sval = $3; }
               ;
 
 unop:           NOT expression       { $$ = Node_new(UnOpNode, 0, $2);
@@ -98,34 +103,44 @@ unop:           NOT expression       { $$ = Node_new(UnOpNode, 0, $2);
               ;
 
 binop:          expression ADD expression { $$ = Node_new(BinOpNode, $1, $3);
-                                            $$->data.sval = "+"; }
+                                            $$->data.node = Node_new(SymbolNode, 0, 0);
+                                            $$->data.node->data.sval = "+"; }
 
               | expression SUB expression { $$ = Node_new(BinOpNode, $1, $3);
-                                            $$->data.sval = "-"; }
+                                            $$->data.node = Node_new(SymbolNode, 0, 0);
+                                            $$->data.node->data.sval = "+"; }
 
               | expression MUL expression { $$ = Node_new(BinOpNode, $1, $3);
-                                            $$->data.sval = "*"; }
+                                            $$->data.node = Node_new(SymbolNode, 0, 0);
+                                            $$->data.node->data.sval = "*"; }
 
               | expression DIV expression { $$ = Node_new(BinOpNode, $1, $3);
-                                            $$->data.sval = "/"; }
+                                            $$->data.node = Node_new(SymbolNode, 0, 0);
+                                            $$->data.node->data.sval = "/"; }
 
               | expression EQ expression  { $$ = Node_new(BinOpNode, $1, $3);
-                                            $$->data.sval = "=="; }
+                                            $$->data.node = Node_new(SymbolNode, 0, 0);
+                                            $$->data.node->data.sval = "=="; }
 
               | expression NE expression  { $$ = Node_new(BinOpNode, $1, $3);
-                                            $$->data.sval = "!="; }
+                                            $$->data.node = Node_new(SymbolNode, 0, 0);
+                                            $$->data.node->data.sval = "!="; }
 
               | expression GT expression  { $$ = Node_new(BinOpNode, $1, $3);
-                                            $$->data.sval = ">"; }
+                                            $$->data.node = Node_new(SymbolNode, 0, 0);
+                                            $$->data.node->data.sval = ">"; }
 
               | expression LT expression  { $$ = Node_new(BinOpNode, $1, $3);
-                                            $$->data.sval = "<"; }
+                                            $$->data.node = Node_new(SymbolNode, 0, 0);
+                                            $$->data.node->data.sval = "<"; }
 
               | expression GE expression  { $$ = Node_new(BinOpNode, $1, $3);
-                                            $$->data.sval = ">="; }
+                                            $$->data.node = Node_new(SymbolNode, 0, 0);
+                                            $$->data.node->data.sval = ">="; }
 
               | expression LE expression  { $$ = Node_new(BinOpNode, $1, $3);
-                                            $$->data.sval = "<="; }
+                                            $$->data.node = Node_new(SymbolNode, 0, 0);
+                                            $$->data.node->data.sval = "<="; }
               ;
 
 primary:        INTEGER { $$ = Node_new(IntegerNode, 0, 0);

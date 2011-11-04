@@ -1,7 +1,7 @@
 #ifndef PROTY_COMPILER_H
 #define PROTY_COMPILER_H
 
-#include "ast.h"
+#include "node.h"
 #include <vm/block.h>
 
 typedef struct Context {

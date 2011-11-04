@@ -17,7 +17,7 @@ ADD_FLEX_BISON_DEPENDENCY(Lexer Parser)
 add_library(protyc SHARED
   ${BISON_Parser_OUTPUTS}
   ${FLEX_Lexer_OUTPUTS}
-  ast.c
+  node.c
   compiler.c
 #  symtab.c
 #  codegen.c

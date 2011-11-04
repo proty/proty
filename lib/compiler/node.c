@@ -1,4 +1,4 @@
-#include "ast.h"
+#include "node.h"
 
 Node* Node_new(enum NodeTag tag, Node* left, Node* right) {
     Node* n = malloc(sizeof(Node));

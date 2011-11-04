@@ -25,8 +25,10 @@ int main(int argc, char** argv) {
         add_history(input);
 
         Block* block = Compiler_compileString(input);
-        Object* object = eval(block);
-        printf("=> %i\n", object->data.i);
+        if (block) {
+            Object* object = eval(block);
+            printf("=> %i\n", object->data.i);
+        }
         free(input);
     }
     return 0;
