@@ -96,6 +96,9 @@ expression:     LPAR expression RPAR { $$ = $2; }
               | expression DOT NAME  { $$ = Node_new(GetSlotNode, $1, 0);
                                        $$->data.node = Node_new(SymbolNode, 0, 0);
                                        $$->data.node->data.sval = $3; }
+              | expression DOT NAME ASSIGN expression { $$ = Node_new(SetSlotNode, $1, $5);
+                                                        $$->data.node = Node_new(SymbolNode, 0, 0);
+                                                        $$->data.node->data.sval = $3; }
               ;
 
 unop:           NOT expression       { $$ = Node_new(UnOpNode, 0, $2);
