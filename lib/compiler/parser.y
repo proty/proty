@@ -93,57 +93,24 @@ expression:     LPAR expression RPAR { $$ = $2; }
               | unop                 { $$ = $1; }
               | binop                { $$ = $1; }
               | primary              { $$ = $1; }
-              | expression DOT NAME  { $$ = Node_new(GetSlotNode, $1, 0);
-                                       $$->data.node = Node_new(SymbolNode, 0, 0);
-                                       $$->data.node->data.sval = $3; }
-              | expression DOT NAME ASSIGN expression { $$ = Node_new(SetSlotNode, $1, $5);
-                                                        $$->data.node = Node_new(SymbolNode, 0, 0);
-                                                        $$->data.node->data.sval = $3; }
+              | expression DOT NAME  { $$ = GetSlotNode_new($1, $3); }
+              | expression DOT NAME ASSIGN expression { $$ = SetSlotNode_new($1, $5, $3); }
               ;
 
 unop:           NOT expression       { $$ = Node_new(UnOpNode, 0, $2);
                                        $$->data.sval = "not"; }
               ;
 
-binop:          expression ADD expression { $$ = Node_new(BinOpNode, $1, $3);
-                                            $$->data.node = Node_new(SymbolNode, 0, 0);
-                                            $$->data.node->data.sval = "+"; }
-
-              | expression SUB expression { $$ = Node_new(BinOpNode, $1, $3);
-                                            $$->data.node = Node_new(SymbolNode, 0, 0);
-                                            $$->data.node->data.sval = "+"; }
-
-              | expression MUL expression { $$ = Node_new(BinOpNode, $1, $3);
-                                            $$->data.node = Node_new(SymbolNode, 0, 0);
-                                            $$->data.node->data.sval = "*"; }
-
-              | expression DIV expression { $$ = Node_new(BinOpNode, $1, $3);
-                                            $$->data.node = Node_new(SymbolNode, 0, 0);
-                                            $$->data.node->data.sval = "/"; }
-
-              | expression EQ expression  { $$ = Node_new(BinOpNode, $1, $3);
-                                            $$->data.node = Node_new(SymbolNode, 0, 0);
-                                            $$->data.node->data.sval = "=="; }
-
-              | expression NE expression  { $$ = Node_new(BinOpNode, $1, $3);
-                                            $$->data.node = Node_new(SymbolNode, 0, 0);
-                                            $$->data.node->data.sval = "!="; }
-
-              | expression GT expression  { $$ = Node_new(BinOpNode, $1, $3);
-                                            $$->data.node = Node_new(SymbolNode, 0, 0);
-                                            $$->data.node->data.sval = ">"; }
-
-              | expression LT expression  { $$ = Node_new(BinOpNode, $1, $3);
-                                            $$->data.node = Node_new(SymbolNode, 0, 0);
-                                            $$->data.node->data.sval = "<"; }
-
-              | expression GE expression  { $$ = Node_new(BinOpNode, $1, $3);
-                                            $$->data.node = Node_new(SymbolNode, 0, 0);
-                                            $$->data.node->data.sval = ">="; }
-
-              | expression LE expression  { $$ = Node_new(BinOpNode, $1, $3);
-                                            $$->data.node = Node_new(SymbolNode, 0, 0);
-                                            $$->data.node->data.sval = "<="; }
+binop:          expression ADD expression { $$ = BinOpNode_new($1, $3, "+"); }
+              | expression SUB expression { $$ = BinOpNode_new($1, $3, "-"); }
+              | expression MUL expression { $$ = BinOpNode_new($1, $3, "*"); }
+              | expression DIV expression { $$ = BinOpNode_new($1, $3, "/"); }
+              | expression EQ expression  { $$ = BinOpNode_new($1, $3, "=="); }
+              | expression NE expression  { $$ = BinOpNode_new($1, $3, "!="); }
+              | expression GT expression  { $$ = BinOpNode_new($1, $3, ">"); }
+              | expression LT expression  { $$ = BinOpNode_new($1, $3, "<"); }
+              | expression GE expression  { $$ = BinOpNode_new($1, $3, ">="); }
+              | expression LE expression  { $$ = BinOpNode_new($1, $3, "<="); }
               ;
 
 primary:        INTEGER { $$ = Node_new(IntegerNode, 0, 0);
