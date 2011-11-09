@@ -22,7 +22,17 @@ Object* eval(Block* block) {
             break;
 
         case OP_SYM:
-            R(PC(0)) = Symbol_get(block->constants[PC(1)]->data);
+            R(PC(0)) = Symbol_get(block->consts[PC(1)]->data);
+            pc += 2;
+            break;
+
+        case OP_STR:
+            R(PC(0)) = String_new(block->consts[PC(1)]->data);
+            pc += 2;
+            break;
+
+        case OP_FLOAT:
+            R(PC(0)) = Float_new(*(double*)block->consts[PC(1)]->data);
             pc += 2;
             break;
 

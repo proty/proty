@@ -6,8 +6,8 @@
 Block* Block_new(const char* name) {
     Block* block = malloc(sizeof(Block));
     block->data = malloc(sizeof(int));
-    block->constants = malloc(sizeof(Constant));
-    block->constantc = 0;
+    block->consts = malloc(sizeof(Const));
+    block->constc = 0;
     block->size = 0;
     return block;
 }
@@ -29,14 +29,14 @@ void Block_append(Block* self, OpCode op, ...) {
     va_end(ap);
 }
 
-int Block_constant(Block* self, ConstantType type, void* data) {
-    Constant* constant = malloc(sizeof(Constant));
+int Block_const(Block* self, ConstType type, void* data) {
+    Const* constant = malloc(sizeof(Const));
     constant->type = type;
     constant->data = data;
 
-    self->constants = realloc(self->constants, sizeof(Constant*)*(self->constantc+1));
-    self->constants[self->constantc] = constant;
-    return self->constantc++;
+    self->consts = realloc(self->consts, sizeof(Const*)*(self->constc+1));
+    self->consts[self->constc] = constant;
+    return self->constc++;
 }
 
 void Block_dump(Block* self) {

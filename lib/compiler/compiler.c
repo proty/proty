@@ -112,20 +112,27 @@ int Compiler_compile(Node* node, Context* context) {
         Block_append(context->block, OP_INT, context->reg, node->data.ival);
         return context->reg++;
 
-    case FloatNode:
-        printf("Float Node\n");
-        break;
+    case FloatNode: {
+        printf("float: %f\n", node->data.dval);
+        double* data = malloc(sizeof(double));
+        *data = node->data.dval;
+        int fl = Block_const(context->block, CONST_FLOAT, (void*)data);
+        Block_append(context->block, OP_FLOAT, context->reg, fl);
+        return context->reg++;
+    }
 
-    case StringNode:
-        printf("String Node\n");
-        break;
+    case StringNode: {
+        int str = Block_const(context->block, CONST_STR, (void*)node->data.sval);
+        Block_append(context->block, OP_STR, context->reg, str);
+        return context->reg++;
+    }
 
     case NameNode:
         printf("Name Node\n");
         break;
 
     case SymbolNode: {
-        int sym = Block_constant(context->block, CONSTANT_SYMBOL, (void*)node->data.sval);
+        int sym = Block_const(context->block, CONST_SYM, (void*)node->data.sval);
         Block_append(context->block, OP_SYM, context->reg, sym);
         return context->reg++;
     }

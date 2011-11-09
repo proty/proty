@@ -3,27 +3,28 @@
 
 #include "opcodes.h"
 
-typedef enum ConstantType {
-    CONSTANT_STRING,
-    CONSTANT_SYMBOL,
-} ConstantType;
+typedef enum ConstType {
+    CONST_STR,
+    CONST_SYM,
+    CONST_FLOAT,
+} ConstType;
 
-typedef struct Constant {
-    ConstantType type;
+typedef struct Const {
+    ConstType type;
     void* data;
-} Constant;
+} Const;
 
 typedef struct Block {
     int* data;
     int size;
 
-    Constant** constants;
-    int constantc;
+    Const** consts;
+    int constc;
 } Block;
 
 Block* Block_new();
 void Block_append(Block* self, OpCode op, ...);
-int Block_constant(Block* self, ConstantType type, void* data);
+int Block_const(Block* self, ConstType type, void* data);
 void Block_dump(Block* self);
 
 #endif

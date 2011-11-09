@@ -28,6 +28,7 @@ int main(int argc, char** argv) {
         if (block) {
             Object* object = eval(block);
             printf("=> %i\n", object->data.i);
+            printf("=> %f\n", object->data.d);
         }
         free(input);
     }

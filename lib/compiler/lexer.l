@@ -1,5 +1,6 @@
 %{
 typedef struct Node Node;
+#include <stdlib.h>
 #include "parser.h"
 #define YY_USER_ACTION yylloc->last_column += yyleng;
 %}
@@ -13,7 +14,6 @@ typedef struct Node Node;
 %option stack
 %option never-interactive
 
-%x STR
 %x COMMENT
 
 %%
@@ -61,13 +61,10 @@ typedef struct Node Node;
 ";"     { return SEMICOLON; }
 "=>"    { return ARROW; }
 
-[0-9]+\.[0-9]+ { yylval->dval = atof(yytext); return DECIMAL; }
-[0-9]+ { yylval->ival = atoi(yytext); return INTEGER; }
-[a-zA-Z][a-zA-Z0-9]* { yylval->sval = yytext; return NAME; }
-
-\"      { BEGIN(STR); }
-<STR>\\n  { }
-<STR>\" { BEGIN(INITIAL); }
+[0-9]+\.[0-9]+       { yylval->dval = atof(yytext); return DECIMAL; }
+[0-9]+               { yylval->ival = atoi(yytext); return INTEGER; }
+[a-zA-Z][a-zA-Z0-9]* { yylval->sval = strdup(yytext); return NAME; }
+\"([^"\\]|\\.)*\"    { yylval->sval = strndup(yytext+1, strlen(yytext)-2); return STRING; }
 
 "/*"              { BEGIN(COMMENT); }
 <COMMENT>\n       { yylloc->last_line += yyleng;
