@@ -68,9 +68,10 @@ int yylex(void* yylval_param, void* loc, void* scanner);
 %token ARROW "=>"
 
 %right DOT
+%right LPAR
 
 %type <node> primary block statements unop binop expression
-%type <node> if_stmt while_stmt
+%type <node> if_stmt while_stmt args
 
 %%
 
@@ -95,6 +96,12 @@ expression:     LPAR expression RPAR { $$ = $2; }
               | primary              { $$ = $1; }
               | expression DOT NAME  { $$ = GetSlotNode_new($1, $3); }
               | expression DOT NAME ASSIGN expression { $$ = SetSlotNode_new($1, $5, $3); }
+              | expression DOT NAME LPAR args RPAR { $$ = SendNode_new($1, $5, $3); }
+              | expression LPAR args RPAR { $$ = Node_new(CallNode, $1, $3); }
+              ;
+
+args:           expression { $$ = Node_new(ArgsNode, $1, 0); }
+              | expression COMMA args { $$ = Node_new(ArgsNode, $1, $3); }
               ;
 
 unop:           NOT expression       { $$ = Node_new(UnOpNode, 0, $2);

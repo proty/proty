@@ -28,3 +28,10 @@ Node* SetSlotNode_new(Node* obj, Node* val, const char* slot) {
     n->data.node->data.sval = slot;
     return n;
 }
+
+Node* SendNode_new(Node* obj, Node* args, const char* slot) {
+    Node* n = Node_new(SendNode, obj, args);
+    n->data.node = Node_new(SymbolNode, 0, 0);
+    n->data.node->data.sval = slot;
+    return n;
+}

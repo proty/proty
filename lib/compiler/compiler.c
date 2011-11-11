@@ -73,13 +73,34 @@ int Compiler_compile(Node* node, Context* context) {
         Compiler_compile(node->right, context);
         break;
 
-    case CallNode:
-        printf("Call Node\n");
-        break;
+    case CallNode: {
+        int obj = Compiler_compile(node->left, context);
+        int argc = Compiler_compile(node->right, context);
 
-    case SendNode:
-        printf("Send Node\n");
-        break;
+        Block_append(context->block, OP_CALL, context->reg, obj, argc);
+        return context->reg++;
+    }
+
+    case SendNode: {
+        int obj = Compiler_compile(node->left, context);
+        int argc = Compiler_compile(node->right, context);
+        int slot = Compiler_compile(node->data.node, context);
+
+        Block_append(context->block, OP_SEND, context->reg, obj, slot, argc);
+        return context->reg++;
+    }
+
+    case ArgsNode: {
+        int argc = 0;
+        Node* args = node;
+        while (args) {
+            argc++;
+            int arg = Compiler_compile(args->left, context);
+            Block_append(context->block, OP_PUSH, arg);
+            args = args->right;
+        };
+        return argc;
+    }
 
     case SetSlotNode: {
         int obj = Compiler_compile(node->left, context);
