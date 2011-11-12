@@ -16,7 +16,7 @@ Block* Compiler_compileFile(const char* file) {
     int res = yyparse(scanner, &root);
     yylex_destroy(scanner);
 
-    return res ? 0 : Compiler_compileRoot(root, file);
+    return res ? 0 : Compiler_compileRoot(root);
 }
 
 Block* Compiler_compileString(const char* str) {
@@ -28,10 +28,10 @@ Block* Compiler_compileString(const char* str) {
     int res = yyparse(scanner, &root);
     yylex_destroy(scanner);
 
-    return res ? 0 : Compiler_compileRoot(root, "<eval>");
+    return res ? 0 : Compiler_compileRoot(root);
 }
 
-Block* Compiler_compileRoot(Node* root, const char* name) {
+Block* Compiler_compileRoot(Node* root) {
     Context* context = calloc(sizeof(Context), 1);
 
     context->reg = 0;
