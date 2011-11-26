@@ -43,7 +43,9 @@ int main(int argc, const char** argv) {
       else { file = argv[count]; break; }
   }
 
-  Compiler_compileFile(file);
+  Context* context = Compiler_newContext();
+  Compiler_compileFile(context, file);
+  free(context);
 
   return 0;
 }

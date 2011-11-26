@@ -7,15 +7,29 @@
 #define PCi *(pc++)
 #define PC(x) (*(pc+x))
 
-Object* eval(Block* block) {
+Object* eval(State* state, Block* block) {
     int* pc = block->data;
-    int sp = 0;
+    int sp = state->sp;
 
-    Object* registers[256];
-    Object* stack[256];
+    Object** registers = state->registers;
+    Object** stack = state->stack;
 
     for (;;) {
         switch (PCi) {
+        case OP_HLT:
+            return Qnil;
+
+        case OP_NOP:
+            break;
+
+        case OP_MOV:
+            R(PC(0)) = R(PC(1));
+            pc += 2;
+            break;
+
+        case OP_RET:
+            return R(PCi);
+
         case OP_INT:
             R(PC(0)) = Integer_new(PC(1));
             pc += 2;
@@ -68,9 +82,6 @@ Object* eval(Block* block) {
             R(ret) = Object_setSlot(obj, slot, val);
             break;
         }
-
-        case OP_RET:
-            return R(PCi);
 
         case OP_PUSH:
             stack[sp++] = R(PCi);

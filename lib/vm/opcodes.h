@@ -2,7 +2,9 @@
 #define PROTY_OPCODE_H
 
 typedef enum OpCode {
+    OP_HLT,
     OP_NOP,
+    OP_MOV,
     OP_RET,
     OP_SYM,
     OP_INT,
@@ -17,7 +19,9 @@ typedef enum OpCode {
 } OpCode;
 
 static const char* OpCodeNames[] = {
+    "hlt",
     "nop",
+    "mov",
     "ret",
     "sym",
     "int",
@@ -33,6 +37,8 @@ static const char* OpCodeNames[] = {
 
 static const int OpCodeSize[] = {
     0,
+    0,
+    2,
     1,
     2,
     2,

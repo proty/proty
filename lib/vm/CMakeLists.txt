@@ -2,6 +2,7 @@ add_library(protyvm SHARED
   block.c
   eval.c
   module.c
+  state.c
 )
 target_link_libraries(protyvm protyrt)
 

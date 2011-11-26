@@ -3,7 +3,8 @@
 
 #include <runtime/runtime.h>
 #include "block.h"
+#include "state.h"
 
-Object* eval(Block* block);
+Object* eval(State* state, Block* block);
 
 #endif

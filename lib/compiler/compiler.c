@@ -7,7 +7,17 @@
 #include "parser.h"
 #include "lexer.h"
 
-Block* Compiler_compileFile(const char* file) {
+Context* Compiler_newContext() {
+    Context* context = malloc(sizeof(Context));
+
+    context->reg = 0;
+    context->block = 0;
+    context->symtab = SymTab_new();
+
+    return context;
+}
+
+Block* Compiler_compileFile(Context* context, const char* file) {
     void* scanner;
     Node* root;
 
@@ -16,10 +26,10 @@ Block* Compiler_compileFile(const char* file) {
     int res = yyparse(scanner, &root);
     yylex_destroy(scanner);
 
-    return res ? 0 : Compiler_compileRoot(root);
+    return res ? 0 : Compiler_compileRoot(context, root);
 }
 
-Block* Compiler_compileString(const char* str) {
+Block* Compiler_compileString(Context* context, const char* str) {
     void* scanner;
     Node* root;
 
@@ -28,36 +38,32 @@ Block* Compiler_compileString(const char* str) {
     int res = yyparse(scanner, &root);
     yylex_destroy(scanner);
 
-    return res ? 0 : Compiler_compileRoot(root);
+    return res ? 0 : Compiler_compileRoot(context, root);
 }
 
-Block* Compiler_compileRoot(Node* root) {
-    Context* context = calloc(sizeof(Context), 1);
-
-    context->reg = 0;
+Block* Compiler_compileRoot(Context* context, Node* root) {
     context->block = Block_new();
 
     // return the last object
-    int ret = Compiler_compile(root, context);
+    int ret = Compiler_compile(context, root);
     Block_append(context->block, OP_RET, ret);
 
     Block* block = context->block;
-    free(context);
 
     Block_dump(block);
     return block;
 }
 
-int Compiler_compile(Node* node, Context* context) {
+int Compiler_compile(Context* context, Node* node) {
     switch (node->tag) {
     case BranchNode:
-        Compiler_compile(node->left, context);
+        Compiler_compile(context, node->left);
         break;
 
     case BinOpNode: {
-        int lhs = Compiler_compile(node->left, context);
-        int rhs = Compiler_compile(node->right, context);
-        int op = Compiler_compile(node->data.node, context);
+        int lhs = Compiler_compile(context, node->left);
+        int rhs = Compiler_compile(context, node->right);
+        int op = Compiler_compile(context, node->data.node);
 
         // push rhs onto the stack
         Block_append(context->block, OP_PUSH, rhs);
@@ -70,21 +76,21 @@ int Compiler_compile(Node* node, Context* context) {
 
     case UnOpNode:
         printf("UnOp Node\n");
-        Compiler_compile(node->right, context);
+        Compiler_compile(context, node->right);
         break;
 
     case CallNode: {
-        int obj = Compiler_compile(node->left, context);
-        int argc = Compiler_compile(node->right, context);
+        int obj = Compiler_compile(context, node->left);
+        int argc = Compiler_compile(context, node->right);
 
         Block_append(context->block, OP_CALL, context->reg, obj, argc);
         return context->reg++;
     }
 
     case SendNode: {
-        int obj = Compiler_compile(node->left, context);
-        int argc = Compiler_compile(node->right, context);
-        int slot = Compiler_compile(node->data.node, context);
+        int obj = Compiler_compile(context, node->left);
+        int argc = Compiler_compile(context, node->right);
+        int slot = Compiler_compile(context, node->data.node);
 
         Block_append(context->block, OP_SEND, context->reg, obj, slot, argc);
         return context->reg++;
@@ -95,7 +101,7 @@ int Compiler_compile(Node* node, Context* context) {
         Node* args = node;
         while (args) {
             argc++;
-            int arg = Compiler_compile(args->left, context);
+            int arg = Compiler_compile(context, args->left);
             Block_append(context->block, OP_PUSH, arg);
             args = args->right;
         };
@@ -103,23 +109,32 @@ int Compiler_compile(Node* node, Context* context) {
     }
 
     case SetSlotNode: {
-        int obj = Compiler_compile(node->left, context);
-        int val = Compiler_compile(node->right, context);
-        int slot = Compiler_compile(node->data.node, context);
+        int obj = Compiler_compile(context, node->left);
+        int val = Compiler_compile(context, node->right);
+        int slot = Compiler_compile(context, node->data.node);
         Block_append(context->block, OP_SET, context->reg, obj, slot, val);
         return context->reg++;
     }
 
     case GetSlotNode: {
-        int obj = Compiler_compile(node->left, context);
-        int slot = Compiler_compile(node->data.node, context);
+        int obj = Compiler_compile(context, node->left);
+        int slot = Compiler_compile(context, node->data.node);
         Block_append(context->block, OP_GET, context->reg, obj, slot);
         return context->reg++;
     }
 
-    case AssignNode:
-        printf("Assign Node\n");
-        break;
+    case AssignNode: {
+        int reg = SymTab_lookup(context->symtab, node->data.sval);
+        int obj = Compiler_compile(context, node->right);
+
+        if (!reg) {
+            SymTab_store(context->symtab, node->data.sval, context->reg);
+            reg = context->reg++;
+        }
+
+        Block_append(context->block, OP_MOV, reg, obj);
+        return reg;
+    }
 
     case IfNode:
         printf("IF Node\n");
@@ -148,9 +163,14 @@ int Compiler_compile(Node* node, Context* context) {
         return context->reg++;
     }
 
-    case NameNode:
-        printf("Name Node\n");
-        break;
+    case NameNode: {
+        int reg = SymTab_lookup(context->symtab, node->data.sval);
+        if (!reg) {
+            printf("name %s not defined\n", node->data.sval);
+            abort();
+        }
+        return reg;
+    }
 
     case SymbolNode: {
         int sym = Block_const(context->block, CONST_SYM, (void*)node->data.sval);
@@ -159,6 +179,6 @@ int Compiler_compile(Node* node, Context* context) {
     }
 
     default:
-        printf("Something else %i\n", node->tag);
+        abort();
     }
 }

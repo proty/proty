@@ -2,8 +2,8 @@
 #include <stdio.h>
 #include <runtime/runtime.h>
 #include <compiler/compiler.h>
-#include <vm/eval.h>
 #include <compiler/config.h>
+#include <vm/eval.h>
 
 // GNU readline
 #include <readline/readline.h>
@@ -18,19 +18,23 @@ int main(int argc, char** argv) {
 
     runtime_init();
 
+    Context* context = Compiler_newContext();
+    State* state = State_new();
+
     while (1) {
         char* input = readline(">>> ");
 
         if (!input) break;
         add_history(input);
 
-        Block* block = Compiler_compileString(input);
+        Block* block = Compiler_compileString(context, input);
         if (block) {
-            Object* object = eval(block);
+            Object* object = eval(state, block);
             printf("=> %i\n", object->data.i);
-            printf("=> %f\n", object->data.d);
         }
         free(input);
     }
+
+    free(context);
     return 0;
 }

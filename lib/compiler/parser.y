@@ -94,6 +94,7 @@ expression:     LPAR expression RPAR { $$ = $2; }
               | unop                 { $$ = $1; }
               | binop                { $$ = $1; }
               | primary              { $$ = $1; }
+              | expression ASSIGN expression { $$ = AssignNode_new($1, $3); }
               | expression DOT NAME  { $$ = GetSlotNode_new($1, $3); }
               | expression DOT NAME ASSIGN expression { $$ = SetSlotNode_new($1, $5, $3); }
               | expression DOT NAME LPAR args RPAR { $$ = SendNode_new($1, $5, $3); }

@@ -19,8 +19,7 @@ add_library(protyc SHARED
   ${FLEX_Lexer_OUTPUTS}
   node.c
   compiler.c
-#  symtab.c
-#  codegen.c
+  symtab.c
 )
 target_link_libraries(protyc protyvm)
 

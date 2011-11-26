@@ -1,10 +1,19 @@
 #include "node.h"
+#include <assert.h>
 
 Node* Node_new(enum NodeTag tag, Node* left, Node* right) {
     Node* n = malloc(sizeof(Node));
     n->tag = tag;
     n->left = left;
     n->right = right;
+    return n;
+}
+
+Node* AssignNode_new(Node* expr, Node* value) {
+    Node* n = Node_new(AssignNode, 0, value);
+    assert(expr->tag == NameNode);
+    n->data.sval = expr->data.sval;
+    free(expr);
     return n;
 }
 
