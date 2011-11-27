@@ -18,38 +18,7 @@ typedef enum OpCode {
     OP_POP,
 } OpCode;
 
-static const char* OpCodeNames[] = {
-    "hlt",
-    "nop",
-    "mov",
-    "ret",
-    "sym",
-    "int",
-    "float",
-    "str",
-    "set",
-    "get",
-    "call",
-    "send",
-    "push",
-    "pop",
-};
-
-static const int OpCodeSize[] = {
-    0,
-    0,
-    2,
-    1,
-    2,
-    2,
-    2,
-    2,
-    4,
-    3,
-    3,
-    4,
-    1,
-    1,
-};
+const char* OpCode_name(OpCode op);
+int OpCode_size(OpCode op);
 
 #endif

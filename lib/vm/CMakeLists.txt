@@ -3,6 +3,7 @@ add_library(protyvm SHARED
   eval.c
   module.c
   state.c
+  opcodes.c
 )
 target_link_libraries(protyvm protyrt)
 

@@ -15,7 +15,7 @@ Block* Block_new(const char* name) {
 void Block_append(Block* self, OpCode op, ...) {
     va_list ap;
     int start = self->size++;
-    int argc = OpCodeSize[op];
+    int argc = OpCode_size(op);
 
     self->size += argc;
     self->data = realloc(self->data, self->size*sizeof(int));
@@ -42,8 +42,8 @@ int Block_const(Block* self, ConstType type, void* data) {
 void Block_dump(Block* self) {
     for (int i = 0; i < self->size;) {
         OpCode op = self->data[i++];
-        printf("%s\t", OpCodeNames[op]);
-        for (int j = 0; j < OpCodeSize[op]; j++) {
+        printf("%s\t", OpCode_name(op));
+        for (int j = 0; j < OpCode_size(op); j++) {
             printf("%i ", self->data[i++]);
         }
         printf("\n");
