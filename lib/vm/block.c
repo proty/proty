@@ -12,6 +12,10 @@ Block* Block_new(const char* name) {
     return block;
 }
 
+void Block_replace(Block* self, int pos, int data) {
+    self->data[pos] = data;
+}
+
 void Block_append(Block* self, OpCode op, ...) {
     va_list ap;
     int start = self->size++;

@@ -30,6 +30,19 @@ Object* eval(State* state, Block* block) {
         case OP_RET:
             return R(PCi);
 
+        case OP_JMP:
+            pc += PC(0);
+            break;
+
+        case OP_JNS:
+            if (R(PC(1)) == Qfalse) {
+                pc += PC(0);
+            }
+            else {
+                pc += 2;
+            }
+            break;
+
         case OP_INT:
             R(PC(0)) = Integer_new(PC(1));
             pc += 2;

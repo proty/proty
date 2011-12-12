@@ -21,10 +21,14 @@ Block* Compiler_compileFile(Context* context, const char* file) {
     void* scanner;
     Node* root;
 
+    FILE* stream = fopen(file, "r");
     yylex_init(&scanner);
-    yyset_in(stdin, scanner);
+    yyset_in(stream, scanner);
+
     int res = yyparse(scanner, &root);
     yylex_destroy(scanner);
+
+    fclose(stream);
 
     return res ? 0 : Compiler_compileRoot(context, root);
 }
@@ -75,7 +79,6 @@ int Compiler_compile(Context* context, Node* node) {
     }
 
     case UnOpNode:
-        printf("UnOp Node\n");
         Compiler_compile(context, node->right);
         break;
 
@@ -140,16 +143,29 @@ int Compiler_compile(Context* context, Node* node) {
         printf("IF Node\n");
         break;
 
-    case WhileNode:
-        printf("WHILE Node\n");
-        break;
+    case WhileNode: {
+        int start = context->block->size;
+
+        int cond = Compiler_compile(context, node->left);
+        int cond_jmp = context->block->size+1;
+
+        Block_append(context->block, OP_JNS, cond);
+        Compiler_compile(context, node->right);
+
+        int diff = start - context->block->size - 1;
+        Block_append(context->block, OP_JMP, diff);
+
+        int end = context->block->size+1;
+        Block_replace(context->block, cond_jmp, end);
+
+        return cond;
+    }
 
     case IntegerNode:
         Block_append(context->block, OP_INT, context->reg, node->data.ival);
         return context->reg++;
 
     case FloatNode: {
-        printf("float: %f\n", node->data.dval);
         double* data = malloc(sizeof(double));
         *data = node->data.dval;
         int fl = Block_const(context->block, CONST_FLOAT, (void*)data);

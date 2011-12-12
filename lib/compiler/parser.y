@@ -30,12 +30,13 @@ int yylex(void* yylval_param, void* loc, void* scanner);
 %token UNDEF "unknown token"
 
 // operators
+%left ASSIGN IADD ISUB IMUL IDIV
+%left LPAR
 %left NOT
 %left AND OR
 %left EQ NE GT LT LE GE
 %left ADD SUB
 %left MUL DIV
-%left ASSIGN IADD ISUB IMUL IDIV
 
 // primitive data types
 %token <ival> INTEGER "integer"
@@ -68,7 +69,6 @@ int yylex(void* yylval_param, void* loc, void* scanner);
 %token ARROW "=>"
 
 %right DOT
-%right LPAR
 
 %type <node> primary block statements unop binop expression
 %type <node> if_stmt while_stmt args
@@ -138,11 +138,11 @@ primary:        INTEGER { $$ = Node_new(IntegerNode, 0, 0);
               ;
 
 if_stmt:        IF expression block { $$ = Node_new(IfNode, $2, $3); }
-              | IF expression block ELSE block { Node* elseNode = Node_new(ElseNode, $3, $5);
-                                                 $$ = Node_new(IfNode, $2, elseNode); }
+              | IF expression block ELSE block { $$ = Node_new(IfNode, $2,
+                                                      Node_new(ElseNode, $3, $5)); }
               ;
 
-while_stmt:     WHILE expression block
+while_stmt:     WHILE expression block { $$ = Node_new(WhileNode, $2, $3); }
               ;
 
 %%

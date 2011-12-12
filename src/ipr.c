@@ -31,10 +31,13 @@ int main(int argc, char** argv) {
         if (block) {
             Object* object = eval(state, block);
             printf("=> %i\n", object->data.i);
+            free(block);
         }
         free(input);
     }
 
     free(context);
+    free(state);
+
     return 0;
 }

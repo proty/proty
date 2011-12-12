@@ -1,7 +1,9 @@
 #include <stdio.h>
 #include <string.h>
+#include <runtime/runtime.h>
 #include <compiler/compiler.h>
 #include <compiler/config.h>
+#include <vm/eval.h>
 
 void version() {
     fprintf(stderr, "Proty " VERSION " " BUILD_TYPE " (" __DATE__ ", " __TIME__ ")\n");
@@ -43,9 +45,17 @@ int main(int argc, const char** argv) {
       else { file = argv[count]; break; }
   }
 
+  runtime_init();
+
   Context* context = Compiler_newContext();
-  Compiler_compileFile(context, file);
+  Block* block = Compiler_compileFile(context, file);
   free(context);
+
+  State* state = State_new();
+  eval(state, block);
+
+  free(block);
+  free(state);
 
   return 0;
 }
