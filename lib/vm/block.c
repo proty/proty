@@ -42,7 +42,7 @@ int Block_const(Block* self, ConstType type, void* data) {
 void Block_dump(Block* self) {
     for (int i = 0; i < self->size;) {
         OpCode op = self->data[i++];
-        printf("%s\t", OpCode_name(op));
+        printf("%04d %s\t", i, OpCode_name(op));
         for (int j = 0; j < OpCode_size(op); j++) {
             printf("%i ", self->data[i++]);
         }
