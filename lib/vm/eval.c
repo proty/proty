@@ -35,8 +35,8 @@ Object* eval(State* state, Block* block) {
             break;
 
         case OP_JNS:
-            if (R(PC(1)) == Qfalse) {
-                pc += PC(0);
+            if (R(PC(0)) == Qfalse) {
+                pc += PC(1);
             }
             else {
                 pc += 2;
@@ -67,11 +67,10 @@ Object* eval(State* state, Block* block) {
             int ret = PCi;
             Object* obj = R(PCi);
             Object* msg = R(PCi);
-            int argc = PCi+1;
+            int argc = PCi;
 
             Object** args = alloca(sizeof(Object*)*argc);
-            args[0] = obj;
-            for (int i = 1; i < argc; i++) {
+            for (int i = 0; i < argc; i++) {
                 args[i] = stack[--sp];
             }
 

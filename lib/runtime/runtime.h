@@ -16,16 +16,8 @@ typedef Object* (*FuncPtr)(Object*, ...);
 #include "bool.h"
 #include "exception.h"
 
-#define FUNC(name, argc) Function_new((FuncPtr)name, argc)
+#define FUNC(name, argc) Function_new((FuncPtr)name, argc-1)
 #define SYM(name) Symbol_get(#name)
-
-#define MODFUNC(name, ...) Object* pr_##name = 0;\
-  Object* name(__VA_ARGS__)
-#define EXPORT(name) Object* pr_##name
-
-#define INITFUNC(name, argc) pr_##name = FUNC(name, argc)
-#define INITOBJ(name, value) pr_##name = value
-#define MODGET(name) pr_##name
 
 void runtime_init();
 

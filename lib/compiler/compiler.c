@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <vm/opcodes.h>
+#include <vm/state.h>
 #include "compiler.h"
 #include "symtab.h"
 #include "config.h"
@@ -53,8 +54,7 @@ Block* Compiler_compileRoot(Context* context, Node* root) {
     Block_append(context->block, OP_RET, ret);
 
     Block* block = context->block;
-
-    Block_dump(block);
+    //Block_dump(block);
     return block;
 }
 
@@ -139,23 +139,43 @@ int Compiler_compile(Context* context, Node* node) {
         return reg;
     }
 
-    case IfNode:
-        printf("IF Node\n");
-        break;
+    case IfNode: {
+        int diff;
+        Reg res;
+
+        Reg cond = Compiler_compile(context, node->left);
+        int cond_jmp = Block_append(context->block, OP_JNS, cond, 0) + 2;
+
+        if (node->tag == ElseNode) {
+            res = context->reg++;
+
+            Reg res_a = Compiler_compile(context, node->right);
+            Block_append(context->block, OP_MOV, res, res_a) + 1;
+        }
+        else {
+            res = Compiler_compile(context, node->right);
+        }
+
+        int end_jmp = Block_append(context->block, OP_JMP, 0) + 1;
+
+        diff = Block_position(context->block) - cond_jmp;
+        Block_replace(context->block, cond_jmp, diff);
+
+        diff = Block_position(context->block) - end_jmp;
+        Block_replace(context->block, end_jmp, diff);
+
+        return res;
+    }
 
     case WhileNode: {
-        int start = context->block->size;
+        int start = Block_position(context->block) - 1;
+        Reg cond = Compiler_compile(context, node->left);
 
-        int cond = Compiler_compile(context, node->left);
-        int cond_jmp = context->block->size+1;
-
-        Block_append(context->block, OP_JNS, cond);
+        int cond_jmp = Block_append(context->block, OP_JNS, cond, 0) + 2;
         Compiler_compile(context, node->right);
 
-        int diff = start - context->block->size - 1;
-        Block_append(context->block, OP_JMP, diff);
-
-        int end = context->block->size+1;
+        int diff = start - Block_position(context->block);
+        int end = Block_append(context->block, OP_JMP, diff);
         Block_replace(context->block, cond_jmp, end);
 
         return cond;

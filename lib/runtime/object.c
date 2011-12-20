@@ -31,17 +31,17 @@ Object* Object_getSlot(Object* self, Object* key) {
   return Qnil;
 }
 
-Object* Object_call(Object* self, int argc, Object** argv) {
+Object* Object_call(Object* self, int argc, Object* argv[]) {
   /// @todo: throw exception
   if (self->proto != Function_proto) {
     printf("proty: called non-function object\n");
     abort();
   }
 
-  return Function_call(self, argc, argv);
+  return Function_call(self, 0, argc, argv);
 }
 
-Object* Object_send(Object* self, Object* key, int argc, Object** argv) {
+Object* Object_send(Object* self, Object* key, int argc, Object* argv[]) {
   Object* func = Object_getSlot(self, key);
 
   if (func->proto != Function_proto) {
@@ -49,7 +49,7 @@ Object* Object_send(Object* self, Object* key, int argc, Object** argv) {
     abort();
   }
 
-  return Function_call(func, argc, argv);
+  return Function_call(func, self, argc, argv);
 }
 
 Object* Object_bool(Object* self) {

@@ -20,7 +20,7 @@ Object* Object_new(Object*);
 Object* Object_setSlot(Object*, Object*, Object*);
 Object* Object_getSlot(Object*, Object*);
 
-Object* Object_send(Object*, Object*, int, Object**);
-Object* Object_call(Object*, int, Object**);
+Object* Object_send(Object*, Object*, int, Object*[]);
+Object* Object_call(Object*, int, Object*[]);
 
 #endif

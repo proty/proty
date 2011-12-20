@@ -30,7 +30,8 @@ int main(int argc, char** argv) {
         Block* block = Compiler_compileString(context, input);
         if (block) {
             Object* object = eval(state, block);
-            printf("=> %i\n", object->data.i);
+            printf("=> ");
+            io_print(0, object);
             free(block);
         }
         free(input);

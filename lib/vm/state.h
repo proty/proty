@@ -3,6 +3,8 @@
 
 #include <runtime/runtime.h>
 
+typedef int Reg;
+
 typedef struct State {
     int sp;
     Object** registers;

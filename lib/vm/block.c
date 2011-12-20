@@ -16,7 +16,7 @@ void Block_replace(Block* self, int pos, int data) {
     self->data[pos] = data;
 }
 
-void Block_append(Block* self, OpCode op, ...) {
+int Block_append(Block* self, OpCode op, ...) {
     va_list ap;
     int start = self->size++;
     int argc = OpCode_size(op);
@@ -31,6 +31,12 @@ void Block_append(Block* self, OpCode op, ...) {
         self->data[i] = va_arg(ap, int);
     }
     va_end(ap);
+
+    return self->size - argc - 1;
+}
+
+int Block_position(Block* self) {
+    return self->size;
 }
 
 int Block_const(Block* self, ConstType type, void* data) {
