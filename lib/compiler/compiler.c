@@ -54,7 +54,7 @@ Block* Compiler_compileRoot(Context* context, Node* root) {
     Block_append(context->block, OP_RET, ret);
 
     Block* block = context->block;
-    //Block_dump(block);
+    Block_dump(block);
     return block;
 }
 

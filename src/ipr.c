@@ -4,6 +4,7 @@
 #include <compiler/compiler.h>
 #include <compiler/config.h>
 #include <vm/eval.h>
+#include <io/io.h>
 
 // GNU readline
 #include <readline/readline.h>

@@ -4,7 +4,7 @@ add_subdirectory(runtime)
 add_subdirectory(compiler)
 add_subdirectory(vm)
 
-add_library(io io/io.c io/file.c)
+add_library(io SHARED io/io.c io/file.c)
 #add_executable(lib/net.bc net/net.c net/socket.c)
 #add_executable(lib/os.bc os/os.c)
 #add_executable(lib/math.bc math/math.c)
