@@ -3,9 +3,9 @@
 #include <stdio.h>
 
 Object* Exception_raise(Object* self) {
-  return Qnil;
+    return Qnil;
 }
 
 void Exception_initProto() {
-  Object_setSlot(Exception_proto, SYM(raise), FUNC(Exception_raise, 1));
+    Object_setSlot(Exception_proto, SYM(raise), FUNC(Exception_raise, 1));
 }

@@ -2,14 +2,14 @@
 #define OBJECT_H
 
 struct Object_t {
-  union {
-    void*  ptr;
-    int    i;
-    double d;
-  } data;
+    union {
+        void*  ptr;
+        int    i;
+        double d;
+    } data;
 
-  Object* proto;
-  Object* slots;
+    Object* proto;
+    Object* slots;
 };
 
 extern Object* Object_proto;
