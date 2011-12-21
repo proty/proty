@@ -78,7 +78,7 @@ int yylex(void* yylval_param, void* loc, void* scanner);
 program: statements EOS { *root = $1; }
 
 block:          LBRACE block RBRACE { $$ = $2; }
-              | statements END { $$ = $1; }
+              | statements { $$ = $1; }
               ;
 
 statements:     expression           { $$ = $1; }
@@ -137,12 +137,12 @@ primary:        INTEGER { $$ = Node_new(IntegerNode, 0, 0);
                              $$->data.sval = $2; }
               ;
 
-if_stmt:        IF expression block { $$ = Node_new(IfNode, $2, $3); }
-              | IF expression block ELSE block { $$ = Node_new(IfNode, $2,
+if_stmt:        IF expression block END { $$ = Node_new(IfNode, $2, $3); }
+              | IF expression block ELSE block END { $$ = Node_new(IfNode, $2,
                                                       Node_new(ElseNode, $3, $5)); }
               ;
 
-while_stmt:     WHILE expression block { $$ = Node_new(WhileNode, $2, $3); }
+while_stmt:     WHILE expression block END { $$ = Node_new(WhileNode, $2, $3); }
               ;
 
 %%

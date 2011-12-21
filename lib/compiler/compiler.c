@@ -141,26 +141,37 @@ int Compiler_compile(Context* context, Node* node) {
 
     case IfNode: {
         int diff;
-        Reg res;
+        Reg res = context->reg++;
 
+        // compile condition
         Reg cond = Compiler_compile(context, node->left);
         int cond_jmp = Block_append(context->block, OP_JNS, cond, 0) + 2;
 
-        if (node->tag == ElseNode) {
-            res = context->reg++;
-
-            Reg res_a = Compiler_compile(context, node->right);
-            Block_append(context->block, OP_MOV, res, res_a) + 1;
+        if (node->right->tag == ElseNode) {
+            Reg res_a = Compiler_compile(context, node->right->left);
+            Block_append(context->block, OP_MOV, res, res_a);
         }
         else {
-            res = Compiler_compile(context, node->right);
+            Reg res_a = Compiler_compile(context, node->right);
+            Block_append(context->block, OP_MOV, res, res_a);
         }
 
+        // add jump to the end
         int end_jmp = Block_append(context->block, OP_JMP, 0) + 1;
 
-        diff = Block_position(context->block) - cond_jmp;
+        // change condition jump to this position
+        diff = Block_position(context->block) - cond_jmp + 1;
         Block_replace(context->block, cond_jmp, diff);
 
+        if (node->right->tag == ElseNode) {
+            Reg res_b = Compiler_compile(context, node->right->right);
+            Block_append(context->block, OP_MOV, res, res_b);
+        }
+        else {
+            Block_append(context->block, OP_NIL, res);
+        }
+
+        // change end jump to this position
         diff = Block_position(context->block) - end_jmp;
         Block_replace(context->block, end_jmp, diff);
 
