@@ -13,6 +13,8 @@ const char* OpCode_name(OpCode op) {
     case OP_INT:   return "int";
     case OP_FLOAT: return "float";
     case OP_STR:   return "str";
+    case OP_NIL:   return "nil";
+    case OP_BOOL:  return "bool";
 
     case OP_SET:   return "set";
     case OP_GET:   return "get";
@@ -38,6 +40,8 @@ int OpCode_size(OpCode op) {
     case OP_INT:   return 2;
     case OP_FLOAT: return 2;
     case OP_STR:   return 2;
+    case OP_NIL:   return 1;
+    case OP_BOOL:  return 2;
 
     case OP_SET:   return 4;
     case OP_GET:   return 3;

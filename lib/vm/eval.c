@@ -63,6 +63,15 @@ Object* eval(State* state, Block* block) {
             pc += 2;
             break;
 
+        case OP_NIL:
+            R(PCi) = Qnil;
+            break;
+
+        case OP_BOOL:
+            R(PC(0)) = PC(1) ? Qtrue : Qfalse;
+            pc += 2;
+            break;
+
         case OP_SEND: {
             int ret = PCi;
             Object* obj = R(PCi);
