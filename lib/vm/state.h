@@ -12,5 +12,6 @@ typedef struct State {
 } State;
 
 State* State_new();
+void State_delete(State* self);
 
 #endif

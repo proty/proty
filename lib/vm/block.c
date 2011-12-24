@@ -1,15 +1,28 @@
 #include <stdlib.h>
 #include <stdarg.h>
 #include <stdio.h>
+#include <string.h>
 #include "block.h"
 
-Block* Block_new(const char* name) {
+Block* Block_new() {
     Block* block = malloc(sizeof(Block));
     block->data = malloc(sizeof(int));
     block->consts = malloc(sizeof(Const));
     block->constc = 0;
     block->size = 0;
     return block;
+}
+
+void Block_delete(Block* self) {
+    free(self->data);
+
+    for (int i = 0; i < self->constc; i++) {
+        Const* c = self->consts[i];
+        // free(c->data);
+        free(c);
+    }
+
+    free(self);
 }
 
 void Block_replace(Block* self, int pos, int data) {
@@ -58,4 +71,86 @@ void Block_dump(Block* self) {
         }
         printf("\n");
     }
+}
+
+void Block_write(Block* self, FILE* file) {
+    // write data size
+    fwrite(&self->size, sizeof(size_t), 1, file);
+    printf("size: %i\n", self->size);
+
+    // write data
+    fwrite(self->data, sizeof(int), self->size, file);
+
+    // write constant count
+    fwrite(&self->constc, sizeof(size_t), 1, file);
+    printf("constc: %i\n", self->constc);
+
+    // write constants
+    for (int i = 0; i < self->constc; i++) {
+        Const* c = self->consts[i];
+
+        // write type
+        fwrite(&c->type, sizeof(ConstType), 1, file);
+
+        // write constant data
+        switch (c->type) {
+        case CONST_SYM:
+        case CONST_STR: {
+            size_t length = strlen(c->data);
+            fwrite(&length, sizeof(size_t), 1, file);
+            fwrite(c->data, sizeof(char), length, file);
+            break;
+        }
+
+        case CONST_FLOAT:
+            fwrite(c->data, sizeof(double), 1, file);
+            break;
+        }
+    }
+}
+
+Block* Block_read(FILE* file) {
+    Block* block = Block_new();
+
+    // read data size
+    fread(&block->size, sizeof(size_t), 1, file);
+
+    // read data
+    block->data = malloc(sizeof(int)*block->size);
+    fread(block->data, sizeof(int), block->size, file);
+
+    // read constant count
+    int constc;
+    fread(&constc, sizeof(size_t), 1, file);
+
+    // read constants
+    for (int i = 0; i < constc; i++) {
+        // read type
+        ConstType type;
+        fread(&type, sizeof(ConstType), 1, file);
+
+        // read data
+        switch (type) {
+        case CONST_SYM:
+        case CONST_STR: {
+            size_t length;
+            fread(&length, sizeof(size_t), 1, file);
+
+            char* data = malloc(sizeof(char)*length);
+            fread(data, sizeof(char), length, file);
+
+            Block_const(block, type, data);
+            break;
+        }
+
+        case CONST_FLOAT: {
+            double* data = malloc(sizeof(double));
+            fread(data, sizeof(double), 1, file);
+            Block_const(block, CONST_FLOAT, data);
+            break;
+        }
+        }
+    }
+
+    return block;
 }

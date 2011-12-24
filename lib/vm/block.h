@@ -16,17 +16,22 @@ typedef struct Const {
 
 typedef struct Block {
     int* data;
-    int size;
+    size_t size;
 
     Const** consts;
-    int constc;
+    size_t constc;
 } Block;
 
 Block* Block_new();
+void Block_delete(Block* self);
+
 int Block_append(Block* self, OpCode op, ...);
 void Block_replace(Block* self, int pos, int data);
 int Block_position(Block* self);
 int Block_const(Block* self, ConstType type, void* data);
+
+void Block_write(Block* self, FILE* file);
+Block* Block_read(FILE* file);
 void Block_dump(Block* self);
 
 #endif

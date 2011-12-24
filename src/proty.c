@@ -4,6 +4,7 @@
 #include <compiler/compiler.h>
 #include <compiler/config.h>
 #include <vm/eval.h>
+#include <vm/module.h>
 
 void version() {
     fprintf(stderr, "Proty " VERSION " " BUILD_TYPE " (" __DATE__ ", " __TIME__ ")\n");
@@ -26,8 +27,8 @@ void help() {
 }
 
 int main(int argc, const char** argv) {
-  const char* file = "<stdin>";
-  const char* output;
+  const char* filename = 0;
+  const char* output = 0;
 
   for (int count = 1; count < argc; count++) {
       if (argv[count][0] == '-') {
@@ -42,20 +43,37 @@ int main(int argc, const char** argv) {
               return 1;
           }
       }
-      else { file = argv[count]; break; }
+      else { filename = argv[count]; break; }
   }
 
   runtime_init();
 
-  Context* context = Compiler_newContext();
-  Block* block = Compiler_compileFile(context, file);
-  free(context);
+  FILE* file = filename ? fopen(filename, "r") : stdin;
+  Module* module;
+
+  if (Module_probe(file)) {
+      module = Module_read(file);
+  }
+  else {
+      Context* context = Compiler_newContext();
+      module = Module_new();
+
+      Block* block = Compiler_compileFile(context, file);
+      Module_addBlock(module, block);
+      free(context);
+  }
 
   State* state = State_new();
-  eval(state, block);
+  eval(state, module->blocks[0]);
+  Block_dump(module->blocks[0]);
 
-  free(block);
-  free(state);
+  if (output) {
+      FILE* out = fopen(output, "w");
+      Module_write(module, out);
+  }
+
+  Module_delete(module);
+  State_delete(state);
 
   return 0;
 }

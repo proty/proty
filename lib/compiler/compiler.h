@@ -28,10 +28,10 @@ Context* Compiler_newContext();
 /**
  * Compiles a file to a Block.
  * @param context The compilation context.
- * @param file The filename.
+ * @param file The file descriptor.
  * @returns The compiled Block.
  */
-Block* Compiler_compileFile(Context* context, const char* file);
+Block* Compiler_compileFile(Context* context, FILE* file);
 
 /**
  * Compiles a string to a Block.

@@ -8,3 +8,9 @@ State* State_new() {
     state->stack = malloc(sizeof(Object*)*256);
     return state;
 }
+
+void State_delete(State* self) {
+    free(self->registers);
+    free(self->stack);
+    free(self);
+}

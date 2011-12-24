@@ -18,18 +18,15 @@ Context* Compiler_newContext() {
     return context;
 }
 
-Block* Compiler_compileFile(Context* context, const char* file) {
+Block* Compiler_compileFile(Context* context, FILE* file) {
     void* scanner;
     Node* root;
 
-    FILE* stream = fopen(file, "r");
     yylex_init(&scanner);
-    yyset_in(stream, scanner);
+    yyset_in(file, scanner);
 
     int res = yyparse(scanner, &root);
     yylex_destroy(scanner);
-
-    fclose(stream);
 
     return res ? 0 : Compiler_compileRoot(context, root);
 }
@@ -53,9 +50,7 @@ Block* Compiler_compileRoot(Context* context, Node* root) {
     int ret = Compiler_compile(context, root);
     Block_append(context->block, OP_RET, ret);
 
-    Block* block = context->block;
-    Block_dump(block);
-    return block;
+    return context->block;
 }
 
 int Compiler_compile(Context* context, Node* node) {
