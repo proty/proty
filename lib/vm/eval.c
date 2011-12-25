@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <alloca.h>
 #include "eval.h"
+#include "load.h"
 
 #define R(x) registers[x]
 #define PCi *(pc++)
@@ -41,6 +42,11 @@ Object* eval(State* state, Block* block) {
             else {
                 pc += 2;
             }
+            break;
+
+        case OP_LOAD:
+            R(PC(0)) = load(state, block->consts[PC(1)]->data);
+            pc += 2;
             break;
 
         case OP_INT:

@@ -8,6 +8,7 @@ const char* OpCode_name(OpCode op) {
     case OP_RET:   return "ret";
     case OP_JMP:   return "jmp";
     case OP_JNS:   return "jns";
+    case OP_LOAD:  return "load";
 
     case OP_SYM:   return "sym";
     case OP_INT:   return "int";
@@ -35,6 +36,7 @@ int OpCode_size(OpCode op) {
     case OP_RET:   return 1;
     case OP_JMP:   return 1;
     case OP_JNS:   return 2;
+    case OP_LOAD:  return 2;
 
     case OP_SYM:   return 2;
     case OP_INT:   return 2;

@@ -29,6 +29,7 @@ int main(int argc, char** argv) {
         add_history(input);
 
         Block* block = Compiler_compileString(context, input);
+
         if (block) {
             Object* object = eval(state, block);
 

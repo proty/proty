@@ -9,6 +9,7 @@ typedef enum OpCode {
     OP_RET,
     OP_JMP,
     OP_JNS,
+    OP_LOAD,
 
     // primitives
     OP_SYM,

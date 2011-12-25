@@ -1,5 +1,7 @@
 #include <stdio.h>
 #include <string.h>
+#include <assert.h>
+
 #include <vm/opcodes.h>
 #include <vm/state.h>
 #include "compiler.h"
@@ -78,6 +80,16 @@ int Compiler_compile(Context* context, Node* node) {
         break;
 
     case CallNode: {
+        if (node->left->tag == NameNode) {
+            if (!strcmp(node->left->data.sval, "load")) {
+                assert(node->right->left->tag == StringNode);
+                const char* name = node->right->left->data.sval;
+                int str = Block_const(context->block, CONST_STR, (void*)name);
+                Block_append(context->block, OP_LOAD, context->reg, str);
+                return context->reg++;
+            }
+        }
+
         int obj = Compiler_compile(context, node->left);
         int argc = Compiler_compile(context, node->right);
 

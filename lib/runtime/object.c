@@ -52,6 +52,10 @@ Object* Object_send(Object* self, Object* key, int argc, Object* argv[]) {
     return Function_call(func, self, argc, argv);
 }
 
+Object* Object_str(Object* self) {
+    return String_new("<Object>");
+}
+
 Object* Object_bool(Object* self) {
     return (self == Qfalse) ? Qfalse : Qtrue;
 }
@@ -63,6 +67,7 @@ Object* Object_not(Object* self) {
 
 void Object_initProto() {
     Object_setSlot(Object_proto, SYM(new), FUNC(Object_new, 1));
+    Object_setSlot(Object_proto, SYM(str), FUNC(Object_str, 1));
     Object_setSlot(Object_proto, SYM(bool), FUNC(Object_bool, 1));
     Object_setSlot(Object_proto, SYM(!), FUNC(Object_not, 1));
 }
