@@ -76,14 +76,12 @@ void Block_dump(Block* self) {
 void Block_write(Block* self, FILE* file) {
     // write data size
     fwrite(&self->size, sizeof(size_t), 1, file);
-    printf("size: %i\n", self->size);
 
     // write data
     fwrite(self->data, sizeof(int), self->size, file);
 
     // write constant count
     fwrite(&self->constc, sizeof(size_t), 1, file);
-    printf("constc: %i\n", self->constc);
 
     // write constants
     for (int i = 0; i < self->constc; i++) {
