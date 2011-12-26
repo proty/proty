@@ -57,9 +57,15 @@ Block* Compiler_compileRoot(Context* context, Node* root) {
 
 int Compiler_compile(Context* context, Node* node) {
     switch (node->tag) {
-    case BranchNode:
-        Compiler_compile(context, node->left);
-        break;
+    case BranchNode: {
+        Reg left = Compiler_compile(context, node->left);
+        if (node->right) {
+            return Compiler_compile(context, node->right);
+        }
+        else {
+            return left;
+        }
+    }
 
     case BinOpNode: {
         int lhs = Compiler_compile(context, node->left);
