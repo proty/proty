@@ -65,7 +65,6 @@ int main(int argc, const char** argv) {
 
   State* state = State_new();
   eval(state, module->blocks[0]);
-  Block_dump(module->blocks[0]);
 
   if (output) {
       FILE* out = fopen(output, "w");
