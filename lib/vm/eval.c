@@ -84,12 +84,13 @@ Object* eval(State* state, Block* block) {
             Object* msg = R(PCi);
             int argc = PCi;
 
-            Object** args = alloca(sizeof(Object*)*argc);
-            for (int i = 0; i < argc; i++) {
+            Object** args = malloc(sizeof(Object*)*argc);
+            for (int i = argc-1; i >= 0; i--) {
                 args[i] = stack[--sp];
             }
 
             R(ret) = Object_send(obj, msg, argc, args);
+            free(args);
             break;
         }
 
