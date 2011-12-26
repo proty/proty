@@ -1,16 +1,16 @@
 #include "runtime/runtime.h"
 #include "socket.h"
 
-MODFUNC(net_socket, Object* self) {
-  Object* socket = Socket_new();
-  return socket;
+Object* net_socket(Object* self) {
+    return Socket_new();
 }
 
-EXPORT(net_Socket);
+Object* net_init() {
+    Socket_proto = Socket_createProto();
 
-void net_init() {
-  Socket_proto = Socket_createProto();
+    Object* net = Object_new(Object_proto);
+    Object_setSlot(net, SYM(socket), FUNC(net_socket, 1));
+    Object_setSlot(net, SYM(Socket), Socket_proto);
 
-  INITFUNC(net_socket, 1);
-  INITOBJ(net_Socket, Socket_proto);
+    return net;
 }

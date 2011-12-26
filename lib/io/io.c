@@ -26,8 +26,7 @@ Object* io_print(Object* self, Object* obj) {
 
 Object* io_open(Object* self, Object* file, Object* mode) {
     if (file->proto == String_proto && mode->proto == String_proto) {
-        Object* new = File_new(file->data.ptr, mode->data.ptr);
-        return new;
+        return File_new(file->data.ptr, mode->data.ptr);
     }
     else {
         return Qnil;
