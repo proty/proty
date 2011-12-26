@@ -4,15 +4,15 @@
 #include "load.h"
 
 Object* load(State* state, const char* name) {
-    char* lib_name = malloc(sizeof(char) * (strlen("lib/lib") + strlen(name) + strlen(".so")));
-    strcpy(lib_name,"lib/lib");
+    char* lib_name = malloc(sizeof(char) * (strlen(name) + 6));
+    strcpy(lib_name,"lib");
     strcat(lib_name, name);
     strcat(lib_name, ".so");
 
     void* lib = dlopen(lib_name, RTLD_LAZY);
     if (!lib) return Qnil;
 
-    char* init_name = malloc(sizeof(char) * (strlen(name) + strlen("init_")));
+    char* init_name = malloc(sizeof(char) * (strlen(name) + 5));
     strcpy(init_name, name);
     strcat(init_name, "_init");
 

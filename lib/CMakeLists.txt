@@ -4,14 +4,19 @@ add_subdirectory(runtime)
 add_subdirectory(compiler)
 add_subdirectory(vm)
 
-add_library(io SHARED io/io.c io/file.c)
-add_library(net SHARED net/net.c net/socket.c)
-add_library(os SHARED os/os.c)
-add_library(time SHARED time/time.c)
+macro(proty_lib name)
+  add_library(${name} SHARED ${ARGN})
+  set_target_properties(${name} PROPERTIES
+                                RUNTIME_OUTPUT_DIRECTORY "proty"
+                                LIBRARY_OUTPUT_DIRECTORY "proty"
+                                OUTPUT_NAME ${name})
+  install(TARGETS ${name} DESTINATION lib/proty)
+endmacro(proty_lib)
 
-add_library(math SHARED math/math.c)
+proty_lib(io io/io.c io/file.c)
+proty_lib(net net/net.c net/socket.c)
+proty_lib(os os/os.c)
+proty_lib(time time/time.c)
+
+proty_lib(math math/math.c)
 target_link_libraries(math m)
-
-install(TARGETS
-    io math# net os time
-DESTINATION lib/proty)
