@@ -13,7 +13,7 @@ Object* File_new(const char* file, const char* mode) {
 
 Object* File_close(Object* self) {
     int res = fclose(self->data.ptr);
-    return res ? Qtrue : Qfalse;
+    return res ? Qfalse : Qtrue;
 }
 
 Object* File_write(Object* self, Object* str) {
