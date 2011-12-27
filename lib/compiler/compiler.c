@@ -116,9 +116,11 @@ int Compiler_compile(Context* context, Node* node) {
         int argc = 0;
         Node* args = node;
         while (args) {
-            argc++;
-            int arg = Compiler_compile(context, args->left);
-            Block_append(context->block, OP_PUSH, arg);
+            if (args->left) {
+                argc++;
+                int arg = Compiler_compile(context, args->left);
+                Block_append(context->block, OP_PUSH, arg);
+            }
             args = args->right;
         };
         return argc;

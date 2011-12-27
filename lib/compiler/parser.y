@@ -101,7 +101,8 @@ expression:     LPAR expression RPAR { $$ = $2; }
               | expression LPAR args RPAR { $$ = Node_new(CallNode, $1, $3); }
               ;
 
-args:           expression { $$ = Node_new(ArgsNode, $1, 0); }
+args:           { $$ = Node_new(ArgsNode, 0, 0); }
+              | expression { $$ = Node_new(ArgsNode, $1, 0); }
               | expression COMMA args { $$ = Node_new(ArgsNode, $1, $3); }
               ;
 
