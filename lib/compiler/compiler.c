@@ -48,9 +48,14 @@ Block* Compiler_compileString(Context* context, const char* str) {
 Block* Compiler_compileRoot(Context* context, Node* root) {
     context->block = Block_new();
 
-    // return the last object
-    int ret = Compiler_compile(context, root);
-    Block_append(context->block, OP_RET, ret);
+    if (root) {
+        int ret = Compiler_compile(context, root);
+        Block_append(context->block, OP_RET, ret);
+    }
+    else {
+        Block_append(context->block, OP_NIL, context->reg);
+        Block_append(context->block, OP_RET, context->reg++);
+    }
 
     return context->block;
 }

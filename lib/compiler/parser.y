@@ -70,24 +70,25 @@ int yylex(void* yylval_param, void* loc, void* scanner);
 
 %right DOT
 
-%type <node> primary block statements unop binop expression
-%type <node> if_stmt while_stmt args
+%type <node> primary block statements statement expression
+%type <node> if_stmt while_stmt unop binop args
 
 %%
 
-program: statements EOS { *root = $1; }
+program:        statements EOS { *root = $1; }
 
 block:          LBRACE block RBRACE { $$ = $2; }
               | statements { $$ = $1; }
               ;
 
-statements:     expression           { $$ = $1; }
-              | expression NEWLINE statements { $$ = Node_new(BranchNode, $1, $3); }
-              | expression SEMICOLON statements { $$ = Node_new(BranchNode, $1, $3); }
-              | if_stmt              { $$ = $1; }
-              | while_stmt           { $$ = $1; }
-              | NEWLINE statements   { $$ = $2; }
-              | SEMICOLON statements { $$ = $2; }
+statements:     { $$ = 0; }
+              | NEWLINE statements { $$ = $2; }
+              | statement statements { $$ = Node_new(BranchNode, $1, $2); }
+              ;
+
+statement:      expression { $$ = $1; }
+              | if_stmt    { $$ = $1; }
+              | while_stmt { $$ = $1; }
               ;
 
 expression:     LPAR expression RPAR { $$ = $2; }
@@ -95,7 +96,7 @@ expression:     LPAR expression RPAR { $$ = $2; }
               | binop                { $$ = $1; }
               | primary              { $$ = $1; }
               | expression ASSIGN expression { $$ = AssignNode_new($1, $3); }
-              | expression DOT NAME  { $$ = GetSlotNode_new($1, $3); }
+              | expression DOT NAME { $$ = GetSlotNode_new($1, $3); }
               | expression DOT NAME ASSIGN expression { $$ = SetSlotNode_new($1, $5, $3); }
               | expression DOT NAME LPAR args RPAR { $$ = SendNode_new($1, $5, $3); }
               | expression LPAR args RPAR { $$ = Node_new(CallNode, $1, $3); }
