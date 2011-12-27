@@ -4,8 +4,8 @@
 #include "load.h"
 
 Object* load(State* state, const char* name) {
-    char* lib_name = malloc(sizeof(char) * (strlen(name) + 6));
-    strcpy(lib_name,"lib");
+    char* lib_name = malloc(sizeof(char) * (strlen(name) + 12));
+    strcpy(lib_name,"libproty-");
     strcat(lib_name, name);
     strcat(lib_name, ".so");
 
