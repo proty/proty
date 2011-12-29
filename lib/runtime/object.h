@@ -15,7 +15,8 @@ struct Object_t {
 extern Object* Object_proto;
 void Object_initProto();
 
-Object* Object_new(Object*);
+Object* Object_new(Object* proto);
+Object* Object_delete(Object* self);
 
 Object* Object_setSlot(Object*, Object*, Object*);
 Object* Object_getSlot(Object*, Object*);

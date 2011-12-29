@@ -91,6 +91,16 @@ Object* Hash_new() {
     return new;
 }
 
+Object* Hash_delete(Object* self) {
+    Hash* hash = self->data.ptr;
+
+    free(hash->keys);
+    free(hash->values);
+    free(hash);
+
+    return Object_delete(self);
+}
+
 Object* Hash_set(Object* self, Object* key, Object* value) {
     Hash* hash = self->data.ptr;
 

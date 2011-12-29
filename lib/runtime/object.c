@@ -10,6 +10,12 @@ Object* Object_new(Object* proto) {
     return new;
 }
 
+Object* Object_delete(Object* self) {
+    if (self->slots) free(self->slots);
+    free(self);
+    return Qnil;
+}
+
 Object* Object_setSlot(Object* self, Object* key, Object* value) {
     if (!self->slots) self->slots = Hash_new();
     return Hash_set(self->slots, key, value);

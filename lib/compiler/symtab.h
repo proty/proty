@@ -8,6 +8,7 @@ typedef struct SymTab {
 } SymTab;
 
 SymTab* SymTab_new();
+void SymTab_delete(SymTab* self);
 void SymTab_store(SymTab* self, const char* name, int value);
 int SymTab_lookup(SymTab* self, const char* name);
 
