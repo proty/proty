@@ -11,12 +11,14 @@ typedef struct Node {
         CallNode,
         SendNode,
         ArgsNode,
+        FuncArgsNode,
         SetSlotNode,
         GetSlotNode,
         AssignNode,
         IfNode,
         ElseNode,
         WhileNode,
+        DoNode,
         IntegerNode,
         FloatNode,
         StringNode,
@@ -33,8 +35,6 @@ typedef struct Node {
 
     struct Node* left;
     struct Node* right;
-
-    int lineno;
 } Node;
 
 Node* Node_new(enum NodeTag tag, Node* left, Node* right);

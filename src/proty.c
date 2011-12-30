@@ -1,10 +1,11 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <runtime/runtime.h>
 #include <compiler/compiler.h>
 #include <compiler/config.h>
-#include <vm/eval.h>
 #include <vm/module.h>
+#include <vm/eval.h>
 
 void version() {
     fprintf(stderr, "Proty " VERSION " " BUILD_TYPE " (" __DATE__ ", " __TIME__ ")\n");
@@ -51,20 +52,19 @@ int main(int argc, const char** argv) {
   FILE* file = filename ? fopen(filename, "r") : stdin;
   Module* module;
 
+  int blockId = 0;
   if (Module_probe(file)) {
       module = Module_read(file);
   }
   else {
-      Context* context = Compiler_newContext();
       module = Module_new();
-
-      Block* block = Compiler_compileFile(context, file);
-      Module_addBlock(module, block);
+      Context* context = Compiler_newContext(module);
+      blockId = Compiler_compileFile(context, file);
       free(context);
   }
 
-  State* state = State_new();
-  eval(state, module->blocks[0]);
+  State* state = State_new(module);
+  eval(state, blockId);
 
   if (output) {
       FILE* out = fopen(output, "w");

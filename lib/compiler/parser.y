@@ -71,7 +71,7 @@ int yylex(void* yylval_param, void* loc, void* scanner);
 %right DOT
 
 %type <node> primary block statements statement expression
-%type <node> if_stmt while_stmt unop binop args
+%type <node> if_stmt while_stmt unop binop args func_args
 
 %%
 
@@ -100,11 +100,17 @@ expression:     LPAR expression RPAR { $$ = $2; }
               | expression DOT NAME ASSIGN expression { $$ = SetSlotNode_new($1, $5, $3); }
               | expression DOT NAME LPAR args RPAR { $$ = SendNode_new($1, $5, $3); }
               | expression LPAR args RPAR { $$ = Node_new(CallNode, $1, $3); }
+              | DO LPAR func_args RPAR block END { $$ = Node_new(DoNode, $3, $5); }
               ;
 
 args:           { $$ = Node_new(ArgsNode, 0, 0); }
               | expression { $$ = Node_new(ArgsNode, $1, 0); }
               | expression COMMA args { $$ = Node_new(ArgsNode, $1, $3); }
+              ;
+
+func_args:      { $$ = 0; }
+              | NAME { $$ = Node_new(FuncArgsNode, 0, 0); $$->data.sval = $1; }
+              | NAME COMMA func_args { $$ = Node_new(FuncArgsNode, 0, $3); $$->data.sval = $1; }
               ;
 
 unop:           NOT expression       { $$ = Node_new(UnOpNode, 0, $2);

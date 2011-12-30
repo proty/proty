@@ -2,6 +2,7 @@
 #include <stdio.h>
 
 Object* Object_proto = 0;
+Object* CFunction_proto = 0;
 Object* Function_proto = 0;
 Object* Hash_proto = 0;
 Object* List_proto = 0;
@@ -18,6 +19,7 @@ Object* Qfalse = 0;
 
 void runtime_init() {
     Object_proto = Object_new(0);
+    CFunction_proto = Object_new(Object_proto);
     Function_proto = Object_new(Object_proto);
     Hash_proto = Object_new(Object_proto);
     List_proto = Object_new(Object_proto);
@@ -30,6 +32,7 @@ void runtime_init() {
 
     SymbolTable_init();
     Object_initProto();
+    CFunction_initProto();
     Function_initProto();
     Hash_initProto();
     List_initProto();

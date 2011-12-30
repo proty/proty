@@ -1,5 +1,6 @@
 add_library(protyrt STATIC
   object.c
+  cfunction.c
   function.c
   hash.c
   list.c

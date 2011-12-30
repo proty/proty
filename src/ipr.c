@@ -3,6 +3,7 @@
 #include <runtime/runtime.h>
 #include <compiler/compiler.h>
 #include <compiler/config.h>
+#include <vm/module.h>
 #include <vm/eval.h>
 #include <io/io.h>
 
@@ -19,8 +20,9 @@ int main(int argc, char** argv) {
 
     runtime_init();
 
-    Context* context = Compiler_newContext();
-    State* state = State_new();
+    Module* module = Module_new();
+    Context* context = Compiler_newContext(module);
+    State* state = State_new(module);
 
     while (1) {
         char* input = readline(">>> ");
@@ -28,15 +30,13 @@ int main(int argc, char** argv) {
         if (!input) break;
         add_history(input);
 
-        Block* block = Compiler_compileString(context, input);
+        int block = Compiler_compileString(context, input);
 
-        if (block) {
+        if (block >= 0) {
             Object* object = eval(state, block);
 
             printf("=> ");
             io_print(0, object);
-
-            Block_delete(block);
         }
         free(input);
     }

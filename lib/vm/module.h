@@ -1,6 +1,7 @@
 #ifndef PROTY_MODULE_H
 #define PROTY_MODULE_H
 
+#include <stdio.h>
 #include "block.h"
 
 typedef struct Module {

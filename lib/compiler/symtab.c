@@ -20,5 +20,5 @@ void SymTab_store(SymTab* self, const char* name, int value) {
 int SymTab_lookup(SymTab* self, const char* name) {
     Object* sym = Symbol_get(name);
     Object* res = Hash_get(self->symbols, sym);
-    return res == Qnil ? 0 : res->data.i;
+    return res == Qnil ? -1 : res->data.i;
 }

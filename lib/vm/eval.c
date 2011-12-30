@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <alloca.h>
+#include "module.h"
 #include "eval.h"
 #include "load.h"
 
@@ -8,7 +9,8 @@
 #define PCi *(pc++)
 #define PC(x) (*(pc+x))
 
-Object* eval(State* state, Block* block) {
+Object* eval(State* state, int id) {
+    Block* block = state->module->blocks[id];
     int* pc = block->data;
     int sp = state->sp;
 
@@ -42,6 +44,11 @@ Object* eval(State* state, Block* block) {
             else {
                 pc += 2;
             }
+            break;
+
+        case OP_FUN:
+            R(PC(0)) = Function_new(PC(1), PC(2));
+            pc += 3;
             break;
 
         case OP_LOAD:
@@ -78,19 +85,46 @@ Object* eval(State* state, Block* block) {
             pc += 2;
             break;
 
+        case OP_CALL: {
+            int ret = PCi;
+            Object* obj = R(PCi);
+            int argc = PCi;
+
+            if (obj->proto == Function_proto) {
+                state->sp = sp;
+                R(ret) = eval(state, Function_getId(obj));
+            }
+            else {
+                Object** args = malloc(sizeof(Object*)*argc);
+                for (int i = argc-1; i >= 0; i--) {
+                    args[i] = stack[--sp];
+                }
+                R(ret) = Object_call(obj, argc, args);
+                free(args);
+            }
+
+            break;
+        }
+
         case OP_SEND: {
             int ret = PCi;
             Object* obj = R(PCi);
             Object* msg = R(PCi);
             int argc = PCi;
 
-            Object** args = malloc(sizeof(Object*)*argc);
-            for (int i = argc-1; i >= 0; i--) {
-                args[i] = stack[--sp];
+            if (obj->proto == Function_proto) {
+                state->sp = sp;
+                R(ret) = eval(state, Function_getId(obj));
+            }
+            else {
+                Object** args = malloc(sizeof(Object*)*argc);
+                for (int i = argc-1; i >= 0; i--) {
+                    args[i] = stack[--sp];
+                }
+                R(ret) = Object_send(obj, msg, argc, args);
+                free(args);
             }
 
-            R(ret) = Object_send(obj, msg, argc, args);
-            free(args);
             break;
         }
 
@@ -120,7 +154,7 @@ Object* eval(State* state, Block* block) {
             break;
 
         default:
-            fprintf(stderr, "error. unknown instruction.");
+            fprintf(stderr, "error: unknown instruction (%i)\n", *(pc-1));
             abort();
         }
     }

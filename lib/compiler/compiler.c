@@ -1,26 +1,28 @@
 #include <stdio.h>
 #include <string.h>
 #include <assert.h>
-
+#include <vm/module.h>
 #include <vm/opcodes.h>
 #include <vm/state.h>
+#include "node.h"
 #include "compiler.h"
 #include "symtab.h"
 #include "config.h"
 #include "parser.h"
 #include "lexer.h"
 
-Context* Compiler_newContext() {
+Context* Compiler_newContext(Module* module) {
     Context* context = malloc(sizeof(Context));
 
     context->reg = 0;
     context->block = 0;
+    context->module = module;
     context->symtab = SymTab_new();
 
     return context;
 }
 
-Block* Compiler_compileFile(Context* context, FILE* file) {
+int Compiler_compileFile(Context* context, FILE* file) {
     void* scanner;
     Node* root;
 
@@ -30,10 +32,10 @@ Block* Compiler_compileFile(Context* context, FILE* file) {
     int res = yyparse(scanner, &root);
     yylex_destroy(scanner);
 
-    return res ? 0 : Compiler_compileRoot(context, root);
+    return res ? -1 : Compiler_compileRoot(context, root);
 }
 
-Block* Compiler_compileString(Context* context, const char* str) {
+int Compiler_compileString(Context* context, const char* str) {
     void* scanner;
     Node* root;
 
@@ -42,11 +44,12 @@ Block* Compiler_compileString(Context* context, const char* str) {
     int res = yyparse(scanner, &root);
     yylex_destroy(scanner);
 
-    return res ? 0 : Compiler_compileRoot(context, root);
+    return res ? -1 : Compiler_compileRoot(context, root);
 }
 
-Block* Compiler_compileRoot(Context* context, Node* root) {
+int Compiler_compileRoot(Context* context, Node* root) {
     context->block = Block_new();
+    int id = Module_addBlock(context->module, context->block);
 
     if (root) {
         int ret = Compiler_compile(context, root);
@@ -57,7 +60,7 @@ Block* Compiler_compileRoot(Context* context, Node* root) {
         Block_append(context->block, OP_RET, context->reg++);
     }
 
-    return context->block;
+    return id;
 }
 
 int Compiler_compile(Context* context, Node* node) {
@@ -117,6 +120,41 @@ int Compiler_compile(Context* context, Node* node) {
         return context->reg++;
     }
 
+    case DoNode: {
+        // backup current context
+        Block* oldBlock = context->block;
+        SymTab* oldSymtab = context->symtab;
+
+        // create context for the new function
+        context->block = Block_new();
+        context->symtab = SymTab_new();
+
+        // pop the arguments from the stack
+        // and save the registers to the symtab
+        int argc = 0;
+        Node* arg = node->left;
+        while (arg) {
+            Block_append(context->block, OP_POP, context->reg);
+            SymTab_store(context->symtab, arg->data.sval, context->reg++);
+            arg = arg->right;
+            argc++;
+        }
+
+        // compile the function code
+        int ret = Compiler_compile(context, node->right);
+        Block_append(context->block, OP_RET, ret);
+        int block = Module_addBlock(context->module, context->block);
+
+        // restore the old context
+        SymTab_delete(context->symtab);
+        context->symtab = oldSymtab;
+        context->block = oldBlock;
+
+        // create the function
+        Block_append(context->block, OP_FUN, context->reg, block, argc);
+        return context->reg++;
+    }
+
     case ArgsNode: {
         int argc = 0;
         Node* args = node;
@@ -150,7 +188,7 @@ int Compiler_compile(Context* context, Node* node) {
         int reg = SymTab_lookup(context->symtab, node->data.sval);
         int obj = Compiler_compile(context, node->right);
 
-        if (!reg) {
+        if (reg < 0) {
             SymTab_store(context->symtab, node->data.sval, context->reg);
             reg = context->reg++;
         }
@@ -231,8 +269,9 @@ int Compiler_compile(Context* context, Node* node) {
     }
 
     case NameNode: {
-        int reg = SymTab_lookup(context->symtab, node->data.sval);
-        if (!reg) {
+        Reg reg = SymTab_lookup(context->symtab, node->data.sval);
+
+        if (reg < 0) {
             printf("name %s not defined\n", node->data.sval);
             abort();
         }

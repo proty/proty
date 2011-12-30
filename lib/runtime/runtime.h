@@ -8,6 +8,7 @@ typedef Object* (*FuncPtr)(Object*, ...);
 #include "hash.h"
 #include "list.h"
 #include "symbol.h"
+#include "cfunction.h"
 #include "function.h"
 #include "integer.h"
 #include "float.h"
@@ -16,7 +17,7 @@ typedef Object* (*FuncPtr)(Object*, ...);
 #include "bool.h"
 #include "exception.h"
 
-#define FUNC(name, argc) Function_new((FuncPtr)name, argc-1)
+#define FUNC(name, argc) CFunction_new((FuncPtr)name, argc-1)
 #define SYM(name) Symbol_get(#name)
 
 void runtime_init();

@@ -1,6 +1,7 @@
 #ifndef PROTY_BLOCK_H
 #define PROTY_BLOCK_H
 
+#include <stdio.h>
 #include "opcodes.h"
 
 typedef enum ConstType {
