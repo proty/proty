@@ -7,7 +7,6 @@
 #include "node.h"
 #include "compiler.h"
 #include "symtab.h"
-#include "config.h"
 #include "parser.h"
 #include "lexer.h"
 

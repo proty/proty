@@ -35,6 +35,13 @@ if(NOT GIT_RETURN_VALUE EQUAL 0)
   unset(GIT_VERSION)
 endif(NOT GIT_RETURN_VALUE EQUAL 0)
 
+# config header
+set(PREFIX ${CMAKE_INSTALL_PREFIX})
+set(BUILD_TYPE ${CMAKE_BUILD_TYPE})
+configure_file("${CMAKE_SOURCE_DIR}/src/config.h.in"
+               "${CMAKE_BINARY_DIR}/config.h")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -include ${CMAKE_BINARY_DIR}/config.h")
+
 add_subdirectory(src)
 add_subdirectory(lib)
 

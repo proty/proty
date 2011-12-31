@@ -2,7 +2,6 @@
 #include <stdio.h>
 #include <runtime/runtime.h>
 #include <compiler/compiler.h>
-#include <compiler/config.h>
 #include <vm/module.h>
 #include <vm/eval.h>
 #include <io/io.h>
