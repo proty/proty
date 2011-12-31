@@ -38,7 +38,7 @@ int Block_append(Block* self, OpCode op, ...) {
 
     self->data[start++] = op;
 
-    va_start(ap, argc);
+    va_start(ap, op);
     for (int i = start; i < self->size; i++) {
         self->data[i] = va_arg(ap, int);
     }

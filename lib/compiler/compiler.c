@@ -91,7 +91,7 @@ int Compiler_compile(Context* context, Node* node) {
 
     case UnOpNode:
         Compiler_compile(context, node->right);
-        break;
+        return 0;
 
     case CallNode: {
         if (node->left->tag == NameNode) {
@@ -286,5 +286,6 @@ int Compiler_compile(Context* context, Node* node) {
 
     default:
         abort();
+        return 0;
     }
 }

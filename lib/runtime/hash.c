@@ -30,16 +30,16 @@ static unsigned hash_str(const char* str) {
  * http://www.concentric.net/~ttwang/tech/addrhash.htm
  */
 
-static unsigned int hash_addr(void* addr) {
-    unsigned key = (unsigned)addr;
-    return (key >> 3) * 2654435761;
+static unsigned hash_addr(void* addr) {
+    unsigned long key = (unsigned long)addr;
+    return (unsigned)(((key >> 3) * 2654435761) % 0x80000000);
 }
 
 /*
  * Invokes the matching hash function.
  */
 
-static unsigned int hash_obj(Object* obj) {
+static unsigned hash_obj(Object* obj) {
     if (obj->proto == String_proto) {
         return hash_str(obj->data.ptr);
     }

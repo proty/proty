@@ -58,8 +58,8 @@ int yylex(void* yylval_param, void* loc, void* scanner);
 %token RPAR ")"
 %token LSQB "["
 %token RSQB "]"
-%token LBRACE "}"
-%token RBRACE "{"
+%token LBRACE "{"
+%token RBRACE "}"
 
 // other symbols
 %token COMMA ","

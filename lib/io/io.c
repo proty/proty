@@ -4,12 +4,12 @@
 
 Object* io_write(Object* self, Object* obj) {
     if (obj->proto == String_proto) {
-        printf("%s", obj->data.ptr);
+        printf("%s", (char*)obj->data.ptr);
     }
     else {
         Object* string = Object_send(obj, SYM(str), 0, 0);
         if (string != Qnil) {
-            printf("%s", string->data.ptr);
+            printf("%s", (char*)string->data.ptr);
         }
         else {
             printf("<%p>", obj);

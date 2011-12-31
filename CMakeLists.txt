@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 2.8)
 project(proty)
 set(VERSION 0.3)
 
-set(CMAKE_C_FLAGS "-std=c99 -fPIC")
+set(CMAKE_C_FLAGS "-std=gnu99 -fPIC -Wall -Wno-unused-function")
 set(EXECUTABLE_OUTPUT_PATH "${CMAKE_BINARY_DIR}")
 set(LIBRARY_OUTPUT_PATH "${CMAKE_BINARY_DIR}/lib")
 set(CMAKE_BUILD_RPATH "${LIBRARY_OUTPUT_PATH}/proty")
