@@ -262,8 +262,41 @@ int Compiler_compile(Context* context, Node* node) {
     }
 
     case StringNode: {
-        int str = Block_const(context->block, CONST_STR, (void*)node->data.sval);
-        Block_append(context->block, OP_STR, context->reg, str);
+        char* str = (char*)node->data.sval;
+
+        // replace control characters
+        int i = 0;
+        int off = 0;
+        while(str[i+off] != '\0') {
+            if (str[i+off] == '\\') {
+                char c = str[i+off+1];
+                if      (c == 'b') str[i] = '\b';
+                else if (c == 'f') str[i] = '\f';
+                else if (c == 'n') str[i] = '\n';
+                else if (c == 'r') str[i] = '\r';
+                else if (c == 't') str[i] = '\t';
+                else if (c == 'v') str[i] = '\v';
+                else if (c == 'x') {
+                    char hex[3];
+                    unsigned int val;
+
+                    hex[0] = str[i+off+2];
+                    hex[1] = str[i+off+3];
+                    hex[2] = '\0';
+                    sscanf(hex, "%x", &val);
+
+                    str[i] = (char)val;
+                    off += 2;
+                }
+                else off--;
+                off++;
+            }
+            i++;
+            if (off) str[i] = str[i+off];
+        }
+
+        int str_const = Block_const(context->block, CONST_STR, (void*)str);
+        Block_append(context->block, OP_STR, context->reg, str_const);
         return context->reg++;
     }
 
