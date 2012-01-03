@@ -52,7 +52,7 @@ int Compiler_compileString(Context* context, const char* string);
  * @param root The root node.
  * @returns The index of the compiled Block.
  */
-int Compiler_compileRoot(Context* context, Node* root);
+int Compiler_compileRootNode(Context* context, Node* root);
 
 /**
  * Compiles a node in the current context.
