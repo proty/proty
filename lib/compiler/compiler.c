@@ -270,7 +270,8 @@ int Compiler_compile(Context* context, Node* node) {
         while(str[i+off] != '\0') {
             if (str[i+off] == '\\') {
                 char c = str[i+off+1];
-                if      (c == 'b') str[i] = '\b';
+                if      (c == 'a') str[i] = '\a';
+                else if (c == 'b') str[i] = '\b';
                 else if (c == 'f') str[i] = '\f';
                 else if (c == 'n') str[i] = '\n';
                 else if (c == 'r') str[i] = '\r';
