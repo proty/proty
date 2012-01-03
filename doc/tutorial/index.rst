@@ -1,5 +1,4 @@
 .. _tutorial-index:
 
-========
 Tutorial
 ========
