@@ -14,10 +14,6 @@ int yylex(void* yylval_param, void* loc, void* scanner);
 %lex-param {yyscan_t* scanner}
 %defines
 
-%code provides {
-    int yyparse(void* scanner, Node** root);
-}
-
 %union {
     int ival;
     double dval;

@@ -7,6 +7,8 @@
 #include "parser.h"
 #include "lexer.h"
 
+int yyparse(void* scanner, Node** root);
+
 Context* Compiler_newContext(Module* module) {
     Context* context = malloc(sizeof(Context));
 
