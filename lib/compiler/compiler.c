@@ -1,12 +1,9 @@
 #include <stdio.h>
 #include <string.h>
 #include <assert.h>
-#include <vm/module.h>
 #include <vm/opcodes.h>
 #include <vm/state.h>
-#include "node.h"
 #include "compiler.h"
-#include "symtab.h"
 #include "parser.h"
 #include "lexer.h"
 

@@ -9,6 +9,7 @@ macro(proty_lib name)
   set_target_properties(proty-${name} PROPERTIES
                                       RUNTIME_OUTPUT_DIRECTORY "proty"
                                       LIBRARY_OUTPUT_DIRECTORY "proty")
+  target_link_libraries(proty-${name} protyrt)
   install(TARGETS proty-${name} DESTINATION lib/proty)
 endmacro(proty_lib)
 

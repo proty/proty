@@ -1,10 +1,10 @@
 #ifndef PROTY_COMPILER_H
 #define PROTY_COMPILER_H
 
-typedef struct Module Module;
-typedef struct Block Block;
-typedef struct Node Node;
-typedef struct SymTab SymTab;
+#include <vm/module.h>
+#include <vm/block.h>
+#include "node.h"
+#include "symtab.h"
 
 /**
  * Holds the compilation context.

@@ -1,4 +1,4 @@
-add_library(protyrt STATIC
+add_library(protyrt SHARED
   object.c
   cfunction.c
   function.c
@@ -14,7 +14,7 @@ add_library(protyrt STATIC
   runtime.c
 )
 
-install(TARGETS protyrt LIBRARY DESTINATION lib ARCHIVE DESTINATION lib)
+install(TARGETS protyrt LIBRARY DESTINATION lib)
 
 # install runtime headers
 file(GLOB files "${CMAKE_CURRENT_SOURCE_DIR}/*.h")

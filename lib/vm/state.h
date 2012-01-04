@@ -2,8 +2,8 @@
 #define STATE_H
 
 #include <runtime/runtime.h>
+#include "module.h"
 
-typedef struct Module Module;
 typedef int Reg;
 
 typedef struct State {
