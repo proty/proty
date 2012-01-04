@@ -41,7 +41,9 @@ Object* CFunction_call(Object* self, Object* fself, int argc, Object* argv[]) {
     case 5: ret = func(fself, argv[0], argv[1], argv[2], argv[3], argv[4]); break;
     case 6: ret = func(fself, argv[0], argv[1], argv[2], argv[3], argv[4], argv[5]); break;
     case 7: ret = func(fself, argv[0], argv[1], argv[2], argv[3], argv[4], argv[5], argv[6]); break;
+    default: ret = Qnil;
     }
+
     return ret;
 }
 
