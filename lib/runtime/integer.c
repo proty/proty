@@ -75,17 +75,17 @@ Object* Integer_iadd(Object* self, Object* other) {
 }
 
 Object* Integer_isub(Object* self, Object* other) {
-    self->data.i += other->data.i;
+    self->data.i -= other->data.i;
     return self;
 }
 
 Object* Integer_imul(Object* self, Object* other) {
-    self->data.i += other->data.i;
+    self->data.i *= other->data.i;
     return self;
 }
 
 Object* Integer_idiv(Object* self, Object* other) {
-    self->data.i += other->data.i;
+    self->data.i /= other->data.i;
     return self;
 }
 

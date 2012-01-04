@@ -7,6 +7,10 @@ Object* Float_new(double value) {
     return new;
 }
 
+/*
+ * Type conversions
+ */
+
 Object* Float_str(Object* self) {
     char buffer[20];
     sprintf(buffer, "%f", self->data.d);
@@ -16,6 +20,10 @@ Object* Float_str(Object* self) {
 Object* Float_bool(Object* self) {
     return self->data.d ? Qtrue : Qfalse;
 }
+
+/*
+ * Binary operations
+ */
 
 Object* Float_add(Object* self, Object* other) {
     return Float_new(self->data.d + other->data.d);
@@ -57,6 +65,30 @@ Object* Float_ge(Object* self, Object* other) {
     return self->data.d >= other->data.d ? Qtrue : Qfalse;
 }
 
+/*
+ * Inplace operations
+ */
+
+Object* Float_iadd(Object* self, Object* other) {
+    self->data.d += other->data.d;
+    return self;
+}
+
+Object* Float_isub(Object* self, Object* other) {
+    self->data.d -= other->data.d;
+    return self;
+}
+
+Object* Float_imul(Object* self, Object* other) {
+    self->data.d *= other->data.d;
+    return self;
+}
+
+Object* Float_idiv(Object* self, Object* other) {
+    self->data.d /= other->data.d;
+    return self;
+}
+
 void Float_initProto() {
     Object_setSlot(Float_proto, SYM(str), FUNC(Float_str, 1));
     Object_setSlot(Float_proto, SYM(bool), FUNC(Float_bool, 1));
@@ -72,4 +104,9 @@ void Float_initProto() {
     Object_setSlot(Float_proto, SYM(>), FUNC(Float_gt, 2));
     Object_setSlot(Float_proto, SYM(<=), FUNC(Float_le, 2));
     Object_setSlot(Float_proto, SYM(>=), FUNC(Float_ge, 2));
+
+    Object_setSlot(Float_proto, SYM(+=), FUNC(Float_iadd, 2));
+    Object_setSlot(Float_proto, SYM(-=), FUNC(Float_isub, 2));
+    Object_setSlot(Float_proto, SYM(*=), FUNC(Float_imul, 2));
+    Object_setSlot(Float_proto, SYM(/=), FUNC(Float_idiv, 2));
 }

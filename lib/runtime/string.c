@@ -19,6 +19,13 @@ Object* String_add(Object* self, Object* other) {
     return str;
 }
 
+Object* String_iadd(Object* self, Object* other) {
+    int size = strlen(self->data.ptr)+strlen(other->data.ptr)+1;
+    char* buffer = realloc(self->data.ptr, size);
+    strcat(buffer, other->data.ptr);
+    return self;
+}
+
 Object* String_eq(Object* self, Object* other) {
     return strcmp(self->data.ptr, other->data.ptr) ? Qfalse : Qtrue;
 }
@@ -69,6 +76,7 @@ Object* String_length(Object* self) {
 
 void String_initProto() {
     Object_setSlot(String_proto, SYM(+), FUNC(String_add, 2));
+    Object_setSlot(String_proto, SYM(+=), FUNC(String_iadd, 2));
 
     Object_setSlot(String_proto, SYM(==), FUNC(String_eq, 2));
     Object_setSlot(String_proto, SYM(!=), FUNC(String_ne, 2));

@@ -117,16 +117,20 @@ unop:           NOT expression       { $$ = Node_new(UnOpNode, 0, $2);
                                        $$->data.sval = "not"; }
               ;
 
-binop:          expression ADD expression { $$ = BinOpNode_new($1, $3, "+"); }
-              | expression SUB expression { $$ = BinOpNode_new($1, $3, "-"); }
-              | expression MUL expression { $$ = BinOpNode_new($1, $3, "*"); }
-              | expression DIV expression { $$ = BinOpNode_new($1, $3, "/"); }
-              | expression EQ expression  { $$ = BinOpNode_new($1, $3, "=="); }
-              | expression NE expression  { $$ = BinOpNode_new($1, $3, "!="); }
-              | expression GT expression  { $$ = BinOpNode_new($1, $3, ">"); }
-              | expression LT expression  { $$ = BinOpNode_new($1, $3, "<"); }
-              | expression GE expression  { $$ = BinOpNode_new($1, $3, ">="); }
-              | expression LE expression  { $$ = BinOpNode_new($1, $3, "<="); }
+binop:          expression ADD expression  { $$ = BinOpNode_new($1, $3, "+"); }
+              | expression SUB expression  { $$ = BinOpNode_new($1, $3, "-"); }
+              | expression MUL expression  { $$ = BinOpNode_new($1, $3, "*"); }
+              | expression DIV expression  { $$ = BinOpNode_new($1, $3, "/"); }
+              | expression EQ expression   { $$ = BinOpNode_new($1, $3, "=="); }
+              | expression NE expression   { $$ = BinOpNode_new($1, $3, "!="); }
+              | expression GT expression   { $$ = BinOpNode_new($1, $3, ">"); }
+              | expression LT expression   { $$ = BinOpNode_new($1, $3, "<"); }
+              | expression GE expression   { $$ = BinOpNode_new($1, $3, ">="); }
+              | expression LE expression   { $$ = BinOpNode_new($1, $3, "<="); }
+              | expression IADD expression { $$ = BinOpNode_new($1, $3, "+="); }
+              | expression ISUB expression { $$ = BinOpNode_new($1, $3, "-="); }
+              | expression IMUL expression { $$ = BinOpNode_new($1, $3, "*="); }
+              | expression IDIV expression { $$ = BinOpNode_new($1, $3, "/="); }
               ;
 
 primary:        INTEGER { $$ = Node_new(IntegerNode, 0, 0);
