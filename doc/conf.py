@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import sys, os
+sys.path.append(os.path.join(os.getcwd(), os.path.dirname(__file__)))
 
 extensions = ["proty"]
 templates_path = []

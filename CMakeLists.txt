@@ -61,14 +61,14 @@ endif(DOXYGEN_FOUND)
 find_program(SPHINX_EXECUTABLE NAMES sphinx-build)
 
 ###### HTML DOCUMENTATION
-add_custom_target(html-doc ${SPHINX_EXECUTABLE} -c ${CMAKE_SOURCE_DIR}
+add_custom_target(html-doc ${SPHINX_EXECUTABLE} -c ${CMAKE_SOURCE_DIR}/doc/
                            ${CMAKE_SOURCE_DIR}/doc/
                            ${CMAKE_BINARY_DIR}/doc/)
 add_dependencies(doc html-doc)
 
 ###### PDF DOCUMENTATION
 add_custom_target(latex-doc ${SPHINX_EXECUTABLE} -b latex
-                            -c ${CMAKE_SOURCE_DIR}
+                            -c ${CMAKE_SOURCE_DIR}/doc/
                             ${CMAKE_SOURCE_DIR}/doc/
                             ${CMAKE_BINARY_DIR}/pdf-doc/)
 add_custom_target(proty.pdf make -C ${CMAKE_BINARY_DIR}/pdf-doc/)
