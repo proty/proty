@@ -118,13 +118,12 @@ static int Compiler_compileSendNode(Context* context, Node* node) {
 }
 
 static int Compiler_compileDoNode(Context* context, Node* node) {
-    // backup current context
+    // backup current block
     Block* oldBlock = context->block;
-    SymTab* oldSymtab = context->symtab;
 
     // create context for the new function
     context->block = Block_new();
-    context->symtab = SymTab_new();
+    SymTab_enterScope(context->symtab);
 
     // pop the arguments from the stack
     // and save the registers to the symtab
@@ -143,8 +142,7 @@ static int Compiler_compileDoNode(Context* context, Node* node) {
     int block = Module_addBlock(context->module, context->block);
 
     // restore the old context
-    SymTab_delete(context->symtab);
-    context->symtab = oldSymtab;
+    SymTab_leaveScope(context->symtab);
     context->block = oldBlock;
 
     // create the function
