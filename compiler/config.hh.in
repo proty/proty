@@ -1,9 +1,0 @@
-#ifndef PROTY_CONFIG_HH
-#define PROTY_CONFIG_HH
-
-#cmakedefine VERSION "@VERSION@"
-#cmakedefine GIT_VERSION "@GIT_VERSION@"
-#cmakedefine BUILD_TYPE "@CMAKE_BUILD_TYPE@"
-#cmakedefine PREFIX "@CMAKE_INSTALL_PREFIX@"
-
-#endif

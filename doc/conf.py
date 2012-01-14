@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import sys, os
-
-sys.path.append("@CMAKE_SOURCE_DIR@/doc")
+sys.path.append(os.path.join(os.getcwd(), os.path.dirname(__file__)))
 
 extensions = ["proty"]
 templates_path = []
@@ -11,10 +10,10 @@ source_encoding = "utf-8-sig"
 master_doc = "index"
 
 project = u"Proty"
-copyright = u"2011, Thomas Gatzweiler"
+copyright = u"2010-2012, Thomas Gatzweiler"
 
-version = "@VERSION@"
-release = "@VERSION@"
+version = "0.4"
+release = version
 
 #language = None
 primary_domain = "pr"
@@ -32,7 +31,7 @@ html_theme = "default"
 html_theme_options = {}
 html_theme_path = []
 
-html_title = "Proty v@VERSION@ documentation"
+html_title = "Proty v%s documentation" % version
 html_short_title = html_title
 html_logo = None
 html_favicon = None

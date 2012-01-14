@@ -1,0 +1,11 @@
+#ifndef PROTY_CONFIG_HH
+#define PROTY_CONFIG_HH
+
+#cmakedefine VERSION "@VERSION@"
+#cmakedefine GIT_VERSION "@GIT_VERSION@"
+#cmakedefine BUILD_TYPE "@BUILD_TYPE@"
+#cmakedefine PREFIX "@PREFIX@"
+#cmakedefine SHARED_LIB_PREFIX "@SHARED_LIB_PREFIX@"
+#cmakedefine SHARED_LIB_SUFFIX "@SHARED_LIB_SUFFIX@"
+
+#endif

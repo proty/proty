@@ -1,6 +1,5 @@
 .. _c-api-index:
 
-=====
 C API
 =====
 

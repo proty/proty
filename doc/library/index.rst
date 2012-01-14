@@ -1,6 +1,5 @@
 .. _library-index:
 
-=================
 Library Reference
 =================
 

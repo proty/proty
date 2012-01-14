@@ -3,21 +3,21 @@
 #include "runtime.h"
 
 typedef struct {
-  int size;
-  int bounds;
-  const char** keys;
-  Object** values;
+    int size;
+    int bounds;
+    const char** keys;
+    Object** values;
 } Symtab;
 
 Symtab* symtab;
 
 void SymbolTable_init() {
-  symtab = malloc(sizeof(Symtab));
-  symtab->keys = calloc(sizeof(char*), 64);
-  symtab->values = malloc(sizeof(Object*)*64);
+    symtab = malloc(sizeof(Symtab));
+    symtab->keys = calloc(sizeof(char*), 64);
+    symtab->values = malloc(sizeof(Object*)*64);
 
-  symtab->bounds = 64;
-  symtab->size = 0;
+    symtab->bounds = 64;
+    symtab->size = 0;
 }
 
 /*
@@ -26,13 +26,13 @@ void SymbolTable_init() {
  */
 
 static unsigned int hash_string(const char* str) {
-  unsigned int hash = 5381;
-  int c;
+    unsigned int hash = 5381;
+    int c;
 
-  while ((c = *str++))
-    hash = ((hash << 5) + hash) + c;
+    while ((c = *str++))
+        hash = ((hash << 5) + hash) + c;
 
-  return hash;
+    return hash;
 }
 
 /*
@@ -41,33 +41,33 @@ static unsigned int hash_string(const char* str) {
  */
 
 Object* Symbol_get(const char* id) {
-  unsigned int hash = hash_string(id);
-  unsigned int pos = hash % symtab->bounds;
+    unsigned int hash = hash_string(id);
+    unsigned int pos = hash % symtab->bounds;
 
-  // search for the key
-  while (symtab->keys[pos]) {
-    if (strcmp(symtab->keys[pos], id)) {
-      pos = (pos+1) % symtab->bounds;
+    // search for the key
+    while (symtab->keys[pos]) {
+        if (strcmp(symtab->keys[pos], id)) {
+            pos = (pos+1) % symtab->bounds;
+        }
+        else return symtab->values[pos];
     }
-    else return symtab->values[pos];
-  }
 
-  // key not found, create a new symbol
-  pos = hash % symtab->bounds;
+    // key not found, create a new symbol
+    pos = hash % symtab->bounds;
 
-  while (symtab->keys[pos] && strcmp(symtab->keys[pos], id)) {
-    pos = (pos+1) % symtab->bounds;
-  }
+    while (symtab->keys[pos] && strcmp(symtab->keys[pos], id)) {
+        pos = (pos+1) % symtab->bounds;
+    }
 
-  Object* symbol = Object_new(Symbol_proto);
+    Object* symbol = Object_new(Symbol_proto);
 
-  symtab->keys[pos] = id;
-  symtab->values[pos] = symbol;
-  symtab->size++;
+    symtab->keys[pos] = id;
+    symtab->values[pos] = symbol;
+    symtab->size++;
 
-  return symbol;
+    return symbol;
 }
 
 void Symbol_initProto() {
-  Symbol_proto->data.ptr = symtab;
+    Symbol_proto->data.ptr = symtab;
 }
