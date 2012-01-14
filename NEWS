@@ -1,7 +1,10 @@
-* Proty 0.4 2011-08-20
+* Proty 0.4 2012-01-14
 
  - implements inplace operations
- - fixes parser bugs
+ - new virtual machine
+ - new function syntax
+ - implements bytecode reading/writing
+ - improves the interactive command line
 
 * Proty 0.3 2011-08-06
 
