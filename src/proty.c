@@ -27,51 +27,51 @@ void help() {
 }
 
 int main(int argc, const char** argv) {
-  const char* filename = 0;
-  const char* output = 0;
+    const char* filename = 0;
+    const char* output = 0;
 
-  for (int count = 1; count < argc; count++) {
-      if (argv[count][0] == '-') {
-          if (!strcmp(argv[count], "-h"))               { help(); return 0; }
-          else if (!strcmp(argv[count], "--help"))      { help(); return 0; }
-          else if (!strcmp(argv[count], "-o"))          { output = argv[++count]; }
-          else if (!strcmp(argv[count], "--version"))   { version(); return 0; }
-          else if (!strcmp(argv[count], "--"))          { break; }
-          else {
-              help();
-              fprintf(stderr, "proty: invalid option %s", argv[count]);
-              return 1;
-          }
-      }
-      else { filename = argv[count]; break; }
-  }
+    for (int count = 1; count < argc; count++) {
+        if (argv[count][0] == '-') {
+            if (!strcmp(argv[count], "-h"))               { help(); return 0; }
+            else if (!strcmp(argv[count], "--help"))      { help(); return 0; }
+            else if (!strcmp(argv[count], "-o"))          { output = argv[++count]; }
+            else if (!strcmp(argv[count], "--version"))   { version(); return 0; }
+            else if (!strcmp(argv[count], "--"))          { break; }
+            else {
+                help();
+                fprintf(stderr, "proty: invalid option %s", argv[count]);
+                return 1;
+            }
+        }
+        else { filename = argv[count]; break; }
+    }
 
-  runtime_init();
+    runtime_init();
 
-  FILE* file = filename ? fopen(filename, "r") : stdin;
-  Module* module;
+    FILE* file = filename ? fopen(filename, "r") : stdin;
+    Module* module;
 
-  int blockId = 0;
-  if (Module_probe(file)) {
-      module = Module_read(file);
-  }
-  else {
-      module = Module_new();
-      Context* context = Compiler_newContext(module);
-      blockId = Compiler_compileFile(context, file);
-      free(context);
-  }
+    int blockId = 0;
+    if (Module_probe(file)) {
+        module = Module_read(file);
+    }
+    else {
+        module = Module_new();
+        Context* context = Compiler_newContext(module);
+        blockId = Compiler_compileFile(context, file);
+        free(context);
+    }
 
-  State* state = State_new(module);
-  eval(state, blockId);
+    State* state = State_new(module);
+    eval(state, blockId);
 
-  if (output) {
-      FILE* out = fopen(output, "w");
-      Module_write(module, out);
-  }
+    if (output) {
+        FILE* out = fopen(output, "w");
+        Module_write(module, out);
+    }
 
-  Module_delete(module);
-  State_delete(state);
+    Module_delete(module);
+    State_delete(state);
 
-  return 0;
+    return 0;
 }
