@@ -11,7 +11,7 @@ typedef struct Node {
         CallNode,
         SendNode,
         ArgsNode,
-        FuncArgsNode,
+        DoArgsNode,
         SetSlotNode,
         GetSlotNode,
         AssignNode,

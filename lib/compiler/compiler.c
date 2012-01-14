@@ -261,7 +261,7 @@ static int Compiler_compileFloatNode(Context* context, Node* node) {
 static int Compiler_compileStringNode(Context* context, Node* node) {
     char* str = (char*)node->data.sval;
 
-    // replace control characters
+    // replace escape sequences
     int i = 0;
     int off = 0;
     while(str[i+off] != '\0') {

@@ -26,7 +26,9 @@ int yylex(void* yylval_param, void* loc, void* scanner);
 %token UNDEF "unknown token"
 
 // operators
-%left ASSIGN IADD ISUB IMUL IDIV
+%left DOT
+%left ASSIGN
+%left IADD ISUB IMUL IDIV
 %left LPAR
 %left NOT
 %left AND OR
@@ -64,21 +66,20 @@ int yylex(void* yylval_param, void* loc, void* scanner);
 %token SEMICOLON ";"
 %token ARROW "=>"
 
-%right DOT
-
 %type <node> primary block statements statement expression
-%type <node> if_stmt while_stmt unop binop args func_args
+%type <node> if_stmt while_stmt unop binop args do_args
 
 %%
 
 program:        statements EOS { *root = $1; }
 
-block:          LBRACE block RBRACE { $$ = $2; }
-              | statements { $$ = $1; }
+block:          LBRACE statements RBRACE { $$ = $2; }
+              | statements END { $$ = $1; }
               ;
 
 statements:     { $$ = 0; }
               | NEWLINE statements { $$ = $2; }
+              | SEMICOLON statements { $$ = $2; }
               | statement statements { $$ = Node_new(BranchNode, $1, $2); }
               ;
 
@@ -96,7 +97,8 @@ expression:     LPAR expression RPAR { $$ = $2; }
               | expression DOT NAME ASSIGN expression { $$ = SetSlotNode_new($1, $5, $3); }
               | expression DOT NAME LPAR args RPAR { $$ = SendNode_new($1, $5, $3); }
               | expression LPAR args RPAR { $$ = Node_new(CallNode, $1, $3); }
-              | DO LPAR func_args RPAR block END { $$ = Node_new(DoNode, $3, $5); }
+              | DO COLON block { $$ = Node_new(DoNode, 0, $3); }
+              | DO do_args COLON block { $$ = Node_new(DoNode, $2, $4); }
               ;
 
 args:           { $$ = Node_new(ArgsNode, 0, 0); }
@@ -104,13 +106,11 @@ args:           { $$ = Node_new(ArgsNode, 0, 0); }
               | expression COMMA args { $$ = Node_new(ArgsNode, $1, $3); }
               ;
 
-func_args:      { $$ = 0; }
-              | NAME { $$ = Node_new(FuncArgsNode, 0, 0); $$->data.sval = $1; }
-              | NAME COMMA func_args { $$ = Node_new(FuncArgsNode, 0, $3); $$->data.sval = $1; }
+do_args:        NAME { $$ = Node_new(DoArgsNode, 0, 0); $$->data.sval = $1; }
+              | NAME COMMA do_args { $$ = Node_new(DoArgsNode, 0, $3); $$->data.sval = $1; }
               ;
 
-unop:           NOT expression       { $$ = Node_new(UnOpNode, 0, $2);
-                                       $$->data.sval = "not"; }
+unop:           NOT expression { $$ = Node_new(UnOpNode, 0, $2); $$->data.sval = "not"; }
               ;
 
 binop:          expression ADD expression  { $$ = BinOpNode_new($1, $3, "+"); }
@@ -129,28 +129,19 @@ binop:          expression ADD expression  { $$ = BinOpNode_new($1, $3, "+"); }
               | expression IDIV expression { $$ = BinOpNode_new($1, $3, "/="); }
               ;
 
-primary:        INTEGER { $$ = Node_new(IntegerNode, 0, 0);
-                          $$->data.ival = $1; }
-
-              | DECIMAL { $$ = Node_new(FloatNode, 0, 0);
-                          $$->data.dval = $1; }
-
-              | STRING  { $$ = Node_new(StringNode, 0, 0);
-                          $$->data.sval = $1; }
-
-              | NAME    { $$ = Node_new(NameNode, 0, 0);
-                          $$->data.sval = $1; }
-
-              | COLON NAME { $$ = Node_new(SymbolNode, 0, 0);
-                             $$->data.sval = $2; }
+primary:        INTEGER { $$ = Node_new(IntegerNode, 0, 0); $$->data.ival = $1; }
+              | DECIMAL { $$ = Node_new(FloatNode, 0, 0); $$->data.dval = $1; }
+              | STRING  { $$ = Node_new(StringNode, 0, 0); $$->data.sval = $1; }
+              | NAME    { $$ = Node_new(NameNode, 0, 0); $$->data.sval = $1; }
+              | COLON NAME { $$ = Node_new(SymbolNode, 0, 0); $$->data.sval = $2; }
               ;
 
-if_stmt:        IF expression block END { $$ = Node_new(IfNode, $2, $3); }
-              | IF expression block ELSE block END { $$ = Node_new(IfNode, $2,
-                                                      Node_new(ElseNode, $3, $5)); }
+if_stmt:        IF expression block { $$ = Node_new(IfNode, $2, $3); }
+              | IF expression block ELSE block { $$ = Node_new(IfNode, $2,
+                                                 Node_new(ElseNode, $3, $5)); }
               ;
 
-while_stmt:     WHILE expression block END { $$ = Node_new(WhileNode, $2, $3); }
+while_stmt:     WHILE expression block { $$ = Node_new(WhileNode, $2, $3); }
               ;
 
 %%

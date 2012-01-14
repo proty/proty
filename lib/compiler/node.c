@@ -32,7 +32,7 @@ Node* GetSlotNode_new(Node* obj, const char* slot) {
 }
 
 Node* SetSlotNode_new(Node* obj, Node* val, const char* slot) {
-    Node* n = Node_new(GetSlotNode, obj, val);
+    Node* n = Node_new(SetSlotNode, obj, val);
     n->data.node = Node_new(SymbolNode, 0, 0);
     n->data.node->data.sval = slot;
     return n;
