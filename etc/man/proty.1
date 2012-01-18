@@ -1,8 +1,11 @@
-.TH PROTY "1" "2012-01-04" "" "Proty Programmers Reference Guide"
+.TH PROTY "1" "2012-01-14" "" "Proty Programmers Reference Guide"
 .SH NAME
 proty \- a dynamic, prototype based programming language
 .SH SYNOPSIS
 .B proty
+[
+.B \-c
+]
 [
 .B \-h
 ]
@@ -22,11 +25,14 @@ proty \- a dynamic, prototype based programming language
 
 .SH OPTIONS
 .TP
+.B \-c
+compile to bytecode
+.TP
 .B \-h, \-\-help
 display a compact option overview
 .TP
 .BI "\-o " file
-compile to a bytecode file
+set the output filename
 .TP
 .B \--version
 display version information
