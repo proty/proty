@@ -59,7 +59,7 @@ int main(int argc, const char** argv) {
         module = Module_new();
         Context* context = Compiler_newContext(module);
         blockId = Compiler_compileFile(context, file);
-        free(context);
+        Compiler_deleteContext(context);
     }
 
     State* state = State_new(module);

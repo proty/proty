@@ -15,6 +15,9 @@ Module* Module_new() {
 }
 
 void Module_delete(Module* self) {
+    for (int i = 0; i < self->blockc; i++) {
+        free(self->blocks[i]);
+    }
     free(self->blocks);
     free(self);
 }

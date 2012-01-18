@@ -40,8 +40,9 @@ int main(int argc, char** argv) {
         free(input);
     }
 
-    free(context);
+    Compiler_deleteContext(context);
     State_delete(state);
+    Module_delete(module);
 
     return 0;
 }

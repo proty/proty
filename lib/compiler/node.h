@@ -38,6 +38,8 @@ typedef struct Node {
 } Node;
 
 Node* Node_new(enum NodeTag tag, Node* left, Node* right);
+void Node_delete(Node* self);
+
 Node* AssignNode_new(Node* name, Node* value);
 Node* BinOpNode_new(Node* lhs, Node* rhs, const char* op);
 Node* GetSlotNode_new(Node* obj, const char* slot);

@@ -20,6 +20,11 @@ Context* Compiler_newContext(Module* module) {
     return context;
 }
 
+void Compiler_deleteContext(Context* context) {
+    SymTab_delete(context->symtab);
+    free(context);
+}
+
 int Compiler_compileFile(Context* context, FILE* file) {
     void* scanner;
     Node* root;
@@ -30,7 +35,10 @@ int Compiler_compileFile(Context* context, FILE* file) {
     int res = yyparse(scanner, &root);
     yylex_destroy(scanner);
 
-    return res ? -1 : Compiler_compileRootNode(context, root);
+    res = res ? -1 : Compiler_compileRootNode(context, root);
+    Node_delete(root);
+
+    return res;
 }
 
 int Compiler_compileString(Context* context, const char* str) {
@@ -42,7 +50,10 @@ int Compiler_compileString(Context* context, const char* str) {
     int res = yyparse(scanner, &root);
     yylex_destroy(scanner);
 
-    return res ? -1 : Compiler_compileRootNode(context, root);
+    res = res ? -1 : Compiler_compileRootNode(context, root);
+    Node_delete(root);
+
+    return res;
 }
 
 int Compiler_compileRootNode(Context* context, Node* root) {

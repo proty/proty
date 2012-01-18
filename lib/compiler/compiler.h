@@ -31,6 +31,12 @@ typedef struct Context {
 Context* Compiler_newContext(Module* module);
 
 /**
+ * Deletes a Context.
+ * @param context The context to delete.
+ */
+void Compiler_deleteContext(Context* context);
+
+/**
  * Compiles a file to a Block.
  * @param context The compilation context.
  * @param file The file descriptor.

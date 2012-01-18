@@ -2,45 +2,62 @@
 #include <assert.h>
 
 Node* Node_new(enum NodeTag tag, Node* left, Node* right) {
-    Node* n = malloc(sizeof(Node));
-    n->tag = tag;
-    n->left = left;
-    n->right = right;
-    return n;
+    Node* node = malloc(sizeof(Node));
+    node->tag = tag;
+    node->left = left;
+    node->right = right;
+    return node;
+}
+
+void Node_delete(Node* self) {
+    if (self->left) Node_delete(self->left);
+    if (self->right) Node_delete(self->right);
+
+    switch (self->tag) {
+    case BinOpNode:
+    case GetSlotNode:
+    case SetSlotNode:
+    case SendNode:
+        Node_delete(self->data.node);
+    default:
+        break;
+    }
+
+    free(self);
 }
 
 Node* AssignNode_new(Node* expr, Node* value) {
-    Node* n = Node_new(AssignNode, 0, value);
+    Node* node = Node_new(AssignNode, 0, value);
     assert(expr->tag == NameNode);
-    n->data.sval = expr->data.sval;
+    node->data.sval = expr->data.sval;
     free(expr);
-    return n;
+    return node;
 }
 
 Node* BinOpNode_new(Node* lhs, Node* rhs, const char* op) {
-    Node* n = Node_new(BinOpNode, lhs, rhs);
-    n->data.node = Node_new(SymbolNode, 0, 0);
-    n->data.node->data.sval = op;
-    return n;
+    Node* node = Node_new(BinOpNode, lhs, rhs);
+    node->data.node = Node_new(SymbolNode, 0, 0);
+    node->data.node->data.sval = op;
+    return node;
 }
 
 Node* GetSlotNode_new(Node* obj, const char* slot) {
-    Node* n = Node_new(GetSlotNode, obj, 0);
-    n->data.node = Node_new(SymbolNode, 0, 0);
-    n->data.node->data.sval = slot;
-    return n;
+    Node* node = Node_new(GetSlotNode, obj, 0);
+    node->data.node = Node_new(SymbolNode, 0, 0);
+    node->data.node->data.sval = slot;
+    return node;
 }
 
 Node* SetSlotNode_new(Node* obj, Node* val, const char* slot) {
-    Node* n = Node_new(SetSlotNode, obj, val);
-    n->data.node = Node_new(SymbolNode, 0, 0);
-    n->data.node->data.sval = slot;
-    return n;
+    Node* node = Node_new(SetSlotNode, obj, val);
+    node->data.node = Node_new(SymbolNode, 0, 0);
+    node->data.node->data.sval = slot;
+    return node;
 }
 
 Node* SendNode_new(Node* obj, Node* args, const char* slot) {
-    Node* n = Node_new(SendNode, obj, args);
-    n->data.node = Node_new(SymbolNode, 0, 0);
-    n->data.node->data.sval = slot;
-    return n;
+    Node* node = Node_new(SendNode, obj, args);
+    node->data.node = Node_new(SymbolNode, 0, 0);
+    node->data.node->data.sval = slot;
+    return node;
 }

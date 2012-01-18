@@ -13,14 +13,14 @@ Block* Block_new() {
 }
 
 void Block_delete(Block* self) {
-    free(self->data);
-
     for (int i = 0; i < self->constc; i++) {
         Const* c = self->consts[i];
         // free(c->data);
         free(c);
     }
 
+    free(self->data);
+    free(self->consts);
     free(self);
 }
 
