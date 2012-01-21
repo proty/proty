@@ -12,7 +12,7 @@ static inline void List_resize(List* list) {
     if (list->size == list->bounds) {
         int new_size = list->bounds + 1;
         new_size = (new_size >> 3) + (new_size < 9 ? 3 : 6) + new_size;
-        list->objects = realloc(list->objects, new_size*sizeof(Object*));
+        list->objects = realloc(list->objects, new_size * sizeof(Object*));
         list->bounds = new_size;
     }
 }
@@ -139,6 +139,22 @@ Object* List_bool(Object* self) {
     return list->size > 0 ? Qtrue : Qfalse;
 }
 
+Object* List_str(Object* self) {
+    List* list = self->data.ptr;
+    Object* str = String_new("[");
+
+    for (int i = 0; i < list->size; i++) {
+        Object* s = Object_send(list->objects[i], SYM(str), 0, 0);
+        String_iadd(str, s);
+        if (i+1 < list->size) {
+            String_iadd(str, String_new(", "));
+        }
+    }
+
+    String_iadd(str, String_new("]"));
+    return str;
+}
+
 void List_initProto() {
     Object_setSlot(List_proto, SYM(append), FUNC(List_append, 2));
     Object_setSlot(List_proto, SYM(insert), FUNC(List_insert, 3));
@@ -150,4 +166,5 @@ void List_initProto() {
     Object_setSlot(List_proto, SYM(reverse), FUNC(List_reverse, 1));
     Object_setSlot(List_proto, SYM(size), FUNC(List_size, 1));
     Object_setSlot(List_proto, SYM(bool), FUNC(List_bool, 1));
+    Object_setSlot(List_proto, SYM(str), FUNC(List_str, 1));
 }
