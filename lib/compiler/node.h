@@ -19,6 +19,7 @@ typedef struct Node {
         ElseNode,
         WhileNode,
         DoNode,
+        ListNode,
         IntegerNode,
         FloatNode,
         StringNode,

@@ -162,16 +162,19 @@ static int Compiler_compileDoNode(Context* context, Node* node) {
 }
 
 static int Compiler_compileArgsNode(Context* context, Node* node) {
-    int argc = 0;
-    Node* args = node;
-    while (args) {
-        if (args->left) {
-            argc++;
-            int arg = Compiler_compile(context, args->left);
-            Block_append(context->block, OP_PUSH, arg);
-        }
-        args = args->right;
-    };
+    int argc;
+
+    if (node->right) {
+        argc = Compiler_compile(context, node->right) + 1;
+    }
+    else argc = 1;
+
+    if (node->left) {
+        int arg = Compiler_compile(context, node->left);
+        Block_append(context->block, OP_PUSH, arg);
+    }
+    else if (!node->right) argc = 0;
+
     return argc;
 }
 
@@ -256,6 +259,12 @@ static int Compiler_compileWhileNode(Context* context, Node* node) {
     return cond;
 }
 
+static int Compiler_compileListNode(Context* context, Node* node) {
+    int argc = Compiler_compile(context, node->left);
+    Block_append(context->block, OP_LIST, context->reg, argc);
+    return context->reg++;
+}
+
 static int Compiler_compileIntegerNode(Context* context, Node* node) {
     Block_append(context->block, OP_INT, context->reg, node->data.ival);
     return context->reg++;
@@ -326,6 +335,7 @@ static int Compiler_compileSymbolNode(Context* context, Node* node) {
 }
 
 int Compiler_compile(Context* context, Node* node) {
+    // dispatch!
     switch (node->tag) {
     case BranchNode: return Compiler_compileBranchNode(context, node);
     case BinOpNode:  return Compiler_compileBinOpNode(context, node);
@@ -339,6 +349,7 @@ int Compiler_compile(Context* context, Node* node) {
     case AssignNode: return Compiler_compileAssignNode(context, node);
     case IfNode:     return Compiler_compileIfNode(context, node);
     case WhileNode:  return Compiler_compileWhileNode(context, node);
+    case ListNode:   return Compiler_compileListNode(context, node);
     case IntegerNode:return Compiler_compileIntegerNode(context, node);
     case FloatNode:  return Compiler_compileFloatNode(context, node);
     case StringNode: return Compiler_compileStringNode(context, node);

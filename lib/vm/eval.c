@@ -85,6 +85,19 @@ Object* eval(State* state, int id) {
             pc += 2;
             break;
 
+        case OP_LIST: {
+            int ret = PCi;
+            int argc = PCi;
+            Object* list = List_new();
+
+            for (int i = 0; i < argc; i++) {
+                List_append(list, stack[--sp]);
+            }
+
+            R(ret) = list;
+            break;
+        }
+
         case OP_CALL: {
             int ret = PCi;
             Object* obj = R(PCi);
@@ -96,7 +109,7 @@ Object* eval(State* state, int id) {
             }
             else {
                 Object** args = malloc(sizeof(Object*)*argc);
-                for (int i = argc-1; i >= 0; i--) {
+                for (int i = 0; i < argc; i++) {
                     args[i] = stack[--sp];
                 }
                 R(ret) = Object_call(obj, argc, args);
@@ -118,7 +131,7 @@ Object* eval(State* state, int id) {
             }
             else {
                 Object** args = malloc(sizeof(Object*)*argc);
-                for (int i = argc-1; i >= 0; i--) {
+                for (int i = 0; i < argc; i++) {
                     args[i] = stack[--sp];
                 }
                 R(ret) = Object_send(obj, msg, argc, args);

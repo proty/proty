@@ -99,6 +99,7 @@ expression:     LPAR expression RPAR { $$ = $2; }
               | expression LPAR args RPAR { $$ = Node_new(CallNode, $1, $3); }
               | DO COLON block { $$ = Node_new(DoNode, 0, $3); }
               | DO do_args COLON block { $$ = Node_new(DoNode, $2, $4); }
+              | LSQB args RSQB { $$ = Node_new(ListNode, $2, 0); }
               ;
 
 args:           { $$ = Node_new(ArgsNode, 0, 0); }
