@@ -265,6 +265,34 @@ static int Compiler_compileListNode(Context* context, Node* node) {
     return context->reg++;
 }
 
+static int Compiler_compileHashNode(Context* context, Node* node) {
+    int argc = Compiler_compile(context, node->left);
+    Block_append(context->block, OP_HASH, context->reg, argc);
+    return context->reg++;
+}
+
+static int Compiler_compileHashArgsNode(Context* context, Node* node) {
+    int argc;
+
+    if (node->right) {
+        argc = Compiler_compile(context, node->right) + 1;
+    }
+    else argc = 1;
+
+    if (node->left) {
+        assert(node->left->tag == HashElementNode);
+
+        int key = Compiler_compile(context, node->left->left);
+        int obj = Compiler_compile(context, node->left->right);
+
+        Block_append(context->block, OP_PUSH, key);
+        Block_append(context->block, OP_PUSH, obj);
+    }
+    else if (!node->right) argc = 0;
+
+    return argc;
+}
+
 static int Compiler_compileIntegerNode(Context* context, Node* node) {
     Block_append(context->block, OP_INT, context->reg, node->data.ival);
     return context->reg++;
@@ -337,24 +365,26 @@ static int Compiler_compileSymbolNode(Context* context, Node* node) {
 int Compiler_compile(Context* context, Node* node) {
     // dispatch!
     switch (node->tag) {
-    case BranchNode: return Compiler_compileBranchNode(context, node);
-    case BinOpNode:  return Compiler_compileBinOpNode(context, node);
-    case UnOpNode:   return Compiler_compileUnOpNode(context, node);
-    case CallNode:   return Compiler_compileCallNode(context, node);
-    case SendNode:   return Compiler_compileSendNode(context, node);
-    case DoNode:     return Compiler_compileDoNode(context, node);
-    case ArgsNode:   return Compiler_compileArgsNode(context, node);
-    case SetSlotNode:return Compiler_compileSetSlotNode(context, node);
-    case GetSlotNode:return Compiler_compileGetSlotNode(context, node);
-    case AssignNode: return Compiler_compileAssignNode(context, node);
-    case IfNode:     return Compiler_compileIfNode(context, node);
-    case WhileNode:  return Compiler_compileWhileNode(context, node);
-    case ListNode:   return Compiler_compileListNode(context, node);
-    case IntegerNode:return Compiler_compileIntegerNode(context, node);
-    case FloatNode:  return Compiler_compileFloatNode(context, node);
-    case StringNode: return Compiler_compileStringNode(context, node);
-    case NameNode:   return Compiler_compileNameNode(context, node);
-    case SymbolNode: return Compiler_compileSymbolNode(context, node);
+    case BranchNode:   return Compiler_compileBranchNode(context, node);
+    case BinOpNode:    return Compiler_compileBinOpNode(context, node);
+    case UnOpNode:     return Compiler_compileUnOpNode(context, node);
+    case CallNode:     return Compiler_compileCallNode(context, node);
+    case SendNode:     return Compiler_compileSendNode(context, node);
+    case DoNode:       return Compiler_compileDoNode(context, node);
+    case ArgsNode:     return Compiler_compileArgsNode(context, node);
+    case SetSlotNode:  return Compiler_compileSetSlotNode(context, node);
+    case GetSlotNode:  return Compiler_compileGetSlotNode(context, node);
+    case AssignNode:   return Compiler_compileAssignNode(context, node);
+    case IfNode:       return Compiler_compileIfNode(context, node);
+    case WhileNode:    return Compiler_compileWhileNode(context, node);
+    case ListNode:     return Compiler_compileListNode(context, node);
+    case HashNode:     return Compiler_compileHashNode(context, node);
+    case HashArgsNode: return Compiler_compileHashArgsNode(context, node);
+    case IntegerNode:  return Compiler_compileIntegerNode(context, node);
+    case FloatNode:    return Compiler_compileFloatNode(context, node);
+    case StringNode:   return Compiler_compileStringNode(context, node);
+    case NameNode:     return Compiler_compileNameNode(context, node);
+    case SymbolNode:   return Compiler_compileSymbolNode(context, node);
     default:
         abort();
         return 0;

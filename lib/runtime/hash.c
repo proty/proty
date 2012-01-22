@@ -159,6 +159,11 @@ Object* Hash_get(Object* self, Object* key) {
     return Qnil;
 }
 
+Object* Hash_size(Object* self) {
+    Hash* hash = self->data.ptr;
+    return Integer_new(hash->size);
+}
+
 void Hash_initProto() {
     // bootstrap hash prototype
     Hash_proto->slots = Object_new(Hash_proto);
@@ -167,4 +172,5 @@ void Hash_initProto() {
     Object_setSlot(Hash_proto, SYM(init), FUNC(Hash_init, 1));
     Object_setSlot(Hash_proto, SYM([]), FUNC(Hash_get, 2));
     Object_setSlot(Hash_proto, SYM([]=), FUNC(Hash_set, 3));
+    Object_setSlot(Hash_proto, SYM(size), FUNC(Hash_size, 1));
 }

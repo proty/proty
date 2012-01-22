@@ -67,7 +67,8 @@ int yylex(void* yylval_param, void* loc, void* scanner);
 %token ARROW "=>"
 
 %type <node> primary block statements statement expression
-%type <node> if_stmt while_stmt unop binop args do_args
+%type <node> if_stmt while_stmt unop binop args do_args hash_args
+%type <node> list hash hash_element
 
 %%
 
@@ -99,7 +100,6 @@ expression:     LPAR expression RPAR { $$ = $2; }
               | expression LPAR args RPAR { $$ = Node_new(CallNode, $1, $3); }
               | DO COLON block { $$ = Node_new(DoNode, 0, $3); }
               | DO do_args COLON block { $$ = Node_new(DoNode, $2, $4); }
-              | LSQB args RSQB { $$ = Node_new(ListNode, $2, 0); }
               ;
 
 args:           { $$ = Node_new(ArgsNode, 0, 0); }
@@ -135,7 +135,25 @@ primary:        INTEGER { $$ = Node_new(IntegerNode, 0, 0); $$->data.ival = $1; 
               | STRING  { $$ = Node_new(StringNode, 0, 0); $$->data.sval = $1; }
               | NAME    { $$ = Node_new(NameNode, 0, 0); $$->data.sval = $1; }
               | COLON NAME { $$ = Node_new(SymbolNode, 0, 0); $$->data.sval = $2; }
+              | list { $$ = $1; }
+              | hash { $$ = $1; }
               ;
+
+list:           LSQB args RSQB { $$ = Node_new(ListNode, $2, 0); }
+              ;
+
+hash:           LBRACE hash_args RBRACE { $$ = Node_new(HashNode, $2, 0); }
+              ;
+
+hash_args:      { $$ = Node_new(HashArgsNode, 0, 0); }
+              | hash_element { $$ = Node_new(HashArgsNode, $1, 0); }
+              | hash_element COMMA hash_args { $$ = Node_new(HashArgsNode, $1, $3); }
+              ;
+
+hash_element:
+                expression ARROW expression { $$ = Node_new(HashElementNode, $1, $3); }
+              ;
+
 
 if_stmt:        IF expression block { $$ = Node_new(IfNode, $2, $3); }
               | IF expression block ELSE block { $$ = Node_new(IfNode, $2,
