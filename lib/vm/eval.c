@@ -1,6 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
-#include <alloca.h>
+#include <assert.h>
 #include "module.h"
 #include "eval.h"
 #include "load.h"
@@ -104,6 +104,7 @@ Object* eval(State* state, int id) {
             int argc = PCi;
 
             if (obj->proto == Function_proto) {
+                assert(argc == Function_getArgc(obj));
                 state->sp = sp;
                 R(ret) = eval(state, Function_getId(obj));
             }
@@ -126,6 +127,7 @@ Object* eval(State* state, int id) {
             int argc = PCi;
 
             if (obj->proto == Function_proto) {
+                assert(argc == Function_getArgc(obj));
                 state->sp = sp;
                 R(ret) = eval(state, Function_getId(obj));
             }

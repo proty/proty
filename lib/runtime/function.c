@@ -21,5 +21,9 @@ int Function_getId(Object* self) {
     return ((Function*)self->data.ptr)->id;
 }
 
+int Function_getArgc(Object* self) {
+    return ((Function*)self->data.ptr)->argc;
+}
+
 void Function_initProto() {
 }
