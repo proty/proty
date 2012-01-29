@@ -52,8 +52,13 @@ int main(int argc, const char** argv) {
     runtime_init();
 
     FILE* file = filename ? fopen(filename, "r") : stdin;
-    Module* module;
 
+    if (!file) {
+        fprintf(stderr, "proty: %s: no such file\n", filename);
+        return 1;
+    }
+
+    Module* module;
     int blockId = 0;
     if (Module_probe(file)) {
         module = Module_read(file);
