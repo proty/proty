@@ -98,6 +98,21 @@ Object* eval(State* state, int id) {
             break;
         }
 
+        case OP_HASH: {
+            int ret = PCi;
+            int argc = PCi;
+            Object* hash = Hash_new();
+
+            for (int i = 0; i < argc; i++) {
+                Object* obj = stack[--sp];
+                Object* key = stack[--sp];
+                Hash_set(hash, key, obj);
+            }
+
+            R(ret) = hash;
+            break;
+        }
+
         case OP_CALL: {
             int ret = PCi;
             Object* obj = R(PCi);
