@@ -1,15 +1,11 @@
-include_directories(.)
-
-add_subdirectory(runtime)
-add_subdirectory(compiler)
-add_subdirectory(vm)
+include_directories(../src/)
 
 macro(proty_lib name)
   add_library(proty-${name} SHARED ${ARGN})
   set_target_properties(proty-${name} PROPERTIES
                                       RUNTIME_OUTPUT_DIRECTORY "proty"
                                       LIBRARY_OUTPUT_DIRECTORY "proty")
-  target_link_libraries(proty-${name} protyrt)
+  target_link_libraries(proty-${name} libproty)
   install(TARGETS proty-${name} DESTINATION lib/proty)
 endmacro(proty_lib)
 

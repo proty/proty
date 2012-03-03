@@ -1,6 +1,6 @@
 %{
 #include <stdio.h>
-#include "node.h"
+#include "compiler/node.h"
 #include "parser.h"
 int yyerror(void* yyloc, void* scanner, Node** root, const char* msg);
 int yylex(void* yylval_param, void* loc, void* scanner);

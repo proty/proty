@@ -1,5 +1,5 @@
-#include "runtime.h"
 #include <stdio.h>
+#include "runtime.h"
 
 Object* Object_proto = 0;
 Object* CFunction_proto = 0;
