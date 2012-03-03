@@ -10,15 +10,22 @@ typedef struct Node {
         UnOpNode,
         CallNode,
         SendNode,
+
         ArgsNode,
         DoArgsNode,
+        HashArgsNode,
+
         SetSlotNode,
         GetSlotNode,
         AssignNode,
+
         IfNode,
         ElseNode,
         WhileNode,
         DoNode,
+
+        HashNode,
+        HashElementNode,
         ListNode,
         IntegerNode,
         FloatNode,

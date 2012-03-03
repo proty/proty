@@ -20,6 +20,7 @@ typedef enum OpCode {
     OP_BOOL,
     OP_NIL,
     OP_LIST,
+    OP_HASH,
 
     // object methods
     OP_SET,

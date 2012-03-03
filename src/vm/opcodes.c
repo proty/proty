@@ -18,6 +18,7 @@ const char* OpCode_name(OpCode op) {
     case OP_NIL:   return "nil";
     case OP_BOOL:  return "bool";
     case OP_LIST:  return "list";
+    case OP_HASH:  return "hash";
 
     case OP_SET:   return "set";
     case OP_GET:   return "get";
@@ -48,6 +49,7 @@ int OpCode_size(OpCode op) {
     case OP_NIL:   return 1;
     case OP_BOOL:  return 2;
     case OP_LIST:  return 2;
+    case OP_HASH:  return 2;
 
     case OP_SET:   return 4;
     case OP_GET:   return 3;
