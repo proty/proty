@@ -103,6 +103,7 @@ int main(int argc, const char** argv) {
     }
     else {
         State* state = State_new(module);
+        State_setGlobalState(state);
         eval(state, blockId);
         State_delete(state);
     }

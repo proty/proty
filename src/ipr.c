@@ -21,7 +21,9 @@ int main(int argc, char** argv) {
 
     Module* module = Module_new();
     Context* context = Compiler_newContext(module);
+
     State* state = State_new(module);
+    State_setGlobalState(state);
 
     while (1) {
         char* input = readline(">>> ");

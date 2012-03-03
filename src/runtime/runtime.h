@@ -16,6 +16,7 @@ typedef Object* (*FuncPtr)(Object*, ...);
 #include "nil.h"
 #include "bool.h"
 #include "exception.h"
+#include "vm/state.h"
 
 #define FUNC(name, argc) CFunction_new((FuncPtr)name, argc-1)
 #define SYM(name) Symbol_get(#name)

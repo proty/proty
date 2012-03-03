@@ -38,24 +38,41 @@ Object* Object_getSlot(Object* self, Object* key) {
 }
 
 Object* Object_call(Object* self, int argc, Object* argv[]) {
-    /// @todo: throw exception
-    if (self->proto != CFunction_proto) {
+    if (self->proto == CFunction_proto) {
+        return CFunction_call(self, 0, argc, argv);
+    }
+    else if (self->proto == Function_proto) {
+        return Function_call(self, 0, argc, argv);
+    }
+    else {
+        /// @todo: throw exception
         printf("proty: called non-function object\n");
         abort();
+        return 0;
     }
-
-    return CFunction_call(self, 0, argc, argv);
 }
 
 Object* Object_send(Object* self, Object* key, int argc, Object* argv[]) {
     Object* func = Object_getSlot(self, key);
+
+    if (func->proto == CFunction_proto) {
+        return CFunction_call(func, self, argc, argv);
+    }
+    else if (func->proto == Function_proto) {
+        return Function_call(func, self, argc, argv);
+    }
+    else {
+        /// @todo: throw exception
+        printf("proty: called non-function object\n");
+        abort();
+        return 0;
+    }
 
     if (func->proto != CFunction_proto) {
         printf("proty: called non-function object\n");
         abort();
     }
 
-    return CFunction_call(func, self, argc, argv);
 }
 
 Object* Object_str(Object* self) {

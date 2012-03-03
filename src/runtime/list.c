@@ -63,10 +63,7 @@ Object* List_set(Object* self, Object* index, Object* value) {
 Object* List_each(Object* self, Object* func) {
     List* list = self->data.ptr;
     for (int i = 0; i < list->size; i++) {
-        Object* args[2];
-        args[0] = self;
-        args[1] = list->objects[i];
-        Object_call(func, 2, args);
+        Object_call(func, 1, &list->objects[i]);
     }
     return Qnil;
 }
@@ -74,10 +71,7 @@ Object* List_each(Object* self, Object* func) {
 Object* List_map(Object* self, Object* func) {
     List* list = self->data.ptr;
     for (int i = 0; i < list->size; i++) {
-        Object* args[2];
-        args[0] = self;
-        args[1] = list->objects[i];
-        list->objects[i] = Object_call(func, 2, args);
+        list->objects[i] = Object_call(func, 1, &list->objects[i]);
     }
     return Qnil;
 }

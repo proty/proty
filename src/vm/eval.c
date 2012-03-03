@@ -103,9 +103,10 @@ Object* eval(State* state, int id) {
             Object* obj = R(PCi);
             int argc = PCi;
 
+            state->sp = sp;
+
             if (obj->proto == Function_proto) {
                 assert(argc == Function_getArgc(obj));
-                state->sp = sp;
                 R(ret) = eval(state, Function_getId(obj));
             }
             else {
@@ -126,9 +127,10 @@ Object* eval(State* state, int id) {
             Object* msg = R(PCi);
             int argc = PCi;
 
+            state->sp = sp;
+
             if (obj->proto == Function_proto) {
                 assert(argc == Function_getArgc(obj));
-                state->sp = sp;
                 R(ret) = eval(state, Function_getId(obj));
             }
             else {
