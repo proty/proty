@@ -22,10 +22,9 @@ Object* CFunction_new(FuncPtr func, int argc) {
 Object* CFunction_call(Object* self, Object* fself, int argc, Object* argv[]) {
     CFunction* function = (CFunction*)self->data.ptr;
 
-    /// @todo: throw exception
     if (argc != function->argc) {
-        printf("proty: call with wrong argument count, expected %i, got %i\n", function->argc, argc);
-        abort();
+        Object* excp = Exception_new("wrong argument count");
+        Exception_raise(excp);
     }
 
     if (!fself) fself = Qnil;

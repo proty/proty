@@ -1,8 +1,21 @@
-#include "runtime.h"
 #include <stdlib.h>
 #include <stdio.h>
+#include "runtime.h"
+#include "vm/state.h"
+
+Object* Exception_new(const char* str) {
+    Object* excp = Object_new(Exception_proto);
+    excp->data.ptr = (void*)str;
+    return excp;
+}
 
 Object* Exception_raise(Object* self) {
+    State* state = State_getGlobalState();
+    state->exception = self;
+
+    longjmp(state->excp_buf, 1);
+
+    // never reached
     return Qnil;
 }
 

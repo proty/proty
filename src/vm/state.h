@@ -1,6 +1,8 @@
 #ifndef STATE_H
 #define STATE_H
 
+#include <setjmp.h>
+
 typedef struct Object_t Object;
 typedef struct Module Module;
 typedef int Reg;
@@ -9,8 +11,10 @@ typedef struct State {
     int sp;
     Object** registers;
     Object** stack;
-    Object* exception;
     Module* module;
+
+    jmp_buf excp_buf;
+    Object* exception;
 } State;
 
 State* State_new(Module* module);

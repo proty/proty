@@ -17,6 +17,10 @@ Object* eval(State* state, int id) {
     Object** registers = state->registers;
     Object** stack = state->stack;
 
+    if (setjmp(state->excp_buf)) {
+        printf("Exception: %s\n", (const char*)state->exception->data.ptr);
+    }
+
     for (;;) {
         switch (PCi) {
         case OP_HLT:

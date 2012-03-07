@@ -45,10 +45,9 @@ Object* Object_call(Object* self, int argc, Object* argv[]) {
         return Function_call(self, 0, argc, argv);
     }
     else {
-        /// @todo: throw exception
-        printf("proty: called non-function object\n");
-        abort();
-        return 0;
+        Object* excp = Exception_new("called non-function object");
+        Exception_raise(excp);
+        return Qnil;
     }
 }
 
@@ -62,17 +61,10 @@ Object* Object_send(Object* self, Object* key, int argc, Object* argv[]) {
         return Function_call(func, self, argc, argv);
     }
     else {
-        /// @todo: throw exception
-        printf("proty: called non-function object\n");
-        abort();
-        return 0;
+        Object* excp = Exception_new("called non-function object");
+        Exception_raise(excp);
+        return Qnil;
     }
-
-    if (func->proto != CFunction_proto) {
-        printf("proty: called non-function object\n");
-        abort();
-    }
-
 }
 
 Object* Object_str(Object* self) {
