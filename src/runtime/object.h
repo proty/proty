@@ -1,7 +1,7 @@
 #ifndef OBJECT_H
 #define OBJECT_H
 
-struct Object_t {
+struct Object {
     union {
         void*  ptr;
         int    i;

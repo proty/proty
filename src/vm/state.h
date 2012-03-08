@@ -1,19 +1,19 @@
 #ifndef STATE_H
 #define STATE_H
 
-typedef struct Object_t Object;
-typedef struct Module Module;
 typedef int Reg;
+struct Object;
+struct Module;
 
 typedef struct State {
     int sp;
-    Object** registers;
-    Object** stack;
-    Object* exception;
-    Module* module;
+    struct Object** registers;
+    struct Object** stack;
+    struct Object* exception;
+    struct Module* module;
 } State;
 
-State* State_new(Module* module);
+State* State_new(struct Module* module);
 void State_delete(State* self);
 
 void State_setGlobalState(State* state);
