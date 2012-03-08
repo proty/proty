@@ -1,12 +1,12 @@
 cmake_minimum_required(VERSION 2.8)
 
-project(proty)
+project(proty C)
 set(VERSION 0.4)
 set(VERSION_MAJOR 0)
 set(VERSION_MINOR 4)
 set(VERSION_PATCH 0)
 
-set(CMAKE_C_FLAGS "-std=gnu99 -fPIC -Wall -Wno-unused-function")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=gnu99 -fPIC -Wall -Wno-unused-function")
 set(EXECUTABLE_OUTPUT_PATH "${CMAKE_BINARY_DIR}")
 set(LIBRARY_OUTPUT_PATH "${CMAKE_BINARY_DIR}/lib")
 set(CMAKE_BUILD_RPATH "${LIBRARY_OUTPUT_PATH}/proty")
@@ -26,7 +26,7 @@ set(CPACK_SYSTEM_NAME "${CMAKE_SYSTEM_NAME}-${CMAKE_SYSTEM_PROCESSOR}")
 
 set(CPACK_DEBIAN_PACKAGE_MAINTAINER "Proty Maintainers")
 set(CPACK_DEBIAN_PACKAGE_ARCHITECTURE ${CMAKE_SYSTEM_PROCESSOR})
-set(CPACK_DEBIAN_PACKAGE_DEPENDS "readline")
+set(CPACK_DEBIAN_PACKAGE_DEPENDS "libreadline6")
 
 include(CPack)
 
