@@ -3,6 +3,7 @@
 
 #include <vm/module.h>
 #include <vm/block.h>
+#include <setjmp.h>
 #include "node.h"
 #include "symtab.h"
 
@@ -21,6 +22,9 @@ typedef struct Context {
 
     /// the register count
     int reg;
+
+    /// error handling
+    jmp_buf error_buf;
 } Context;
 
 /**
