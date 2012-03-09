@@ -1,6 +1,6 @@
 %{
-typedef struct Node Node;
 #include <stdlib.h>
+#include "compiler/node.h"
 #include "parser.h"
 #define YY_USER_ACTION yylloc->last_column += yyleng;
 %}
@@ -82,7 +82,10 @@ typedef struct Node Node;
 
 %%
 
-int yyerror(YYLTYPE* loc, void* scanner, Node* root, const char* p) {
-    printf("Error at %i.%i:\n  %s\n", loc->last_line, loc->last_column, p);
+int yyerror(YYLTYPE* loc, void* scanner, Node** root, const char* p) {
+    fprintf(stderr, "Error at %i.%i:\n  %s\n", loc->last_line,
+            loc->last_column, p);
+
+    if (*root) Node_delete(*root);
     return 0;
 }

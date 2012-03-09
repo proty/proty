@@ -27,7 +27,7 @@ void Compiler_deleteContext(Context* context) {
 
 int Compiler_compileFile(Context* context, FILE* file) {
     void* scanner;
-    Node* root;
+    Node* root = 0;
 
     yylex_init(&scanner);
     yyset_in(file, scanner);
@@ -35,24 +35,26 @@ int Compiler_compileFile(Context* context, FILE* file) {
     int res = yyparse(scanner, &root);
     yylex_destroy(scanner);
 
-    res = res ? -1 : Compiler_compileRootNode(context, root);
-    Node_delete(root);
+    if (res) return -1;
 
+    res = Compiler_compileRootNode(context, root);
+    Node_delete(root);
     return res;
 }
 
 int Compiler_compileString(Context* context, const char* str) {
     void* scanner;
-    Node* root;
+    Node* root = 0;
 
     yylex_init(&scanner);
     yy_scan_string(str, scanner);
     int res = yyparse(scanner, &root);
     yylex_destroy(scanner);
 
-    res = res ? -1 : Compiler_compileRootNode(context, root);
-    Node_delete(root);
+    if (res) return -1;
 
+    res = Compiler_compileRootNode(context, root);
+    Node_delete(root);
     return res;
 }
 
