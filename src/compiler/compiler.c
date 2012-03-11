@@ -37,7 +37,7 @@ int Compiler_compileFile(Context* context, FILE* file) {
     if (res) return -1;
 
     res = Compiler_compileRootNode(context, root);
-    Node_delete(root);
+    if (root) Node_delete(root);
     return res;
 }
 
@@ -53,7 +53,7 @@ int Compiler_compileString(Context* context, const char* str) {
     if (res) return -1;
 
     res = Compiler_compileRootNode(context, root);
-    Node_delete(root);
+    if (root) Node_delete(root);
     return res;
 }
 
