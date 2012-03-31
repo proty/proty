@@ -54,6 +54,7 @@ add_library(protyc SHARED
 )
 target_link_libraries(protyc libproty)
 install(TARGETS protyc LIBRARY DESTINATION lib)
+install(DIRECTORY compiler DESTINATION include/proty FILES_MATCHING PATTERN "*.h")
 
 #
 # proty executable
