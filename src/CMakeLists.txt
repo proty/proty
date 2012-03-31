@@ -33,15 +33,17 @@ add_library(libproty SHARED
 set_target_properties(libproty PROPERTIES OUTPUT_NAME "proty")
 target_link_libraries(libproty dl)
 install(TARGETS libproty LIBRARY DESTINATION lib)
+install(DIRECTORY vm DESTINATION include/proty FILES_MATCHING PATTERN "*.h")
+install(DIRECTORY runtime DESTINATION include/proty FILES_MATCHING PATTERN "*.h")
 
 #
 # Compiler
 #
 
-BISON_TARGET(Parser compiler/parser.y ${CMAKE_CURRENT_BINARY_DIR}/parser.c)
-FLEX_TARGET(Lexer compiler/lexer.l ${CMAKE_CURRENT_BINARY_DIR}/lexer.c
+bison_target(Parser compiler/parser.y ${CMAKE_CURRENT_BINARY_DIR}/parser.c)
+flex_target(Lexer compiler/lexer.l ${CMAKE_CURRENT_BINARY_DIR}/lexer.c
             COMPILE_FLAGS --header-file=${CMAKE_CURRENT_BINARY_DIR}/lexer.h)
-ADD_FLEX_BISON_DEPENDENCY(Lexer Parser)
+add_flex_bison_dependency(Lexer Parser)
 
 add_library(protyc SHARED
   ${FLEX_Lexer_OUTPUTS}
