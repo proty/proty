@@ -6,10 +6,11 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR})
 include_directories(${CMAKE_SOURCE_DIR}/lib/)
 
 #
-# VM
+# libproty
 #
 
 add_library(libproty SHARED
+  env.c
   vm/block.c
   vm/eval.c
   vm/load.c
@@ -35,9 +36,10 @@ target_link_libraries(libproty dl)
 install(TARGETS libproty LIBRARY DESTINATION lib)
 install(DIRECTORY vm DESTINATION include/proty FILES_MATCHING PATTERN "*.h")
 install(DIRECTORY runtime DESTINATION include/proty FILES_MATCHING PATTERN "*.h")
+install(DIRECTORY . DESTINATION include/proty FILES_MATCHING PATTERN "*.h")
 
 #
-# Compiler
+# libprotyc
 #
 
 bison_target(Parser compiler/parser.y ${CMAKE_CURRENT_BINARY_DIR}/parser.c)
