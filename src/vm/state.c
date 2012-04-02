@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include "runtime/runtime.h"
 #include "state.h"
 #include "module.h"
 

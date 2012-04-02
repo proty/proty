@@ -3,21 +3,21 @@
 
 #include <setjmp.h>
 
-typedef struct Object_t Object;
-typedef struct Module Module;
 typedef int Reg;
+struct Object;
+struct Module;
 
 typedef struct State {
     int sp;
-    Object** registers;
-    Object** stack;
-    Module* module;
+    struct Object** registers;
+    struct Object** stack;
+    struct Module* module;
 
     jmp_buf excp_buf;
-    Object* exception;
+    struct Object* exception;
 } State;
 
-State* State_new(Module* module);
+State* State_new(struct Module* module);
 void State_delete(State* self);
 
 void State_setGlobalState(State* state);

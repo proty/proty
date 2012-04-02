@@ -5,6 +5,7 @@
 #cmakedefine GIT_VERSION "@GIT_VERSION@"
 #cmakedefine BUILD_TYPE "@BUILD_TYPE@"
 #cmakedefine PREFIX "@PREFIX@"
+#cmakedefine PLATFORM "@PLATFORM@"
 #cmakedefine SHARED_LIB_PREFIX "@SHARED_LIB_PREFIX@"
 #cmakedefine SHARED_LIB_SUFFIX "@SHARED_LIB_SUFFIX@"
 

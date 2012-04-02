@@ -21,8 +21,8 @@ Object* String_add(Object* self, Object* other) {
 
 Object* String_iadd(Object* self, Object* other) {
     int size = strlen(self->data.ptr)+strlen(other->data.ptr)+1;
-    char* buffer = realloc(self->data.ptr, size);
-    strcat(buffer, other->data.ptr);
+    self->data.ptr = realloc(self->data.ptr, size);
+    strcat(self->data.ptr, other->data.ptr);
     return self;
 }
 

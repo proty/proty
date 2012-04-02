@@ -27,38 +27,45 @@ void Compiler_deleteContext(Context* context) {
 
 int Compiler_compileFile(Context* context, FILE* file) {
     void* scanner;
-    Node* root;
+    Node* root = 0;
 
     yylex_init(&scanner);
     yyset_in(file, scanner);
 
     int res = yyparse(scanner, &root);
     yylex_destroy(scanner);
+    if (res) return -1;
 
-    res = res ? -1 : Compiler_compileRootNode(context, root);
-    Node_delete(root);
-
+    res = Compiler_compileRootNode(context, root);
+    if (root) Node_delete(root);
     return res;
 }
 
 int Compiler_compileString(Context* context, const char* str) {
     void* scanner;
-    Node* root;
+    Node* root = 0;
 
     yylex_init(&scanner);
     yy_scan_string(str, scanner);
+
     int res = yyparse(scanner, &root);
     yylex_destroy(scanner);
+    if (res) return -1;
 
-    res = res ? -1 : Compiler_compileRootNode(context, root);
-    Node_delete(root);
-
+    res = Compiler_compileRootNode(context, root);
+    if (root) Node_delete(root);
     return res;
 }
 
 int Compiler_compileRootNode(Context* context, Node* root) {
     context->block = Block_new();
     int id = Module_addBlock(context->module, context->block);
+
+    // this code is only executed if an error occurs in the
+    // compilation process further down
+    if (setjmp(context->error_buf)) {
+        return -1;
+    }
 
     if (root) {
         int ret = Compiler_compile(context, root);
@@ -70,6 +77,10 @@ int Compiler_compileRootNode(Context* context, Node* root) {
     }
 
     return id;
+}
+
+static void Compiler_error(Context* context) {
+    longjmp(context->error_buf, 1);
 }
 
 static int Compiler_compileBranchNode(Context* context, Node* node) {
@@ -350,9 +361,10 @@ static int Compiler_compileNameNode(Context* context, Node* node) {
     Reg reg = SymTab_lookup(context->symtab, node->data.sval);
 
     if (reg < 0) {
-        printf("name %s not defined\n", node->data.sval);
-        abort();
+        fprintf(stderr, "name %s not defined\n", node->data.sval);
+        Compiler_error(context);
     }
+
     return reg;
 }
 
