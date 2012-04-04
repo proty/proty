@@ -29,12 +29,14 @@ void help() {
 
 int main(int argc, const char** argv) {
     int compile = 0;
+    int dump = 0;
     const char* filename = 0;
     const char* output = 0;
 
     for (int count = 1; count < argc; count++) {
         if (argv[count][0] == '-') {
             if      (!strcmp(argv[count], "-c"))          { compile = 1; }
+            else if (!strcmp(argv[count], "-d"))          { dump = 1; }
             else if (!strcmp(argv[count], "-h"))          { help(); return 0; }
             else if (!strcmp(argv[count], "--help"))      { help(); return 0; }
             else if (!strcmp(argv[count], "-o"))          { output = argv[++count]; }
@@ -100,6 +102,9 @@ int main(int argc, const char** argv) {
 
         FILE* out = fopen(output, "w");
         Module_write(module, out);
+    }
+    else if (dump) {
+        Module_dump(module);
     }
     else {
         State* state = State_new(module);
