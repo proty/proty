@@ -11,7 +11,9 @@ void version() {
     #ifdef GIT_VERSION
     fprintf(stderr, "[" GIT_VERSION "]\n");;
     #endif
+
     fprintf(stderr, "\n");
+    fprintf(stderr, COPYRIGHT "\n");
     fprintf(stderr, "This program comes with ABSOLUTELY NO WARRANTY.\n");
     fprintf(stderr, "This is free software, and you are welcome to redistribute it\n");
     fprintf(stderr, "under certain conditions; see proty.cc/license for details.\n");
