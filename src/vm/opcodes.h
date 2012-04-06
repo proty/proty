@@ -28,6 +28,10 @@ typedef enum OpCode {
     OP_CALL,
     OP_SEND,
 
+    // exception handling
+    OP_TRY,
+    OP_ENDTRY,
+
     // stack operations
     OP_PUSH,
     OP_POP,

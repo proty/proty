@@ -66,17 +66,13 @@ int yylex(void* yylval_param, void* loc, void* scanner);
 %token SEMICOLON ";"
 %token ARROW "=>"
 
-%type <node> primary block statements statement expression
-%type <node> if_stmt while_stmt unop binop args do_args hash_args
-%type <node> list hash hash_element
+%type <node> primary statements statement expression
+%type <node> if_stmt while_stmt try_stmt unop binop args
+%type <node> do_args hash_args list hash hash_element
 
 %%
 
 program:        statements EOS { *root = $1; }
-
-block:          LBRACE statements RBRACE { $$ = $2; }
-              | statements END { $$ = $1; }
-              ;
 
 statements:     { $$ = 0; }
               | NEWLINE statements { $$ = $2; }
@@ -87,6 +83,7 @@ statements:     { $$ = 0; }
 statement:      expression { $$ = $1; }
               | if_stmt    { $$ = $1; }
               | while_stmt { $$ = $1; }
+              | try_stmt   { $$ = $1; }
               ;
 
 expression:     LPAR expression RPAR { $$ = $2; }
@@ -98,8 +95,8 @@ expression:     LPAR expression RPAR { $$ = $2; }
               | expression DOT NAME ASSIGN expression { $$ = SetSlotNode_new($1, $5, $3); }
               | expression DOT NAME LPAR args RPAR { $$ = SendNode_new($1, $5, $3); }
               | expression LPAR args RPAR { $$ = Node_new(CallNode, $1, $3); }
-              | DO COLON block { $$ = Node_new(DoNode, 0, $3); }
-              | DO do_args COLON block { $$ = Node_new(DoNode, $2, $4); }
+              | DO COLON statements END { $$ = Node_new(DoNode, 0, $3); }
+              | DO do_args COLON statements END { $$ = Node_new(DoNode, $2, $4); }
               ;
 
 args:           { $$ = Node_new(ArgsNode, 0, 0); }
@@ -155,12 +152,15 @@ hash_element:
               ;
 
 
-if_stmt:        IF expression block { $$ = Node_new(IfNode, $2, $3); }
-              | IF expression block ELSE block { $$ = Node_new(IfNode, $2,
-                                                 Node_new(ElseNode, $3, $5)); }
+if_stmt:        IF expression statements END { $$ = Node_new(IfNode, $2, $3); }
+              | IF expression statements ELSE statements END
+                   { $$ = Node_new(IfNode, $2, Node_new(ElseNode, $3, $5)); }
               ;
 
-while_stmt:     WHILE expression block { $$ = Node_new(WhileNode, $2, $3); }
+while_stmt:     WHILE expression statements END { $$ = Node_new(WhileNode, $2, $3); }
+              ;
+
+try_stmt:       TRY statements CATCH statements END { $$ = Node_new(TryNode, $2, $4); }
               ;
 
 %%

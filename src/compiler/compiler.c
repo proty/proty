@@ -270,6 +270,25 @@ static int Compiler_compileWhileNode(Context* context, Node* node) {
     return cond;
 }
 
+static int Compiler_compileTryNode(Context* context, Node* node) {
+    int catch_jmp = Block_append(context->block, OP_TRY, 0) + 1;
+    int ret = Compiler_compile(context, node->left);
+    Block_append(context->block, OP_ENDTRY);
+
+    int skip_catch = Block_append(context->block, OP_JMP, 0) + 1;
+
+    int diff;
+    diff = Block_position(context->block) - catch_jmp;
+    Block_replace(context->block, catch_jmp, diff);
+
+    Compiler_compile(context, node->right);
+
+    diff = Block_position(context->block) - skip_catch;
+    Block_replace(context->block, skip_catch, diff);
+
+    return ret;
+}
+
 static int Compiler_compileListNode(Context* context, Node* node) {
     int argc = Compiler_compile(context, node->left);
     Block_append(context->block, OP_LIST, context->reg, argc);
@@ -389,6 +408,7 @@ int Compiler_compile(Context* context, Node* node) {
     case AssignNode:   return Compiler_compileAssignNode(context, node);
     case IfNode:       return Compiler_compileIfNode(context, node);
     case WhileNode:    return Compiler_compileWhileNode(context, node);
+    case TryNode:      return Compiler_compileTryNode(context, node);
     case ListNode:     return Compiler_compileListNode(context, node);
     case HashNode:     return Compiler_compileHashNode(context, node);
     case HashArgsNode: return Compiler_compileHashArgsNode(context, node);

@@ -17,8 +17,15 @@ Object* eval(State* state, int id) {
     Object** registers = state->registers;
     Object** stack = state->stack;
 
+    int* catch = 0;
     if (setjmp(state->excp_buf)) {
-        printf("Exception: %s\n", (const char*)state->exception->data.ptr);
+        if (!catch) {
+            printf("Unhandled Exception: %s\n", (const char*)state->exception->data.ptr);
+            abort();
+        }
+        else {
+            pc = catch;
+        }
     }
 
     for (;;) {
@@ -180,6 +187,14 @@ Object* eval(State* state, int id) {
             R(ret) = Object_setSlot(obj, slot, val);
             break;
         }
+
+        case OP_TRY:
+            catch = pc + PC(0);
+            pc++;
+            break;
+
+        case OP_ENDTRY:
+            break;
 
         case OP_PUSH:
             stack[sp++] = R(PCi);

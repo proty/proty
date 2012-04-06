@@ -23,6 +23,7 @@ typedef struct Node {
         ElseNode,
         WhileNode,
         DoNode,
+        TryNode,
 
         HashNode,
         HashElementNode,
