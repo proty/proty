@@ -387,6 +387,10 @@ static int Compiler_compileNameNode(Context* context, Node* node) {
         Block_append(context->block, OP_BOOL, context->reg, 0);
         return context->reg++;
     }
+    else if (!strcmp(name, "nil")) {
+        Block_append(context->block, OP_NIL, context->reg);
+        return context->reg++;
+    }
 
     Reg reg = SymTab_lookup(context->symtab, name);
 
