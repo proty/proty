@@ -108,7 +108,7 @@ do_args:        NAME { $$ = Node_new(DoArgsNode, 0, 0); $$->data.sval = $1; }
               | NAME COMMA do_args { $$ = Node_new(DoArgsNode, 0, $3); $$->data.sval = $1; }
               ;
 
-unop:           NOT expression { $$ = Node_new(UnOpNode, 0, $2); $$->data.sval = "not"; }
+unop:           NOT expression { $$ = UnOpNode_new($2, "not"); }
               ;
 
 binop:          expression ADD expression  { $$ = BinOpNode_new($1, $3, "+"); }
@@ -125,6 +125,8 @@ binop:          expression ADD expression  { $$ = BinOpNode_new($1, $3, "+"); }
               | expression ISUB expression { $$ = BinOpNode_new($1, $3, "-="); }
               | expression IMUL expression { $$ = BinOpNode_new($1, $3, "*="); }
               | expression IDIV expression { $$ = BinOpNode_new($1, $3, "/="); }
+              | expression AND expression { $$ = BinOpNode_new($1, $3, "and"); }
+              | expression OR expression { $$ = BinOpNode_new($1, $3, "or"); }
               ;
 
 primary:        INTEGER { $$ = Node_new(IntegerNode, 0, 0); $$->data.ival = $1; }

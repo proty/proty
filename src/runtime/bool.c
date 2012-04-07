@@ -29,8 +29,8 @@ Object* Bool_new() {
 
 void Bool_initProto() {
     Object_setSlot(Bool_proto, SYM(==), FUNC(Bool_eq, 2));
-    Object_setSlot(Bool_proto, SYM(&&), FUNC(Bool_and, 2));
-    Object_setSlot(Bool_proto, SYM(||), FUNC(Bool_or, 2));
-    Object_setSlot(Bool_proto, SYM(!), FUNC(Bool_not, 1));
+    Object_setSlot(Bool_proto, SYM(and), FUNC(Bool_and, 2));
+    Object_setSlot(Bool_proto, SYM(or), FUNC(Bool_or, 2));
+    Object_setSlot(Bool_proto, SYM(not), FUNC(Bool_not, 1));
     Object_setSlot(Bool_proto, SYM(str), FUNC(Bool_str, 1));
 }

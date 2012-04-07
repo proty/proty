@@ -41,6 +41,13 @@ Node* BinOpNode_new(Node* lhs, Node* rhs, const char* op) {
     return node;
 }
 
+Node* UnOpNode_new(Node* obj, const char* op) {
+    Node* node = Node_new(UnOpNode, 0, obj);
+    node->data.node = Node_new(SymbolNode, 0, 0);
+    node->data.node->data.sval = op;
+    return node;
+}
+
 Node* GetSlotNode_new(Node* obj, const char* slot) {
     Node* node = Node_new(GetSlotNode, obj, 0);
     node->data.node = Node_new(SymbolNode, 0, 0);

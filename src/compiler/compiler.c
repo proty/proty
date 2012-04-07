@@ -108,8 +108,11 @@ static int Compiler_compileBinOpNode(Context* context, Node* node) {
 }
 
 static int Compiler_compileUnOpNode(Context* context, Node* node) {
-    Compiler_compile(context, node->right);
-    return 0;
+    int obj = Compiler_compile(context, node->right);
+    int op = Compiler_compile(context, node->data.node);
+
+    Block_append(context->block, OP_SEND, context->reg, obj, op, 0);
+    return context->reg++;
 }
 
 static int Compiler_compileCallNode(Context* context, Node* node) {
