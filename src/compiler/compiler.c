@@ -377,10 +377,21 @@ static int Compiler_compileStringNode(Context* context, Node* node) {
 }
 
 static int Compiler_compileNameNode(Context* context, Node* node) {
-    Reg reg = SymTab_lookup(context->symtab, node->data.sval);
+    const char* name = node->data.sval;
+
+    if (!strcmp(name, "true")) {
+        Block_append(context->block, OP_BOOL, context->reg, 1);
+        return context->reg++;
+    }
+    else if (!strcmp(name, "false")) {
+        Block_append(context->block, OP_BOOL, context->reg, 0);
+        return context->reg++;
+    }
+
+    Reg reg = SymTab_lookup(context->symtab, name);
 
     if (reg < 0) {
-        fprintf(stderr, "name %s not defined\n", node->data.sval);
+        fprintf(stderr, "name %s not defined\n", name);
         Compiler_error(context);
     }
 
