@@ -95,8 +95,8 @@ expression:     LPAR expression RPAR { $$ = $2; }
               | expression DOT NAME ASSIGN expression { $$ = SetSlotNode_new($1, $5, $3); }
               | expression DOT NAME LPAR args RPAR { $$ = SendNode_new($1, $5, $3); }
               | expression LPAR args RPAR { $$ = Node_new(CallNode, $1, $3); }
-              | DO COLON statements END { $$ = Node_new(DoNode, 0, $3); }
               | DO do_args COLON statements END { $$ = Node_new(DoNode, $2, $4); }
+              | DO do_args LBRACE statements RBRACE { $$ = Node_new(DoNode, $2, $4); }
               ;
 
 args:           { $$ = Node_new(ArgsNode, 0, 0); }
@@ -104,7 +104,8 @@ args:           { $$ = Node_new(ArgsNode, 0, 0); }
               | expression COMMA args { $$ = Node_new(ArgsNode, $1, $3); }
               ;
 
-do_args:        NAME { $$ = Node_new(DoArgsNode, 0, 0); $$->data.sval = $1; }
+do_args:        { $$ = 0; }
+              | NAME { $$ = Node_new(DoArgsNode, 0, 0); $$->data.sval = $1; }
               | NAME COMMA do_args { $$ = Node_new(DoArgsNode, 0, $3); $$->data.sval = $1; }
               ;
 
