@@ -72,6 +72,7 @@ int main(int argc, const char** argv) {
         Context* context = Compiler_newContext(module);
         blockId = Compiler_compileFile(context, file);
         Compiler_deleteContext(context);
+        if (blockId < 0) return 1;
     }
 
     if (compile) {
