@@ -68,11 +68,11 @@
 
 "/*"              { BEGIN(COMMENT); }
 <COMMENT>\n       { yylloc->last_line += yyleng;
-                    yylloc->last_column = 1; }
+                    yylloc->last_column = 1; return NEWLINE; }
 <COMMENT>"*"+"/"  { BEGIN(INITIAL); }
 <COMMENT>.*       { }
 
-"#"(.*)\n { yylloc->last_line += 1; }
+"#"(.*)(\n)? { yylloc->last_line += 1; return NEWLINE; }
 
 \n      { yylloc->last_line += yyleng;
           yylloc->last_column = 1; return NEWLINE; }
