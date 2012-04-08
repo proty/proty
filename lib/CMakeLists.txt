@@ -13,6 +13,7 @@ proty_lib(io io/io.c io/file.c)
 proty_lib(net net/net.c net/socket.c)
 proty_lib(os os/os.c)
 proty_lib(time time/time.c)
+proty_lib(test test/test.c)
 
 proty_lib(math math/math.c)
 target_link_libraries(proty-math m)

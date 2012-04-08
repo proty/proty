@@ -1,0 +1,6 @@
+ENABLE_TESTING()
+
+file(GLOB TESTFILES ${CMAKE_CURRENT_SOURCE_DIR}/*.pr)
+foreach(TESTFILE ${TESTFILES})
+  add_test(${TESTFILE} ${CMAKE_BINARY_DIR}/proty ${TESTFILE})
+endforeach()

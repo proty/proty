@@ -33,6 +33,7 @@ if(${CMAKE_SYSTEM_PROCESSOR} STREQUAL "x86_64")
 endif()
 
 include(CPack)
+include(CTest)
 
 ###### FORCE OUT OF SOURCE BUILD
 if (CMAKE_SOURCE_DIR STREQUAL CMAKE_BINARY_DIR)
@@ -73,6 +74,7 @@ set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -include ${CMAKE_BINARY_DIR}/config.h")
 ###### SUBDIRECTORIES
 add_subdirectory(src)
 add_subdirectory(lib)
+add_subdirectory(test)
 
 ###### DOCUMENTATION
 file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/doc)
