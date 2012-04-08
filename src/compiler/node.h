@@ -18,6 +18,7 @@ typedef struct Node {
         SetSlotNode,
         GetSlotNode,
         AssignNode,
+        SubscriptNode,
 
         IfNode,
         ElseNode,

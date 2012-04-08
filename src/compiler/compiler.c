@@ -220,6 +220,21 @@ static int Compiler_compileAssignNode(Context* context, Node* node) {
     return reg;
 }
 
+static int Compiler_compileSubscriptNode(Context* context, Node* node) {
+    int obj = Compiler_compile(context, node->left);
+    int sub = Compiler_compile(context, node->right);
+
+    // generate [] symbol
+    Node* sym = Node_new(SymbolNode, 0, 0);
+    sym->data.sval = "[]";
+    int op = Compiler_compile(context, sym);
+
+    Block_append(context->block, OP_PUSH, sub);
+    Block_append(context->block, OP_SEND, context->reg, obj, op, 1);
+
+    return context->reg++;
+}
+
 static int Compiler_compileIfNode(Context* context, Node* node) {
     int diff;
     Reg res = context->reg++;
@@ -424,6 +439,7 @@ int Compiler_compile(Context* context, Node* node) {
     case SetSlotNode:  return Compiler_compileSetSlotNode(context, node);
     case GetSlotNode:  return Compiler_compileGetSlotNode(context, node);
     case AssignNode:   return Compiler_compileAssignNode(context, node);
+    case SubscriptNode:return Compiler_compileSubscriptNode(context, node);
     case IfNode:       return Compiler_compileIfNode(context, node);
     case WhileNode:    return Compiler_compileWhileNode(context, node);
     case TryNode:      return Compiler_compileTryNode(context, node);

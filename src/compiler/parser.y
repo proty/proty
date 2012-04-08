@@ -97,6 +97,7 @@ expression:     LPAR expression RPAR { $$ = $2; }
               | expression LPAR args RPAR { $$ = Node_new(CallNode, $1, $3); }
               | DO do_args COLON statements END { $$ = Node_new(DoNode, $2, $4); }
               | DO do_args LBRACE statements RBRACE { $$ = Node_new(DoNode, $2, $4); }
+              | expression LSQB expression RSQB { $$ = Node_new(SubscriptNode, $1, $3); }
               ;
 
 args:           { $$ = Node_new(ArgsNode, 0, 0); }
@@ -126,8 +127,8 @@ binop:          expression ADD expression  { $$ = BinOpNode_new($1, $3, "+"); }
               | expression ISUB expression { $$ = BinOpNode_new($1, $3, "-="); }
               | expression IMUL expression { $$ = BinOpNode_new($1, $3, "*="); }
               | expression IDIV expression { $$ = BinOpNode_new($1, $3, "/="); }
-              | expression AND expression { $$ = BinOpNode_new($1, $3, "and"); }
-              | expression OR expression { $$ = BinOpNode_new($1, $3, "or"); }
+              | expression AND expression  { $$ = BinOpNode_new($1, $3, "and"); }
+              | expression OR expression   { $$ = BinOpNode_new($1, $3, "or"); }
               ;
 
 primary:        INTEGER { $$ = Node_new(IntegerNode, 0, 0); $$->data.ival = $1; }
