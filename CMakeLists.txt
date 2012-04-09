@@ -5,7 +5,7 @@ set(VERSION 0.4)
 set(VERSION_MAJOR 0)
 set(VERSION_MINOR 4)
 set(VERSION_PATCH 0)
-set(COPYRIGHT "Copyright (c) 2010-2012 Thomas Gatzweiler")
+set(COPYRIGHT "Copyright (C) 2010-2012 Thomas Gatzweiler")
 
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=gnu99 -fPIC -Wall -Wno-unused-function")
 set(EXECUTABLE_OUTPUT_PATH "${CMAKE_BINARY_DIR}")

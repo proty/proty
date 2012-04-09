@@ -26,7 +26,7 @@ int main(int argc, char** argv) {
     State_setGlobalState(state);
 
     while (1) {
-        char* input = readline(">>> ");
+        char* input = readline("> ");
 
         if (!input) break;
         add_history(input);
