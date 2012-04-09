@@ -19,8 +19,8 @@ test.run("length", do test {
 })
 
 test.run("bool", do test {
-    test.assertTrue("xyz")
-    test.assertFalse("")
+    test.assertTrue("xyz".bool())
+    test.assertFalse("".bool())
 })
 
 test.run("split", do test {
