@@ -84,13 +84,16 @@ static void Compiler_error(Context* context) {
 }
 
 static int Compiler_compileBranchNode(Context* context, Node* node) {
-    Reg left = Compiler_compile(context, node->left);
+    Reg ret;
+
+    if (node->left) {
+        ret = Compiler_compile(context, node->left);
+    }
     if (node->right) {
-        return Compiler_compile(context, node->right);
+        ret = Compiler_compile(context, node->right);
     }
-    else {
-        return left;
-    }
+
+    return ret;
 }
 
 static int Compiler_compileBinOpNode(Context* context, Node* node) {

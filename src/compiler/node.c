@@ -26,11 +26,9 @@ void Node_delete(Node* self) {
     free(self);
 }
 
-Node* AssignNode_new(Node* expr, Node* value) {
+Node* AssignNode_new(const char* name, Node* value) {
     Node* node = Node_new(AssignNode, 0, value);
-    assert(expr->tag == NameNode);
-    node->data.sval = expr->data.sval;
-    free(expr);
+    node->data.sval = name;
     return node;
 }
 

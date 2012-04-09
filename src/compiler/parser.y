@@ -13,6 +13,7 @@ int yylex(void* yylval_param, void* loc, void* scanner);
 %parse-param {Node** root}
 %lex-param {yyscan_t* scanner}
 %defines
+%expect 1
 
 %union {
     int ival;
@@ -29,9 +30,9 @@ int yylex(void* yylval_param, void* loc, void* scanner);
 %left DOT
 %left ASSIGN
 %left IADD ISUB IMUL IDIV
-%left LPAR
-%left NOT
+%left LPAR LSQB
 %left AND OR
+%left NOT
 %left EQ NE GT LT LE GE
 %left ADD SUB
 %left MUL DIV
@@ -67,17 +68,28 @@ int yylex(void* yylval_param, void* loc, void* scanner);
 %token ARROW "=>"
 
 %type <node> primary statements statement expression
-%type <node> if_stmt while_stmt try_stmt unop binop args
+%type <node> if_stmt while_stmt try_stmt unop binop slotop args
 %type <node> do_args hash_args list hash hash_element
 
 %%
 
-program:        statements EOS { *root = $1; }
+program:        statements opt_terms EOS { *root = $1; }
 
 statements:     { $$ = 0; }
-              | NEWLINE statements { $$ = $2; }
-              | SEMICOLON statements { $$ = $2; }
-              | statement statements { $$ = Node_new(BranchNode, $1, $2); }
+              | statement { $$ = $1; }
+              | statements terms statement { $$ = Node_new(BranchNode, $1, $3); }
+              ;
+
+opt_terms:
+              | terms
+              ;
+
+terms:          term
+              | terms term
+              ;
+
+term:           NEWLINE
+              | SEMICOLON
               ;
 
 statement:      expression { $$ = $1; }
@@ -87,17 +99,20 @@ statement:      expression { $$ = $1; }
               ;
 
 expression:     LPAR expression RPAR { $$ = $2; }
+              | primary              { $$ = $1; }
               | unop                 { $$ = $1; }
               | binop                { $$ = $1; }
-              | primary              { $$ = $1; }
-              | expression ASSIGN expression { $$ = AssignNode_new($1, $3); }
-              | expression DOT NAME { $$ = GetSlotNode_new($1, $3); }
-              | expression DOT NAME ASSIGN expression { $$ = SetSlotNode_new($1, $5, $3); }
-              | expression DOT NAME LPAR args RPAR { $$ = SendNode_new($1, $5, $3); }
+              | slotop               { $$ = $1; }
+              | NAME ASSIGN expression { $$ = AssignNode_new($1, $3); }
               | expression LPAR args RPAR { $$ = Node_new(CallNode, $1, $3); }
+              | expression LSQB expression RSQB { $$ = Node_new(SubscriptNode, $1, $3); }
               | DO do_args COLON statements END { $$ = Node_new(DoNode, $2, $4); }
               | DO do_args LBRACE statements RBRACE { $$ = Node_new(DoNode, $2, $4); }
-              | expression LSQB expression RSQB { $$ = Node_new(SubscriptNode, $1, $3); }
+              ;
+
+slotop:         expression DOT NAME { $$ = GetSlotNode_new($1, $3); }
+              | expression DOT NAME ASSIGN expression { $$ = SetSlotNode_new($1, $5, $3); }
+              | expression DOT NAME LPAR args RPAR { $$ = SendNode_new($1, $5, $3); }
               ;
 
 args:           { $$ = Node_new(ArgsNode, 0, 0); }
@@ -156,15 +171,15 @@ hash_element:
               ;
 
 
-if_stmt:        IF expression statements END { $$ = Node_new(IfNode, $2, $3); }
-              | IF expression statements ELSE statements END
-                   { $$ = Node_new(IfNode, $2, Node_new(ElseNode, $3, $5)); }
+if_stmt:        IF expression term statements END { $$ = Node_new(IfNode, $2, $4); }
+              | IF expression term statements ELSE statements END
+                   { $$ = Node_new(IfNode, $2, Node_new(ElseNode, $4, $6)); }
               ;
 
-while_stmt:     WHILE expression statements END { $$ = Node_new(WhileNode, $2, $3); }
+while_stmt:     WHILE expression term statements END { $$ = Node_new(WhileNode, $2, $4); }
               ;
 
-try_stmt:       TRY statements CATCH statements END { $$ = Node_new(TryNode, $2, $4); }
+try_stmt:       TRY term statements CATCH statements END { $$ = Node_new(TryNode, $3, $5); }
               ;
 
 %%
