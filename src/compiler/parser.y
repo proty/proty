@@ -27,8 +27,8 @@ int yylex(void* yylval_param, void* loc, void* scanner);
 %token UNDEF "unknown token"
 
 // operators
-%left DOT
 %left ASSIGN
+%left DOT
 %left IADD ISUB IMUL IDIV
 %left LPAR LSQB
 %left AND OR
