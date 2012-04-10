@@ -9,8 +9,8 @@ test.run("get", do test {
 
 test.run("set", do test {
     a = [3, 2, 1]
-#    a[0] = 1
-#    a[2] = 3
+    a[0] = 1
+    a[2] = 3
     test.assertEqual(a[0], 1)
     test.assertEqual(a[1], 2)
     test.assertEqual(a[2], 3)

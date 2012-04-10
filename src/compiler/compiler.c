@@ -226,14 +226,22 @@ static int Compiler_compileAssignNode(Context* context, Node* node) {
 static int Compiler_compileSubscriptNode(Context* context, Node* node) {
     int obj = Compiler_compile(context, node->left);
     int sub = Compiler_compile(context, node->right);
+    int value = node->data.node ? Compiler_compile(context, node->data.node) : 0;
 
-    // generate [] symbol
+    // generate [] or []= symbol
     Node* sym = Node_new(SymbolNode, 0, 0);
-    sym->data.sval = "[]";
+    sym->data.sval = value ? "[]=" : "[]";
     int op = Compiler_compile(context, sym);
 
+    int args = 1;
+
+    if (value) {
+        Block_append(context->block, OP_PUSH, value);
+        args = 2;
+    }
+
     Block_append(context->block, OP_PUSH, sub);
-    Block_append(context->block, OP_SEND, context->reg, obj, op, 1);
+    Block_append(context->block, OP_SEND, context->reg, obj, op, args);
 
     return context->reg++;
 }

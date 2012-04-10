@@ -67,7 +67,7 @@ int yylex(void* yylval_param, void* loc, void* scanner);
 %token SEMICOLON ";"
 %token ARROW "=>"
 
-%type <node> primary stmts cmpd_stmt stmt expr
+%type <node> primary stmts cmpd_stmt stmt expr subscript
 %type <node> if_stmt while_stmt try_stmt unop binop slotop args
 %type <node> do_args hash_args list hash hash_element
 
@@ -106,9 +106,9 @@ expr          : LPAR expr RPAR { $$ = $2; }
               | unop           { $$ = $1; }
               | binop          { $$ = $1; }
               | slotop         { $$ = $1; }
+              | subscript      { $$ = $1; }
               | NAME ASSIGN expr { $$ = AssignNode_new($1, $3); }
               | expr LPAR args RPAR { $$ = Node_new(CallNode, $1, $3); }
-              | expr LSQB expr RSQB { $$ = Node_new(SubscriptNode, $1, $3); }
               | DO do_args COLON stmts END { $$ = Node_new(DoNode, $2, $4); }
               | DO do_args LBRACE stmts RBRACE { $$ = Node_new(DoNode, $2, $4); }
               ;
@@ -116,6 +116,10 @@ expr          : LPAR expr RPAR { $$ = $2; }
 slotop        : expr DOT NAME { $$ = GetSlotNode_new($1, $3); }
               | expr DOT NAME ASSIGN expr { $$ = SetSlotNode_new($1, $5, $3); }
               | expr DOT NAME LPAR args RPAR { $$ = SendNode_new($1, $5, $3); }
+              ;
+
+subscript     : expr LSQB expr RSQB { $$ = SubscriptNode_new($1, $3, 0); }
+              | expr LSQB expr RSQB ASSIGN expr { $$ = SubscriptNode_new($1, $3, $6); }
               ;
 
 args          : { $$ = Node_new(ArgsNode, 0, 0); }

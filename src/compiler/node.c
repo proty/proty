@@ -18,7 +18,10 @@ void Node_delete(Node* self) {
     case GetSlotNode:
     case SetSlotNode:
     case SendNode:
-        Node_delete(self->data.node);
+    case SubscriptNode:
+        if (self->data.node) {
+            Node_delete(self->data.node);
+        }
     default:
         break;
     }
@@ -29,6 +32,12 @@ void Node_delete(Node* self) {
 Node* AssignNode_new(const char* name, Node* value) {
     Node* node = Node_new(AssignNode, 0, value);
     node->data.sval = name;
+    return node;
+}
+
+Node* SubscriptNode_new(Node* obj, Node* subscript, Node* value) {
+    Node* node = Node_new(SubscriptNode, obj, subscript);
+    node->data.node = value;
     return node;
 }
 
