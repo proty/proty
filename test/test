@@ -72,7 +72,11 @@ def main():
 
         for line in proc.stdout:
             try:
-                key, value = str(line[:-1], "utf-8").split(": ")
+                if sys.version_info[0] == 3:
+                    line = str(line[:-1], "utf-8")
+                else:
+                    line = str(line[:-1])
+                key, value = line.split(": ")
             except:
                 continue
 
