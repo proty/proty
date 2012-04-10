@@ -24,6 +24,7 @@ void help() {
             "Usage: proty [options ...] [input file]\n"
             "  --help, -h   Shows this message\n"
             "  -c           Compile to bytecode\n"
+            "  -d           Dump bytecode\n"
             "  -o [file]    Set the output filename\n"
             "  --version    Shows version information\n"
             "  --           Stop reading options\n");
