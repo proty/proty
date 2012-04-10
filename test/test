@@ -61,7 +61,7 @@ def main():
         if not re.match("(.*).pr", test_file):
             continue
 
-        suite.start_test(test_file)
+        suite.start_test(test_file[:-3])
 
         file_path = os.path.join(test_dir, test_file)
         proc = Popen([proty, file_path], stdout=PIPE)
