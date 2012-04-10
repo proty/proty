@@ -1,12 +1,77 @@
+find_package(BISON)
+find_package(FLEX)
+
+include_directories(.)
+include_directories(${CMAKE_CURRENT_BINARY_DIR})
 include_directories(${CMAKE_SOURCE_DIR}/lib/)
+
+#
+# libproty
+#
+
+add_library(libproty SHARED
+  env.c
+  vm/block.c
+  vm/eval.c
+  vm/load.c
+  vm/module.c
+  vm/state.c
+  vm/opcodes.c
+  runtime/runtime.c
+  runtime/object.c
+  runtime/cfunction.c
+  runtime/function.c
+  runtime/hash.c
+  runtime/list.c
+  runtime/symbol.c
+  runtime/integer.c
+  runtime/float.c
+  runtime/string.c
+  runtime/nil.c
+  runtime/bool.c
+  runtime/exception.c
+)
+set_target_properties(libproty PROPERTIES OUTPUT_NAME "proty")
+target_link_libraries(libproty dl)
+install(TARGETS libproty LIBRARY DESTINATION lib)
+install(DIRECTORY vm DESTINATION include/proty FILES_MATCHING PATTERN "*.h")
+install(DIRECTORY runtime DESTINATION include/proty FILES_MATCHING PATTERN "*.h")
+install(DIRECTORY . DESTINATION include/proty FILES_MATCHING PATTERN "*.h")
+
+#
+# libprotyc
+#
+
+bison_target(Parser compiler/parser.y ${CMAKE_CURRENT_BINARY_DIR}/parser.c)
+flex_target(Lexer compiler/lexer.l ${CMAKE_CURRENT_BINARY_DIR}/lexer.c
+            COMPILE_FLAGS --header-file=${CMAKE_CURRENT_BINARY_DIR}/lexer.h)
+add_flex_bison_dependency(Lexer Parser)
+
+add_library(protyc SHARED
+  ${FLEX_Lexer_OUTPUTS}
+  ${BISON_Parser_OUTPUTS}
+  compiler/node.c
+  compiler/compiler.c
+  compiler/symtab.c
+)
+target_link_libraries(protyc libproty)
+install(TARGETS protyc LIBRARY DESTINATION lib)
+install(DIRECTORY compiler DESTINATION include/proty FILES_MATCHING PATTERN "*.h")
+
+#
+# proty executable
+#
 
 add_executable(proty proty.c)
 target_link_libraries(proty protyc)
 set_target_properties(proty PROPERTIES LINK_FLAGS "-Wl,-rpath,${CMAKE_BUILD_RPATH}")
+install(TARGETS proty RUNTIME DESTINATION bin)
+
+#
+# ipr executable
+#
 
 add_executable(ipr ipr.c)
 target_link_libraries(ipr protyc readline proty-io)
 set_target_properties(ipr PROPERTIES LINK_FLAGS "-Wl,-rpath,${CMAKE_BUILD_RPATH}")
-
-install(TARGETS proty RUNTIME DESTINATION bin)
 install(TARGETS ipr RUNTIME DESTINATION bin)

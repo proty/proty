@@ -21,10 +21,12 @@ int main(int argc, char** argv) {
 
     Module* module = Module_new();
     Context* context = Compiler_newContext(module);
+
     State* state = State_new(module);
+    State_setGlobalState(state);
 
     while (1) {
-        char* input = readline(">>> ");
+        char* input = readline("> ");
 
         if (!input) break;
         add_history(input);
@@ -40,8 +42,9 @@ int main(int argc, char** argv) {
         free(input);
     }
 
-    free(context);
+    Compiler_deleteContext(context);
     State_delete(state);
+    Module_delete(module);
 
     return 0;
 }

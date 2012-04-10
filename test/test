@@ -1,63 +1,96 @@
 #!/usr/bin/env python
 
-"""
-This script runs all test files in the test directory and converts
-their outputs to a junit compatible xml format.
-"""
-
-import subprocess
-import os, sys
-import fnmatch
-from datetime import datetime
-import time
+from subprocess import Popen, PIPE
 from xml.dom.minidom import Document
+import os, sys, time, re
 
-dir = sys.argv[1]
+class TestSuite(Document):
+    def __init__(self):
+        Document.__init__(self)
+        self.suites = self.createElement("testsuites")
+        self.appendChild(self.suites)
+        self.test_id = 0
 
-doc = Document()
-suites = doc.createElement("testsuites")
+    def start_test(self, name):
+        self.name = name
+        self.test_id += 1
+        self.tests = 0
+        self.failures = 0
+        self.time = time.time()
 
-id = 0
-for file in os.listdir(dir):
-    if fnmatch.fnmatch(file, "*.pr"):
-        id += 1
+        self.suite = self.createElement("testsuite")
+        self.suite.setAttribute("id", str(self.test_id))
+        self.suite.setAttribute("package", "proty")
+        self.suite.setAttribute("name", name)
 
-        tests = 0
-        failures = 0
-        suitename = "proty." + file.split(".pr")[0]
+    def add_case(self, name, failed, failures):
+        testcase = self.createElement("testcase")
+        testcase.setAttribute("name", name)
+        testcase.setAttribute("classname", self.name)
+        testcase.setAttribute("time", "0.0")
 
-        suite = doc.createElement("testsuite")
-        suite.setAttribute("id", str(id))
-        suite.setAttribute("package", "proty")
-        suite.setAttribute("name", suitename)
-        suite.setAttribute("hostname", "prsys")
-        suite.setAttribute("timestamp", time.strftime("%Y-%m-%dT%H:%M:%S"))
+        self.tests += 1
+        if failed:
+            self.failures += 1
 
-        start = time.time()
+        for f in failures:
+            failure = self.createElement("failure")
+            failure.setAttribute("type", f[0])
+            failure.setAttribute("message", f[1])
+            testcase.appendChild(failure)
 
-        proc = subprocess.Popen(["./proty", os.path.join(dir, file)],
-                                stdout=subprocess.PIPE)
+        self.suite.appendChild(testcase)
+
+    def stop_test(self):
+        elapsed = (time.time() - self.time)
+
+        self.suite.setAttribute("time", "%.4f" % elapsed)
+        self.suite.setAttribute("tests", str(self.tests))
+        self.suite.setAttribute("failures", str(self.failures))
+        self.suite.setAttribute("errors", "0")
+
+        self.suites.appendChild(self.suite)
+
+def main():
+    suite = TestSuite()
+
+    proty = sys.argv[1]
+    test_dir = sys.argv[2]
+
+    for test_file in os.listdir(test_dir):
+        if not re.match("(.*).pr", test_file):
+            continue
+
+        suite.start_test(test_file[:-3])
+
+        file_path = os.path.join(test_dir, test_file)
+        proc = Popen([proty, file_path], stdout=PIPE)
+        ret = proc.wait()
+
+        name = ""
+        failures = []
 
         for line in proc.stdout:
-            testcase = doc.createElement("testcase")
+            try:
+                if sys.version_info[0] == 3:
+                    line = str(line[:-1], "utf-8")
+                else:
+                    line = str(line[:-1])
+                key, value = line.split(": ")
+            except:
+                continue
 
-            line = line.rstrip().decode("utf-8")
-            name, successCount, failureCount = line.split(";")
+            if key == "testing":
+                failures = []
+                name = value
+            elif key == "assertion failed":
+                failures.append((key, value))
+            elif key == "status":
+                suite.add_case(name, value == "failed", failures)
 
-            tests += int(successCount) + int(failureCount)
-            failures += int(failureCount)
+        suite.stop_test()
 
-            testcase.setAttribute("name", name)
-            testcase.setAttribute("classname", suitename)
-            testcase.setAttribute("time", "0.0")
-            suite.appendChild(testcase)
+    print(suite.toprettyxml(indent="  "))
 
-        elapsed = (time.time() - start)
-        suite.setAttribute("time", "%.4f" % elapsed)
-        suite.setAttribute("tests", str(tests))
-        suite.setAttribute("failures", str(failures))
-        suite.setAttribute("errors", "0")
-        suites.appendChild(suite)
-
-doc.appendChild(suites)
-print(doc.toprettyxml(indent="  "))
+if __name__ == "__main__":
+    main()
