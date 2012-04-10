@@ -1,3 +1,11 @@
+* Proty 0.5 2012-04-10
+
+ - implements basic exception handling
+ - implements hash syntax
+ - parser improvements
+ - better error handling
+ - new unit test suite
+
 * Proty 0.4 2012-01-14
 
  - implements inplace operations
