@@ -1,6 +1,6 @@
 test = load("test")
 
-test.run("app}", do test {
+test.run("append", do test {
     a = "a"
     b = "b"
     c = "c"
@@ -19,8 +19,8 @@ test.run("length", do test {
 })
 
 test.run("bool", do test {
-    test.assertTrue("xyz".bool())
-    test.assertFalse("".bool())
+    test.assertTrue("xyz")
+    test.assertFalse("")
 })
 
 test.run("split", do test {

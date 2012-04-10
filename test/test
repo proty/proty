@@ -1,0 +1,92 @@
+#!/usr/bin/env python
+
+from subprocess import Popen, PIPE
+from xml.dom.minidom import Document
+import os, sys, time, re
+
+class TestSuite(Document):
+    def __init__(self):
+        Document.__init__(self)
+        self.suites = self.createElement("testsuites")
+        self.appendChild(self.suites)
+        self.test_id = 0
+
+    def start_test(self, name):
+        self.name = name
+        self.test_id += 1
+        self.tests = 0
+        self.failures = 0
+        self.time = time.time()
+
+        self.suite = self.createElement("testsuite")
+        self.suite.setAttribute("id", str(self.test_id))
+        self.suite.setAttribute("package", "proty")
+        self.suite.setAttribute("name", name)
+
+    def add_case(self, name, failed, failures):
+        testcase = self.createElement("testcase")
+        testcase.setAttribute("name", name)
+        testcase.setAttribute("classname", self.name)
+        testcase.setAttribute("time", "0.0")
+
+        self.tests += 1
+        if failed:
+            self.failures += 1
+
+        for f in failures:
+            failure = self.createElement("failure")
+            failure.setAttribute("type", f[0])
+            failure.setAttribute("message", f[1])
+            testcase.appendChild(failure)
+
+        self.suite.appendChild(testcase)
+
+    def stop_test(self):
+        elapsed = (time.time() - self.time)
+
+        self.suite.setAttribute("time", "%.4f" % elapsed)
+        self.suite.setAttribute("tests", str(self.tests))
+        self.suite.setAttribute("failures", str(self.failures))
+        self.suite.setAttribute("errors", "0")
+
+        self.suites.appendChild(self.suite)
+
+def main():
+    suite = TestSuite()
+
+    proty = sys.argv[1]
+    test_dir = sys.argv[2]
+
+    for test_file in os.listdir(test_dir):
+        if not re.match("(.*).pr", test_file):
+            continue
+
+        suite.start_test(test_file)
+
+        file_path = os.path.join(test_dir, test_file)
+        proc = Popen([proty, file_path], stdout=PIPE)
+        ret = proc.wait()
+
+        name = ""
+        failures = []
+
+        for line in proc.stdout:
+            try:
+                key, value = str(line[:-1], "utf-8").split(": ")
+            except:
+                continue
+
+            if key == "testing":
+                failures = []
+                name = value
+            elif key == "assertion failed":
+                failures.append((key, value))
+            elif key == "status":
+                suite.add_case(name, value == "failed", failures)
+
+        suite.stop_test()
+
+    print(suite.toprettyxml(indent="  "))
+
+if __name__ == "__main__":
+    main()

@@ -44,6 +44,6 @@ test.run("to string", do test {
 })
 
 test.run("to bool", do test {
-    test.assertTrue(5.bool())
-    test.assertFalse(0.bool())
+    test.assertTrue(5)
+    test.assertFalse(0)
 })
