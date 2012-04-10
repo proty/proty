@@ -1,9 +1,9 @@
 cmake_minimum_required(VERSION 2.8)
 
 project(proty C)
-set(VERSION 0.4)
+set(VERSION 0.5)
 set(VERSION_MAJOR 0)
-set(VERSION_MINOR 4)
+set(VERSION_MINOR 5)
 set(VERSION_PATCH 0)
 set(COPYRIGHT "Copyright (C) 2010-2012 Thomas Gatzweiler")
 

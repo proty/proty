@@ -12,7 +12,7 @@ master_doc = "index"
 project = u"Proty"
 copyright = u"2010-2012, Thomas Gatzweiler"
 
-version = "0.4"
+version = "0.5"
 release = version
 
 #language = None
