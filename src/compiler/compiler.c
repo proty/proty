@@ -164,8 +164,16 @@ static int Compiler_compileDoNode(Context* context, Node* node) {
         argc++;
     }
 
-    // compile the function code
-    int ret = Compiler_compile(context, node->right);
+    // compile the function code if it exists
+    int ret;
+    if (node->right) {
+        ret = Compiler_compile(context, node->right);
+    }
+    else {
+        Block_append(context->block, OP_NIL, context->reg);
+        ret = context->reg++;
+    }
+
     Block_append(context->block, OP_RET, ret);
     int block = Module_addBlock(context->module, context->block);
 
