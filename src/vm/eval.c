@@ -194,6 +194,7 @@ Object* eval(State* state, int id) {
             break;
 
         case OP_ENDTRY:
+            catch = 0;
             break;
 
         case OP_PUSH:
