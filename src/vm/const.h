@@ -1,7 +1,7 @@
 #ifndef PROTY_CONST_H
 #define PROTY_CONST_H
 
-typedef struct Block Block;
+struct Block;
 
 typedef enum ConstType {
     CONST_STR,
@@ -15,7 +15,7 @@ typedef struct Const {
 } Const;
 
 void Const_write(Const* self, FILE* file);
-void Const_read(Block* block, FILE* file);
+void Const_read(struct Block* block, FILE* file);
 void Const_dump(Const* self);
 
 #endif
