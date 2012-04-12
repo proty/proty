@@ -7,27 +7,25 @@
 #include <vm/eval.h>
 
 void version() {
-    fprintf(stderr, "Proty " VERSION " " BUILD_TYPE " (" __DATE__ ", " __TIME__ ")\n");
+    fputs("Proty " VERSION " " BUILD_TYPE " (" __DATE__ ", " __TIME__ ")\n", stderr);
     #ifdef GIT_VERSION
-    fprintf(stderr, "[" GIT_VERSION "]\n");;
+    fputs("[" GIT_VERSION "]\n", stderr);
     #endif
 
-    fprintf(stderr, "\n");
-    fprintf(stderr, COPYRIGHT "\n");
-    fprintf(stderr, "This program comes with ABSOLUTELY NO WARRANTY.\n");
-    fprintf(stderr, "This is free software, and you are welcome to redistribute it\n");
-    fprintf(stderr, "under certain conditions; see proty.cc/license for details.\n");
+    fputs("\n" COPYRIGHT "\n", stderr);
+    fputs("This program comes with ABSOLUTELY NO WARRANTY.\n", stderr);
+    fputs("This is free software, and you are welcome to redistribute it\n", stderr);
+    fputs("under certain conditions; see proty.cc/license for details.\n", stderr);
 }
 
 void help() {
-    fprintf(stderr,
-            "Usage: proty [options ...] [input file]\n"
-            "  --help, -h   Shows this message\n"
-            "  -c           Compile to bytecode\n"
-            "  -d           Dump bytecode\n"
-            "  -o [file]    Set the output filename\n"
-            "  --version    Shows version information\n"
-            "  --           Stop reading options\n");
+    fputs("Usage: proty [options ...] [input file]\n"
+          "  --help, -h   Shows this message\n"
+          "  -c           Compile to bytecode\n"
+          "  -d           Dump bytecode\n"
+          "  -o [file]    Set the output filename\n"
+          "  --version    Shows version information\n"
+          "  --           Stop reading options\n", stderr);
 }
 
 int main(int argc, const char** argv) {
