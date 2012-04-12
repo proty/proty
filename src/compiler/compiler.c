@@ -84,7 +84,7 @@ static void Compiler_error(Context* context) {
 }
 
 static int Compiler_compileBranchNode(Context* context, Node* node) {
-    Reg ret;
+    Reg ret = 0;
 
     if (node->left) {
         ret = Compiler_compile(context, node->left);
