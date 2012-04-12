@@ -62,13 +62,20 @@ int Block_const(Block* self, ConstType type, void* data) {
 }
 
 void Block_dump(Block* self) {
+    puts("Constants:");
+    for (int i = 0; i < self->constc; i++) {
+        printf("%02d ", i);
+        Const_dump(self->consts[i]);
+    }
+
+    puts("\nCode:");
     for (int i = 0; i < self->size;) {
         OpCode op = self->data[i];
         printf("%04d %s\t", i++, OpCode_name(op));
         for (int j = 0; j < OpCode_size(op); j++) {
             printf("%i ", self->data[i++]);
         }
-        printf("\n");
+        puts("");
     }
 }
 
@@ -84,25 +91,7 @@ void Block_write(Block* self, FILE* file) {
 
     // write constants
     for (int i = 0; i < self->constc; i++) {
-        Const* c = self->consts[i];
-
-        // write type
-        fwrite(&c->type, sizeof(ConstType), 1, file);
-
-        // write constant data
-        switch (c->type) {
-        case CONST_SYM:
-        case CONST_STR: {
-            size_t length = strlen(c->data);
-            fwrite(&length, sizeof(size_t), 1, file);
-            fwrite(c->data, sizeof(char), length, file);
-            break;
-        }
-
-        case CONST_FLOAT:
-            fwrite(c->data, sizeof(double), 1, file);
-            break;
-        }
+        Const_write(self->consts[i], file);
     }
 }
 
@@ -122,31 +111,7 @@ Block* Block_read(FILE* file) {
 
     // read constants
     for (int i = 0; i < constc; i++) {
-        // read type
-        ConstType type;
-        fread(&type, sizeof(ConstType), 1, file);
-
-        // read data
-        switch (type) {
-        case CONST_SYM:
-        case CONST_STR: {
-            size_t length;
-            fread(&length, sizeof(size_t), 1, file);
-
-            char* data = malloc(sizeof(char)*length);
-            fread(data, sizeof(char), length, file);
-
-            Block_const(block, type, data);
-            break;
-        }
-
-        case CONST_FLOAT: {
-            double* data = malloc(sizeof(double));
-            fread(data, sizeof(double), 1, file);
-            Block_const(block, CONST_FLOAT, data);
-            break;
-        }
-        }
+        Const_read(block, file);
     }
 
     return block;

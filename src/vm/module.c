@@ -72,7 +72,7 @@ int Module_probe(FILE* file) {
 void Module_dump(Module* self) {
     printf("MODULE DUMP\n");
     for (int i = 0; i < self->blockc; i++) {
-        printf("Block %i:\n", i);
+        printf("\n#### Block %i\n", i);
         Block_dump(self->blocks[i]);
     }
 }

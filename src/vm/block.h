@@ -3,17 +3,7 @@
 
 #include <stdio.h>
 #include "opcodes.h"
-
-typedef enum ConstType {
-    CONST_STR,
-    CONST_SYM,
-    CONST_FLOAT,
-} ConstType;
-
-typedef struct Const {
-    ConstType type;
-    void* data;
-} Const;
+#include "const.h"
 
 typedef struct Block {
     int* data;
