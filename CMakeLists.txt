@@ -78,7 +78,8 @@ add_subdirectory(lib)
 add_custom_target(test
   COMMAND ${CMAKE_SOURCE_DIR}/test/test
           ${CMAKE_BINARY_DIR}/proty
-          ${CMAKE_SOURCE_DIR}/test)
+          ${CMAKE_SOURCE_DIR}/test
+          ${CMAKE_BINARY_DIR}/testresults.xml)
 
 ###### DOCUMENTATION
 file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/doc)

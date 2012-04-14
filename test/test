@@ -32,6 +32,9 @@ class TestSuite(Document):
         self.tests += 1
         if failed:
             self.failures += 1
+            print("F", end="")
+        else:
+            print(".", end="")
 
         for f in failures:
             failure = self.createElement("failure")
@@ -56,6 +59,7 @@ def main():
 
     proty = sys.argv[1]
     test_dir = sys.argv[2]
+    out_file = sys.argv[3]
 
     for test_file in os.listdir(test_dir):
         if not re.match("(.*).pr", test_file):
@@ -90,7 +94,11 @@ def main():
 
         suite.stop_test()
 
-    print(suite.toprettyxml(indent="  "))
+    out = open(out_file, "w")
+    out.write(suite.toprettyxml(indent="  "))
+    out.close()
 
 if __name__ == "__main__":
+    print("running tests")
     main()
+    print("\ndone.")
