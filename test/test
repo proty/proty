@@ -32,9 +32,9 @@ class TestSuite(Document):
         self.tests += 1
         if failed:
             self.failures += 1
-            print("F", end="")
+            sys.stdout.write("F")
         else:
-            print(".", end="")
+            sys.stdout.write(".")
 
         for f in failures:
             failure = self.createElement("failure")
