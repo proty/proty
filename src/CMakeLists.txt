@@ -10,7 +10,7 @@ include_directories(${CMAKE_SOURCE_DIR}/lib/)
 #
 
 add_library(libproty SHARED
-  env.c
+  version.c
   vm/block.c
   vm/const.c
   vm/eval.c
