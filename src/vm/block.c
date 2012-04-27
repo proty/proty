@@ -81,13 +81,13 @@ void Block_dump(Block* self) {
 
 void Block_write(Block* self, FILE* file) {
     // write data size
-    fwrite(&self->size, sizeof(size_t), 1, file);
+    fwrite(&self->size, sizeof(int), 1, file);
 
     // write data
     fwrite(self->data, sizeof(int), self->size, file);
 
     // write constant count
-    fwrite(&self->constc, sizeof(size_t), 1, file);
+    fwrite(&self->constc, sizeof(int), 1, file);
 
     // write constants
     for (int i = 0; i < self->constc; i++) {
@@ -99,7 +99,7 @@ Block* Block_read(FILE* file) {
     Block* block = Block_new();
 
     // read data size
-    fread(&block->size, sizeof(size_t), 1, file);
+    fread(&block->size, sizeof(int), 1, file);
 
     // read data
     block->data = malloc(sizeof(int)*block->size);
@@ -107,7 +107,7 @@ Block* Block_read(FILE* file) {
 
     // read constant count
     int constc;
-    fread(&constc, sizeof(size_t), 1, file);
+    fread(&constc, sizeof(int), 1, file);
 
     // read constants
     for (int i = 0; i < constc; i++) {

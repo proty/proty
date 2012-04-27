@@ -34,7 +34,7 @@ void Module_write(Module* self, FILE* file) {
     fwrite(&magic, sizeof(int), 1, file);
 
     // write block count
-    fwrite(&self->blockc, sizeof(size_t), 1, file);
+    fwrite(&self->blockc, sizeof(int), 1, file);
 
     // write blocks
     for (int i = 0; i < self->blockc; i++) {
@@ -52,7 +52,7 @@ Module* Module_read(FILE* file) {
 
     // read blocks
     int blockc;
-    fread(&blockc, sizeof(size_t), 1, file);
+    fread(&blockc, sizeof(int), 1, file);
 
     for (int i = 0; i < blockc; i++) {
         Block* block = Block_read(file);

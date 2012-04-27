@@ -6,7 +6,7 @@
 
 typedef struct Module {
     Block** blocks;
-    size_t blockc;
+    int blockc;
 } Module;
 
 Module* Module_new();

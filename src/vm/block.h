@@ -7,10 +7,10 @@
 
 typedef struct Block {
     int* data;
-    size_t size;
+    int size;
 
     Const** consts;
-    size_t constc;
+    int constc;
 } Block;
 
 Block* Block_new();
