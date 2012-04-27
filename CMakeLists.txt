@@ -71,8 +71,13 @@ configure_file("${CMAKE_SOURCE_DIR}/src/config.h.in"
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -include ${CMAKE_BINARY_DIR}/config.h")
 
 ###### SUBDIRECTORIES
+include_directories(${CMAKE_BINARY_DIR}/src/)
+include_directories(${CMAKE_SOURCE_DIR}/src/)
+include_directories(${CMAKE_SOURCE_DIR}/lib/)
+
 add_subdirectory(src)
 add_subdirectory(lib)
+add_subdirectory(tools)
 
 ###### TESTS
 add_custom_target(test

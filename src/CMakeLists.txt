@@ -1,10 +1,6 @@
 find_package(BISON)
 find_package(FLEX)
 
-include_directories(.)
-include_directories(${CMAKE_CURRENT_BINARY_DIR})
-include_directories(${CMAKE_SOURCE_DIR}/lib/)
-
 #
 # libproty
 #
@@ -58,21 +54,3 @@ add_library(protyc SHARED
 target_link_libraries(protyc libproty)
 install(TARGETS protyc LIBRARY DESTINATION lib)
 install(DIRECTORY compiler DESTINATION include/proty FILES_MATCHING PATTERN "*.h")
-
-#
-# proty executable
-#
-
-add_executable(proty proty.c)
-target_link_libraries(proty protyc)
-set_target_properties(proty PROPERTIES LINK_FLAGS "-Wl,-rpath,${CMAKE_BUILD_RPATH}")
-install(TARGETS proty RUNTIME DESTINATION bin)
-
-#
-# ipr executable
-#
-
-add_executable(ipr ipr.c)
-target_link_libraries(ipr protyc readline proty-io)
-set_target_properties(ipr PROPERTIES LINK_FLAGS "-Wl,-rpath,${CMAKE_BUILD_RPATH}")
-install(TARGETS ipr RUNTIME DESTINATION bin)
