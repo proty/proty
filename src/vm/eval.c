@@ -101,9 +101,10 @@ Object* eval(State* state, int id) {
             int argc = PCi;
             Object* list = List_new();
 
-            for (int i = 0; i < argc; i++) {
-                List_append(list, stack[--sp]);
+            for (int i = sp - argc; i < sp; i++) {
+                List_append(list, stack[i]);
             }
+            sp -= argc;
 
             R(ret) = list;
             break;
@@ -136,12 +137,8 @@ Object* eval(State* state, int id) {
                 R(ret) = eval(state, Function_getId(obj));
             }
             else {
-                Object** args = malloc(sizeof(Object*)*argc);
-                for (int i = 0; i < argc; i++) {
-                    args[i] = stack[--sp];
-                }
-                R(ret) = Object_call(obj, argc, args);
-                free(args);
+                R(ret) = Object_call(obj, argc, stack+sp-argc);
+                sp -= argc;
             }
 
             break;
@@ -160,12 +157,8 @@ Object* eval(State* state, int id) {
                 R(ret) = eval(state, Function_getId(obj));
             }
             else {
-                Object** args = malloc(sizeof(Object*)*argc);
-                for (int i = 0; i < argc; i++) {
-                    args[i] = stack[--sp];
-                }
-                R(ret) = Object_send(obj, msg, argc, args);
-                free(args);
+                R(ret) = Object_send(obj, msg, argc, stack+sp-argc);
+                sp -= argc;
             }
 
             break;

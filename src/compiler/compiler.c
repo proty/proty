@@ -187,20 +187,16 @@ static int Compiler_compileDoNode(Context* context, Node* node) {
 }
 
 static int Compiler_compileArgsNode(Context* context, Node* node) {
-    int argc;
-
-    if (node->right) {
-        argc = Compiler_compile(context, node->right) + 1;
-    }
-    else argc = 1;
-
     if (node->left) {
         int arg = Compiler_compile(context, node->left);
         Block_append(context->block, OP_PUSH, arg);
     }
-    else if (!node->right) argc = 0;
+    else return 0;
 
-    return argc;
+    if (node->right) {
+        return Compiler_compile(context, node->right) + 1;
+    }
+    else return 1;
 }
 
 static int Compiler_compileSetSlotNode(Context* context, Node* node) {
@@ -241,15 +237,13 @@ static int Compiler_compileSubscriptNode(Context* context, Node* node) {
     sym->data.sval = value ? "[]=" : "[]";
     int op = Compiler_compile(context, sym);
 
-    int args = 1;
+    Block_append(context->block, OP_PUSH, sub);
 
     if (value) {
         Block_append(context->block, OP_PUSH, value);
-        args = 2;
     }
 
-    Block_append(context->block, OP_PUSH, sub);
-    Block_append(context->block, OP_SEND, context->reg, obj, op, args);
+    Block_append(context->block, OP_SEND, context->reg, obj, op, value ? 2 : 1);
 
     return context->reg++;
 }
