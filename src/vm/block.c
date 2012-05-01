@@ -5,10 +5,15 @@
 
 Block* Block_new() {
     Block* block = malloc(sizeof(Block));
+
     block->data = malloc(sizeof(int));
+    block->size = 0;
+
     block->consts = malloc(sizeof(Const));
     block->constc = 0;
-    block->size = 0;
+
+    block->regc = 0;
+
     return block;
 }
 
@@ -62,18 +67,24 @@ int Block_const(Block* self, ConstType type, void* data) {
 }
 
 void Block_dump(Block* self) {
-    puts("Constants:");
+    printf("size: %i\n", self->size);
+    printf("registers: %i\n", self->regc);
+    printf("constants: %i\n", self->constc);
+
+    puts("");
+
     for (int i = 0; i < self->constc; i++) {
         printf("%02d ", i);
         Const_dump(self->consts[i]);
     }
 
-    puts("\nCode:");
+    puts("");
+
     for (int i = 0; i < self->size;) {
         OpCode op = self->data[i];
-        printf("%04d %s\t", i++, OpCode_name(op));
+        printf("[%03d] %s\t", i++, OpCode_name(op));
         for (int j = 0; j < OpCode_size(op); j++) {
-            printf("%i ", self->data[i++]);
+            printf("%i  ", self->data[i++]);
         }
         puts("");
     }
@@ -85,6 +96,9 @@ void Block_write(Block* self, FILE* file) {
 
     // write data
     fwrite(self->data, sizeof(int), self->size, file);
+
+    // write register count
+    fwrite(&self->regc, sizeof(int), 1, file);
 
     // write constant count
     fwrite(&self->constc, sizeof(int), 1, file);
@@ -104,6 +118,9 @@ Block* Block_read(FILE* file) {
     // read data
     block->data = malloc(sizeof(int)*block->size);
     fread(block->data, sizeof(int), block->size, file);
+
+    // read register count
+    fread(&block->regc, sizeof(int), 1, file);
 
     // read constant count
     int constc;

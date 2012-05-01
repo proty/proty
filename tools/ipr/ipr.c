@@ -34,7 +34,7 @@ int main(int argc, char** argv) {
         int block = Compiler_compileString(context, input);
 
         if (block >= 0) {
-            Object* object = eval(state, block);
+            Object* object = eval(state, block, 0);
 
             printf("=> ");
             io_print(0, object);

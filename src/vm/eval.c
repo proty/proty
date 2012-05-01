@@ -9,13 +9,16 @@
 #define PCi *(pc++)
 #define PC(x) (*(pc+x))
 
-Object* eval(State* state, int id) {
+Object* eval(State* state, int id, int argc) {
     Block* block = state->module->blocks[id];
+
     int* pc = block->data;
     int sp = state->sp;
 
-    Object** registers = state->registers;
     Object** stack = state->stack;
+    Object** registers = stack+sp-argc;
+
+    sp += block->regc - argc;
 
     int* catch = 0;
     if (setjmp(state->excp_buf)) {
@@ -42,6 +45,7 @@ Object* eval(State* state, int id) {
             break;
 
         case OP_RET:
+            state->sp = sp - block->regc;
             return R(PCi);
 
         case OP_JMP:
@@ -134,7 +138,7 @@ Object* eval(State* state, int id) {
 
             if (obj->proto == Function_proto) {
                 assert(argc == Function_getArgc(obj));
-                R(ret) = eval(state, Function_getId(obj));
+                R(ret) = eval(state, Function_getId(obj), argc);
             }
             else {
                 R(ret) = Object_call(obj, argc, stack+sp-argc);
@@ -154,7 +158,7 @@ Object* eval(State* state, int id) {
 
             if (obj->proto == Function_proto) {
                 assert(argc == Function_getArgc(obj));
-                R(ret) = eval(state, Function_getId(obj));
+                R(ret) = eval(state, Function_getId(obj), argc);
             }
             else {
                 R(ret) = Object_send(obj, msg, argc, stack+sp-argc);

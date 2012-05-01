@@ -32,11 +32,12 @@ Object* Function_call(Object* self, Object* fself, int argc, Object* argv[]) {
 
     State* state = State_getGlobalState();
 
+    // push the arguments onto the stack
     for (int i = 0; i < argc; i++) {
         state->stack[state->sp++] = argv[i];
     }
 
-    return eval(state, function->id);
+    return eval(state, function->id, argc);
 }
 
 int Function_getId(Object* self) {

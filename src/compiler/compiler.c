@@ -76,6 +76,8 @@ int Compiler_compileRootNode(Context* context, Node* root) {
         Block_append(context->block, OP_RET, context->reg++);
     }
 
+    context->block->regc = context->reg;
+
     return id;
 }
 
@@ -148,17 +150,17 @@ static int Compiler_compileSendNode(Context* context, Node* node) {
 static int Compiler_compileDoNode(Context* context, Node* node) {
     // backup current block
     Block* oldBlock = context->block;
+    int oldReg = context->reg;
 
     // create context for the new function
     context->block = Block_new();
+    context->reg = 0;
     SymTab_enterScope(context->symtab);
 
-    // pop the arguments from the stack
-    // and save the registers to the symtab
+    // map the first registers to the arguments on the stack
     int argc = 0;
     Node* arg = node->left;
     while (arg) {
-        Block_append(context->block, OP_POP, context->reg);
         SymTab_store(context->symtab, arg->data.sval, context->reg++);
         arg = arg->right;
         argc++;
@@ -175,11 +177,14 @@ static int Compiler_compileDoNode(Context* context, Node* node) {
     }
 
     Block_append(context->block, OP_RET, ret);
+
+    context->block->regc = context->reg;
     int block = Module_addBlock(context->module, context->block);
 
     // restore the old context
     SymTab_leaveScope(context->symtab);
     context->block = oldBlock;
+    context->reg = oldReg;
 
     // create the function
     Block_append(context->block, OP_FUN, context->reg, block, argc);

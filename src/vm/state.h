@@ -9,7 +9,6 @@ struct Module;
 
 typedef struct State {
     int sp;
-    struct Object** registers;
     struct Object** stack;
     struct Module* module;
 

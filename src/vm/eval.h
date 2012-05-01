@@ -4,6 +4,6 @@
 #include <runtime/runtime.h>
 #include "state.h"
 
-Object* eval(State* state, int id);
+Object* eval(State* state, int id, int argc);
 
 #endif

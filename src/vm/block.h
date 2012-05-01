@@ -11,6 +11,8 @@ typedef struct Block {
 
     Const** consts;
     int constc;
+
+    int regc;
 } Block;
 
 Block* Block_new();
