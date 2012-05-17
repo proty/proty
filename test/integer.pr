@@ -1,49 +1,49 @@
 test = load("test")
 
 test.run("addition", do test {
-    test.assertEqual(100+100, 200)
-    test.assertEqual(50+0, 50)
-    test.assertEqual(0+0, 0)
+    test.assert_equal(100+100, 200)
+    test.assert_equal(50+0, 50)
+    test.assert_equal(0+0, 0)
 })
 
 test.run("substraction", do test {
-    test.assertEqual(100-100, 0)
-    test.assertEqual(50-0, 50)
-    test.assertEqual(0-0, 0)
+    test.assert_equal(100-100, 0)
+    test.assert_equal(50-0, 50)
+    test.assert_equal(0-0, 0)
 })
 
 test.run("multiplication", do test {
-    test.assertEqual(10*10, 100)
-    test.assertEqual(50*0, 0)
-    test.assertEqual(0*0, 0)
+    test.assert_equal(10*10, 100)
+    test.assert_equal(50*0, 0)
+    test.assert_equal(0*0, 0)
 })
 
 test.run("division", do test {
-    test.assertEqual(100/100, 1)
-    test.assertEqual(100/10, 10)
-    test.assertEqual(100/1, 100)
-    test.assertEqual(0/5, 0)
+    test.assert_equal(100/100, 1)
+    test.assert_equal(100/10, 10)
+    test.assert_equal(100/1, 100)
+    test.assert_equal(0/5, 0)
 })
 
 test.run("logical operators", do test {
-    test.assertTrue(5<10)
-    test.assertTrue(10>5)
+    test.assert_true(5<10)
+    test.assert_true(10>5)
 
-    test.assertTrue(5<=5)
-    test.assertTrue(5>=5)
+    test.assert_true(5<=5)
+    test.assert_true(5>=5)
 
-    test.assertTrue(5==5)
-    test.assertTrue(5!=10)
+    test.assert_true(5==5)
+    test.assert_true(5!=10)
 })
 
 test.run("to string", do test {
     a = 5
-    test.assertEqual(a.str(), "5")
+    test.assert_equal(a.str(), "5")
     b = 0
-    test.assertEqual(b.str(), "0")
+    test.assert_equal(b.str(), "0")
 })
 
 test.run("to bool", do test {
-    test.assertTrue(5)
-    test.assertFalse(0)
+    test.assert_true(5)
+    test.assert_false(0)
 })

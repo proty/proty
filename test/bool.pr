@@ -1,25 +1,25 @@
 test = load("test")
 
 test.run("and operator", do test {
-    test.assertFalse(true and false)
-    test.assertFalse(false and true)
-    test.assertFalse(false and false)
-    test.assertTrue(true and true)
+    test.assert_false(true and false)
+    test.assert_false(false and true)
+    test.assert_false(false and false)
+    test.assert_true(true and true)
 })
 
 test.run("or operator", do test {
-    test.assertTrue(true or true)
-    test.assertTrue(true or false)
-    test.assertTrue(false or true)
-    test.assertFalse(false or false)
+    test.assert_true(true or true)
+    test.assert_true(true or false)
+    test.assert_true(false or true)
+    test.assert_false(false or false)
 })
 
 test.run("not operator", do test {
-    test.assertTrue(not false)
-    test.assertFalse(not true)
+    test.assert_true(not false)
+    test.assert_false(not true)
 })
 
 test.run("string", do test {
-    test.assertEqual(true.str(), "<true>")
-    test.assertEqual(false.str(), "<false>")
+    test.assert_equal(true.str(), "<true>")
+    test.assert_equal(false.str(), "<false>")
 })

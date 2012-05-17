@@ -61,9 +61,9 @@ Object* test_assertFalse(Object* self, Object* obj) {
 
 Object* test_init() {
     test_context = Object_new(Object_proto);
-    Object_setSlot(test_context, SYM(assertEqual), FUNC(test_assertEqual, 3));
-    Object_setSlot(test_context, SYM(assertTrue), FUNC(test_assertTrue, 2));
-    Object_setSlot(test_context, SYM(assertFalse), FUNC(test_assertFalse, 2));
+    Object_setSlot(test_context, SYM(assert_equal), FUNC(test_assertEqual, 3));
+    Object_setSlot(test_context, SYM(assert_true), FUNC(test_assertTrue, 2));
+    Object_setSlot(test_context, SYM(assert_false), FUNC(test_assertFalse, 2));
 
     Object* test = Object_new(Object_proto);
     Object_setSlot(test, SYM(run), FUNC(test_run, 3));
