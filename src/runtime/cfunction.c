@@ -46,5 +46,12 @@ Object* CFunction_call(Object* self, Object* fself, int argc, Object* argv[]) {
     return ret;
 }
 
+Object* CFunction_str(Object* self) {
+    char buffer[16];
+    sprintf(buffer, "<CFunction(%i)>", ((CFunction*)self->data.ptr)->argc);
+    return String_new(buffer);
+}
+
 void CFunction_initProto() {
+    Object_setSlot(CFunction_proto, SYM(str), FUNC(CFunction_str, 1));
 }

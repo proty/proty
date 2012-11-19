@@ -48,5 +48,12 @@ int Function_getArgc(Object* self) {
     return ((Function*)self->data.ptr)->argc;
 }
 
+Object* Function_str(Object* self) {
+    char buffer[15];
+    sprintf(buffer, "<Function(%i)>", Function_getArgc(self));
+    return String_new(buffer);
+}
+
 void Function_initProto() {
+    Object_setSlot(Function_proto, SYM(str), FUNC(Function_str, 1));
 }
